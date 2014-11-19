@@ -1,0 +1,14 @@
+{
+  "name": "js-signals",
+  "homepage": "https://github.com/millermedeiros/js-signals",
+  "version": "1.0.0",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "e3749fe6b082fa884b2c522105c223a757bee2dd"
+  },
+  "_source": "git://github.com/millermedeiros/js-signals.git",
+  "_target": "~1.0.0",
+  "_originalSource": "js-signals"
+}

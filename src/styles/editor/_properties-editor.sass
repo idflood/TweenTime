@@ -1,0 +1,139 @@
+.properties-editor
+  position: fixed
+  top: 0
+  right: 0
+  width: 280px
+  bottom: 297px
+  border-left: 1px solid $editor_border
+  background: $editor_bg
+  font-size: 11px
+  color: #aaa
+  overflow: auto
+  //-webkit-font-smoothing: antialiased
+
+  .properties-is-closed &
+    right: -281px
+    overflow: visible
+
+  .timeline-is-closed &
+    bottom: 97px
+
+  &__main
+    padding: 10px 10px
+
+  .property
+    overflow: hidden
+    min-height: 26px
+    line-height: 25px
+
+  &__title
+    +vertical-separator(bottom)
+    position: relative
+    margin-top: 0
+    margin-bottom: 10px
+    margin-left: -10px
+    margin-right: -10px
+    padding-left: 10px
+    padding-right: 10px
+    padding-bottom: 5px
+    color: #fff
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8)
+
+.property__label
+  position: relative
+  display: inline-block
+  min-width: 50px
+  min-height: 25px
+  margin-right: 10px
+  color: #fff
+
+.property__key
+  display: inline-block
+  position: relative
+  top: 1px
+  width: 8px
+  height: 8px
+  padding: 0
+  margin-right: 7px
+  background: #666
+  border: 0
+  border-radius: 4px
+  cursor: pointer
+  z-index: 500
+  &:focus
+    outline: 0
+
+.property__input
+  background: #57595a
+  border: 1px solid #2f3132
+  color: #fff
+  padding: 2px 5px
+  &:focus
+    outline: 0
+
+.property--number span
+  display: inline-block
+  min-width: 100px
+
+a.menu-item--toggle-side
+  position: absolute
+  top: 8px
+  right: -3px
+  z-index: 99999
+
+  .properties-is-closed &
+    left: -27px
+
+  i
+    &:before
+      content: "\f054"
+
+  &.menu-item--toggle-left
+    i
+      &:before
+        content: "\f053"
+
+.property--tween
+  .property__label
+    margin-left: 18px
+
+  .property__select
+    display: inline-block
+    padding-right: 20px
+    border: 0
+    border-radius: 0
+    color: #aaa
+    background: transparent
+    -webkit-appearance: none
+
+    &:focus
+      outline: 0
+
+  &::after
+    content: "\f078" !important
+    display: inline !important
+    font-family: 'icomoon'
+    position: relative
+    left: -20px
+
+.actions
+  +vertical-separator
+  margin-left: -10px
+  margin-right: -10px
+  padding-left: 10px
+  padding-right: 10px
+  margin-top: 40px
+  padding-top: 20px
+  text-align: right
+
+.actions__item
+  transition: background 0.3s
+  display: inline-block
+  padding: 4px 10px
+  background: #CF3938
+  text-decoration: none
+  &, &:hover, &:focus, &:active, &:link
+    color: #fff
+
+  &:hover
+    background: darken(#CF3938, 8%)

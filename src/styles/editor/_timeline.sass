@@ -1,0 +1,108 @@
+.editor__time-main
+  height: 220px
+  position: absolute
+  left: 0
+  right: 0
+  bottom: 0
+  overflow-y: scroll
+  background: $editor_bg
+
+.brush .extent
+  fill: #fff
+  fill-opacity: .05
+
+.line__toggle
+  font-size: 14px
+  cursor: pointer
+
+.line--label
+  cursor: pointer
+
+.editor__time
+  +vertical-separator()
+  position: fixed
+  bottom: 0
+  left: 0
+  right: 0
+  height: 270px
+  background: $editor_bg
+  z-index: 9000
+
+  .timeline-is-closed &
+    bottom: -200px
+
+  text
+    fill: #fff
+
+  rect, path, line
+    shape-rendering: crispEdges
+
+  .line--separator
+    stroke: lighten($editor_bg, 15%)
+
+  .line--separator-secondary
+    stroke: lighten($editor_bg, 7%)
+
+  .line--label
+    font-size: 11px
+
+  .line--label-small
+    font-size: 10px
+    fill: #919191
+
+  .line--key
+    fill: #919191
+    cursor: move
+
+    &--selected
+      //fill: #32B6C8
+      fill: #fff
+
+  .axis
+    path, line
+      fill: none
+      stroke: #fff
+
+  .x.axis
+    path
+      display: none
+    line
+      stroke: lighten($editor_bg, 15%)
+    text
+      font-size: 10px
+      fill: #919191
+      font-weight: bold
+      -webkit-font-smoothing: antialiased
+
+  .x.grid
+    text
+      display: none
+    line
+      stroke: lighten($editor_bg, 7%)
+
+  .line
+    fill: none
+    stroke: steelblue
+    stroke-width: 1.5px
+
+  .bar
+    fill: rgba(lighten($editor_bg, 20%), 0.5)
+    stroke: rgba(lighten($editor_bg, 20%), 0.9)
+    cursor: move
+
+  .bar-anchor
+    fill-opacity: 0
+    cursor: ew-resize
+
+
+  .click-handler
+    fill-opacity: 0
+
+  .time-indicator__line
+    fill: lighten($editor_bg, 35%)
+  .time-indicator__handle
+    fill: #fff
+    stroke: lighten($editor_bg, 17%)
+
+.property__error
+  fill: #CF3938

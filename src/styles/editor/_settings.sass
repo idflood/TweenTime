@@ -1,0 +1,17 @@
+$editor_bg: darken(#383b3c, 5%)
+$editor_border: #000
+
+$editor_border2: #181818
+$editor_border2_light: #484a4b
+
+@mixin vertical-separator($side: top)
+  position: relative
+  border-#{$side}: 1px solid $editor_border2
+  &:before
+    content: ""
+    position: absolute
+    #{$side}: 0
+    left: 0
+    right: 0
+    height: 1px
+    background: $editor_border2_light

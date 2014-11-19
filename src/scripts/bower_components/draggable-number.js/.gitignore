@@ -1,0 +1,14 @@
+.DS_Store
+.sass-cache/**
+node_modules/**
+coverage
+lib-cov
+*.seed
+*.log
+*.dat
+*.out
+*.pid
+pids
+logs
+results
+npm-debug.log
