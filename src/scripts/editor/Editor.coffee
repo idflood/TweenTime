@@ -145,3 +145,14 @@ define (require) ->
       $play_pause.click (e) =>
         e.preventDefault()
         @playPause()
+
+      $bt_first = @$timeline.find('.control--first')
+      $bt_first.click (e) =>
+        e.preventDefault()
+        @timer.seek([0])
+
+      $bt_last = @$timeline.find('.control--last')
+      $bt_last.click (e) =>
+        e.preventDefault()
+        total = @tweenTime.getTotalDuration()
+        @timer.seek([total * 1000])

@@ -2543,12 +2543,28 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       };
 
       Editor.prototype.initControls = function() {
-        var $play_pause;
+        var $bt_first, $bt_last, $play_pause;
         $play_pause = this.$timeline.find('.control--play-pause');
-        return $play_pause.click((function(_this) {
+        $play_pause.click((function(_this) {
           return function(e) {
             e.preventDefault();
             return _this.playPause();
+          };
+        })(this));
+        $bt_first = this.$timeline.find('.control--first');
+        $bt_first.click((function(_this) {
+          return function(e) {
+            e.preventDefault();
+            return _this.timer.seek([0]);
+          };
+        })(this));
+        $bt_last = this.$timeline.find('.control--last');
+        return $bt_last.click((function(_this) {
+          return function(e) {
+            var total;
+            e.preventDefault();
+            total = _this.tweenTime.getTotalDuration();
+            return _this.timer.seek([total * 1000]);
           };
         })(this));
       };

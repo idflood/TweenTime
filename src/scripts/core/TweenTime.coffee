@@ -6,3 +6,5 @@ define (require) ->
     constructor: (@data) ->
       @timer = new Timer()
       @orchestrator = new Orchestrator(@timer, @data)
+
+    getTotalDuration: () => @orchestrator.getTotalDuration()
