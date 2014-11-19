@@ -3,6 +3,7 @@ var gutil = require('gulp-util');
 var requirejs = require('requirejs');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
+var livereload = require('gulp-livereload');
 
 gulp.task('scripts:tweentime', [], function(cb) {
   requirejs.optimize({
@@ -79,4 +80,16 @@ gulp.task('styles', [], function(cb) {
     .pipe(gulp.dest('./dist/styles/'));
 });
 
-gulp.task('default', ['styles', 'scripts'])
+gulp.task('default', function() {
+  livereload.listen();
+
+  gulp.watch([
+    'examples/*.html',
+    '!src/scripts/bower_components/**',
+    'dist/styles/*.css',
+    'dist/scripts/*.js'
+  ], livereload.changed);
+
+  gulp.watch(['src/styles/**'], ['styles']);
+  gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts']);
+});
