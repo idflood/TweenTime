@@ -25,9 +25,6 @@ gulp.task('scripts:tweentime', [], function(cb) {
       "startFile": "src/misc/wrap.start.js",
       "endFile": "src/misc/wrap.end.js"
     },
-    pragmasOnSave: {
-      excludeCoffeeScript: true
-    }
   }, function (buildResponse) {
     cb();
   }, function (err){
@@ -57,9 +54,6 @@ gulp.task('scripts', ['scripts:tweentime'], function(cb) {
       "startFile": "src/misc/wrap.start--editor.js",
       "endFile": "src/misc/wrap.end--editor.js"
     },
-    pragmasOnSave: {
-      excludeCoffeeScript: true
-    }
   }, function (buildResponse) {
     cb();
   }, function (err){
