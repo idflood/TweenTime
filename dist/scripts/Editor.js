@@ -1896,15 +1896,15 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         propertiesWithError = function(d) {
           return d.errors != null;
         };
-        errorsGrp = subGrp.append('svg').attr('class', 'property__errors').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight);
+        errorsGrp = subGrp.insert('svg', ':first-child').attr('class', 'property__errors').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight);
         errorsValue = function(d, i, j) {
           return d.errors;
         };
         errorTime = function(d, k) {
           return d.time;
         };
-        errors = properties.filter(propertiesWithError).selectAll('.property__error').data(errorsValue, errorTime);
-        errors.enter().append('rect').attr('class', 'property__error').attr('width', 4).attr('height', self.timeline.lineHeight).attr('y', '1');
+        errors = properties.filter(propertiesWithError).select('.property__errors').selectAll('.property__error').data(errorsValue, errorTime);
+        errors.enter().append('rect').attr('class', 'property__error').attr('width', 4).attr('height', self.timeline.lineHeight - 1).attr('y', '1');
         properties.selectAll('.property__error').attr('x', function(d) {
           var dx;
           dx = self.timeline.x(d.time * 1000);
@@ -1967,9 +1967,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         height = 270 - margin.top - margin.bottom - 40;
         this.lineHeight = 20;
         this.label_position_x = -170;
-        console.log(d3);
-        console.log(d3.time);
-        console.log(d3.time.scale);
         this.x = d3.time.scale().range([0, width]);
         this.x.domain(this.initialDomain);
         this.xAxis = d3.svg.axis().scale(this.x).orient("top").tickSize(-height, 0).tickFormat(Utils.formatMinutes);
