@@ -4,7 +4,6 @@ define (require) ->
       @timer = @tweenTime.timer
 
       @initExport()
-      @initAdd()
       @initToggle()
 
     initToggle: () ->
@@ -26,40 +25,6 @@ define (require) ->
         $('body').toggleClass('properties-is-closed', propertiesClosed)
 
         window.dispatchEvent(new Event('resize'))
-
-    initAdd: () ->
-      if !window.ElementFactory then return
-      $container = @$timeline.find('.submenu--add')
-      elements = window.ElementFactory.elements
-      self = this
-
-      for element_name, element of elements
-        # body...
-        $link = $('<a href="#" data-key="' + element_name + '">' + element_name + '</a>')
-        $container.append($link)
-
-      $container.find('a').click (e) ->
-        e.preventDefault()
-        element_name = $(this).data('key')
-        if ElementFactory.elements[element_name]
-          all_data = self.tweenTime.data
-          next_id = all_data.length + 1
-          id = "item" + next_id
-          label = element_name + " " + next_id
-          current_time = self.tweenTime.timer.time[0] / 1000
-          data =
-            isDirty: true
-            id: id
-            label: label
-            type: element_name
-            start: current_time
-            end: current_time + 2
-            collapsed: false
-            properties: []
-            #options: window.ElementFactory.elements[element_name].default_attributes()
-            #properties: window.ElementFactory.elements[element_name].default_properties(current_time)
-          self.tweenTime.data.push(data)
-          self.timeline.isDirty = true
 
     initExport: () ->
       self = this

@@ -23,7 +23,7 @@ define (require) ->
   EditorControls = require 'cs!editor/EditorControls'
 
   class Editor
-    constructor: (@tweenTime) ->
+    constructor: (@tweenTime, options = {}) ->
       @timer = @tweenTime.timer
 
       @$timeline = $(tpl_timeline)
@@ -32,6 +32,7 @@ define (require) ->
 
       @timeline = new Timeline(@tweenTime)
       @menu = new EditorMenu(@tweenTime, @$timeline)
+      if options.onMenuCreated? then options.onMenuCreated(@$timeline.find('.editor__menu'))
 
       @propertiesEditor = new PropertiesEditor(@timeline, @timer)
       @propertiesEditor.keyAdded.add(@onKeyAdded)
