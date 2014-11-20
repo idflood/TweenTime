@@ -74,9 +74,11 @@ gulp.task('styles', [], function(cb) {
     .pipe(gulp.dest('./dist/styles/'));
 });
 
-gulp.task('default', function() {
+gulp.task('livereload', function() {
   livereload.listen();
+});
 
+gulp.task('default', ['livereload', 'styles', 'scripts'], function() {
   gulp.watch([
     'examples/*.html',
     '!src/scripts/bower_components/**',
