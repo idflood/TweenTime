@@ -28,27 +28,17 @@ define (require) ->
 
     initExport: () ->
       self = this
-      copyAndClean = (source) ->
-        target = []
-        for obj in source
+      json_replacer = (key, val) ->
+        if key == 'timeline' then return undefined
+        if key == 'tween' then return undefined
+        if key == 'updating' then return undefined
+        if key == 'isDirty' then return undefined
+        # Disable all private properies from TweenMax/TimelineMax
+        if key.indexOf('_') == 0 then return undefined
+        return val
 
-          new_data =
-            id: obj.id,
-            type: obj.type,
-            label: obj.label,
-            start: obj.start,
-            end: obj.end,
-            collapsed: obj.collapsed,
-            properties: obj.properties
-
-          target.push(new_data)
-
-        return target
       @$timeline.find('[data-action="export"]').click (e) ->
         e.preventDefault()
-        # @todo: use second parameter of JSON.stringify to export clean json.
-        export_data = copyAndClean(self.tweenTime.data)
-        # Alternative to heave nice looking json string.
-        data = JSON.stringify(export_data, null, 2)
-
+        # Alternative to have nice looking json string.
+        data = JSON.stringify(self.tweenTime.data, json_replacer, 2)
         console.log data

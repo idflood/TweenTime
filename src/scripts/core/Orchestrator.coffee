@@ -83,7 +83,6 @@ define (require) ->
                 easing = @getEasing(next_key)
                 val.ease = easing
                 tween = TweenMax.to(item.values, tween_duration, val)
-                next_key.tween = tween
                 propertyTimeline.add(tween, key.time)
 
           # force main timeline to refresh
