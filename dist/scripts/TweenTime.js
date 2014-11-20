@@ -999,6 +999,7 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
 
       Orchestrator.prototype.update = function(timestamp) {
         var easing, first_key, has_dirty_items, item, key, key_index, next_key, propName, property, propertyTimeline, seconds, tween, tween_duration, tween_time, val, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
+        this.data.updating = false;
         seconds = timestamp / 1000;
         has_dirty_items = false;
         _ref = this.data;
@@ -1024,12 +1025,18 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
             has_dirty_items = true;
           }
           if (item.timeline && item.isDirty && item.properties) {
+            this.data.updating = true;
             item.isDirty = false;
-            item.timeline.clear();
             _ref2 = item.properties;
             for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
               property = _ref2[_j];
-              propertyTimeline = new TimelineMax();
+              if (property.timeline) {
+                property.timeline.clear();
+              } else {
+                property.timeline = new TimelineMax();
+                item.timeline.add(property.timeline, 0);
+              }
+              propertyTimeline = property.timeline;
               propName = property.name;
               first_key = property.keys.length > 0 ? property.keys[0] : false;
               tween_time = 0;
@@ -1041,7 +1048,7 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
               val[propName] = first_key ? first_key.val : property.val;
               easing = this.getEasing();
               val.ease = easing;
-              tween = TweenLite.to(item.values, tween_duration, val);
+              tween = TweenMax.to(item.values, tween_duration, val);
               propertyTimeline.add(tween, tween_time);
               _ref3 = property.keys;
               for (key_index = _k = 0, _len2 = _ref3.length; _k < _len2; key_index = ++_k) {
@@ -1053,11 +1060,10 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
                   val[propName] = next_key.val;
                   easing = this.getEasing(next_key);
                   val.ease = easing;
-                  tween = TweenLite.to(item.values, tween_duration, val);
+                  tween = TweenMax.to(item.values, tween_duration, val);
                   propertyTimeline.add(tween, key.time);
                 }
               }
-              item.timeline.add(propertyTimeline, 0);
             }
             seconds = seconds - 0.0000001;
           }

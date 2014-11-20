@@ -2434,31 +2434,30 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       };
 
       EditorMenu.prototype.initExport = function() {
-        var copyAndClean, self;
+        var json_replacer, self;
         self = this;
-        copyAndClean = function(source) {
-          var new_data, obj, target, _i, _len;
-          target = [];
-          for (_i = 0, _len = source.length; _i < _len; _i++) {
-            obj = source[_i];
-            new_data = {
-              id: obj.id,
-              type: obj.type,
-              label: obj.label,
-              start: obj.start,
-              end: obj.end,
-              collapsed: obj.collapsed,
-              properties: obj.properties
-            };
-            target.push(new_data);
+        json_replacer = function(key, val) {
+          if (key === 'timeline') {
+            return void 0;
           }
-          return target;
+          if (key === 'tween') {
+            return void 0;
+          }
+          if (key === 'updating') {
+            return void 0;
+          }
+          if (key === 'isDirty') {
+            return void 0;
+          }
+          if (key.indexOf('_') === 0) {
+            return void 0;
+          }
+          return val;
         };
         return this.$timeline.find('[data-action="export"]').click(function(e) {
-          var data, export_data;
+          var data;
           e.preventDefault();
-          export_data = copyAndClean(self.tweenTime.data);
-          data = JSON.stringify(export_data, null, 2);
+          data = JSON.stringify(self.tweenTime.data, json_replacer, 2);
           return console.log(data);
         });
       };
