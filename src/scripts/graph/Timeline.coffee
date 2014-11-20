@@ -32,9 +32,7 @@ define (require) ->
       height = 270 - margin.top - margin.bottom - 40
       @lineHeight = 20
       @label_position_x = -170
-      console.log d3
-      console.log d3.time
-      console.log d3.time.scale
+
       @x = d3.time.scale().range([0, width])
       @x.domain(@initialDomain)
 
