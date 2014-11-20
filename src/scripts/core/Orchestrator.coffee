@@ -21,6 +21,7 @@ define (require) ->
       return Quad.easeOut
 
     update: (timestamp) =>
+      @data.updating = false
       seconds = timestamp / 1000
       has_dirty_items = false
 
@@ -45,11 +46,18 @@ define (require) ->
         if item.isDirty then has_dirty_items = true
 
         if item.timeline and item.isDirty and item.properties
+          @data.updating = true
           item.isDirty = false
-          item.timeline.clear()
+          #item.timeline.clear()
 
           for property in item.properties
-            propertyTimeline = new TimelineMax()
+            if property.timeline
+              property.timeline.clear()
+            else
+              property.timeline = new TimelineMax()
+              item.timeline.add(property.timeline, 0)
+
+            propertyTimeline = property.timeline
             propName = property.name
             # Add a inital key, even if there is no animation to set the value from time 0.
             first_key = if property.keys.length > 0 then property.keys[0] else false
@@ -62,7 +70,7 @@ define (require) ->
             val[propName] = if first_key then first_key.val else property.val
             easing = @getEasing()
             val.ease = easing
-            tween = TweenLite.to(item.values, tween_duration, val)
+            tween = TweenMax.to(item.values, tween_duration, val)
             propertyTimeline.add(tween, tween_time)
 
             for key, key_index in property.keys
@@ -74,10 +82,9 @@ define (require) ->
                 val[propName] = next_key.val
                 easing = @getEasing(next_key)
                 val.ease = easing
-                tween = TweenLite.to(item.values, tween_duration, val)
+                tween = TweenMax.to(item.values, tween_duration, val)
+                next_key.tween = tween
                 propertyTimeline.add(tween, key.time)
-
-            item.timeline.add(propertyTimeline, 0)
 
           # force main timeline to refresh
           seconds = seconds - 0.0000001

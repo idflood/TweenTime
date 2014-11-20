@@ -110,12 +110,15 @@
 
       function animate() {
         var box_values = data[0].values;
-        $('.box').css({
-          'opacity': box_values.opacity,
-          'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
-        });
+        if (!data.updating) {
+          $('.box').css({
+            'opacity': box_values.opacity,
+            'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
+          });
+        }
         window.requestAnimationFrame(animate);
       }
+
       animate();
     </script>
   </body>
