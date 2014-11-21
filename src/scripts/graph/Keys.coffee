@@ -47,13 +47,13 @@ define (require) ->
       keys = properties.select('.keys--wrapper').selectAll('.key').data(propValue, propKey)
 
       selectKey = (d) ->
-        propertyObject = this.parentNode.parentNode
+        propertyObject = this.parentNode
         lineObject = propertyObject.parentNode.parentNode
         lineData = d3.select(lineObject).datum()
         propertyData = d3.select(propertyObject).datum()
 
-        d3.selectAll('.line--key--selected').classed('line--key--selected', false)
-        d3.select(this).selectAll('rect').classed('line--key--selected', true)
+        d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
+        d3.select(this).selectAll('rect').classed('key__shape--selected', true)
         self.timeline.onSelect.dispatch(lineData, d, propertyData, this)
 
       key_size = 6
@@ -66,7 +66,7 @@ define (require) ->
         .attr('x', -3)
         .attr('width', key_size)
         .attr('height', key_size)
-        .attr('class', 'line--key')
+        .attr('class', 'key__shape')
         .attr('transform', 'rotate(45)')
 
       keys.attr 'transform', (d) ->
