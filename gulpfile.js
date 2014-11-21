@@ -78,7 +78,7 @@ gulp.task('livereload', function() {
   livereload.listen();
 });
 
-gulp.task('default', ['livereload', 'styles', 'scripts'], function() {
+gulp.task('watch', function() {
   gulp.watch([
     'examples/*.html',
     '!src/scripts/bower_components/**',
@@ -89,3 +89,5 @@ gulp.task('default', ['livereload', 'styles', 'scripts'], function() {
   gulp.watch(['src/styles/**'], ['styles']);
   gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts']);
 });
+
+gulp.task('default', ['livereload', 'styles', 'scripts', 'watch']);
