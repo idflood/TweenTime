@@ -40,3 +40,6 @@ define (require) ->
       console.log "on change: " + ease
       console.log this
       @object.isDirty = true
+
+    update: () =>
+      return "todo..."

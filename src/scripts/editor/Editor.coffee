@@ -54,6 +54,7 @@ define (require) ->
 
       @timeline.render(time, time_changed)
       @controls.render(time, time_changed)
+      @propertiesEditor.render(time, time_changed)
 
       @lastTime = @timer.time[0]
       window.requestAnimationFrame(@render)

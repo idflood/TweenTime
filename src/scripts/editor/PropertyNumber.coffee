@@ -28,15 +28,16 @@ define (require) ->
 
     getCurrentVal: () =>
       val = @property.val
+      prop_name = if @instance_property.name then @instance_property.name else @property.name
 
       # if we selected a key simply return it's value
       if @key_val
         return @key_val.val
 
-      if @values[@property.name]?
-        # If defined in the instance values use that instead (keys)
-        val = @values[@property.name]
-      else if @instance_property and @instance_property.val?
+      if @object.values? && @object.values[prop_name]
+        return @object.values[prop_name]
+
+      if @instance_property and @instance_property.val?
         # Use the instance property if defined (value changed but no key)
         val = @instance_property.val
       return val
@@ -115,4 +116,14 @@ define (require) ->
       draggable = new DraggableNumber($input.get(0), {
         changeCallback: onInputChange
       })
+      $input.data('draggable', draggable)
       $input.change(onInputChange)
+
+    update: () =>
+      val = @getCurrentVal()
+      $input = @$el.find('input')
+      draggable = $input.data('draggable')
+      if draggable
+        draggable.set(val.toFixed(3))
+      else
+        $input.val(val.toFixed(3))

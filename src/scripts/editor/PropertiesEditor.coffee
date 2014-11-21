@@ -13,6 +13,7 @@ define (require) ->
       @$container = @$el.find('.properties-editor__main')
       # todo: rename keyAdded to updated
       @keyAdded = new Signals.Signal()
+      @selectedProps = []
 
       $('body').append(@$el)
 
@@ -23,6 +24,7 @@ define (require) ->
 
     # todo: rename data to key
     onSelect: (selectedObject, data = false, propertyData = false, d3Object = false) =>
+      @selectedProps = []
       @$container.empty()
       # data and propertyData are defined on key select.
       property_name = false
@@ -42,6 +44,7 @@ define (require) ->
             instance_prop = _.find(selectedObject.properties, (d) -> d.name == key)
             prop = new PropertyNumber(prop, instance_prop, selectedObject, @timer, data)
             prop.keyAdded.add(@onKeyAdded)
+            @selectedProps.push(prop)
             @$container.append(prop.$el)
       else
         # Basic data, loop through properties.
@@ -49,11 +52,13 @@ define (require) ->
           if !property_name || instance_prop.name == property_name
             prop = new PropertyNumber({label: instance_prop.name}, instance_prop, selectedObject, @timer, data)
             prop.keyAdded.add(@onKeyAdded)
+            @selectedProps.push(prop)
             @$container.append(prop.$el)
 
       if property_name
         # Add tween select if we are editing a key.
         tween = new PropertyTween({label: instance_prop.name}, instance_prop, selectedObject, @timer, data)
+        @selectedProps.push(tween)
         @$container.append(tween.$el)
 
         # Add a remove key button
@@ -70,3 +75,8 @@ define (require) ->
             selectedObject.isDirty = true
             @keyAdded.dispatch()
             #if d3Object then $(d3Object).remove()
+
+    render: (time, time_changed) =>
+      if !time_changed then return
+      for prop in @selectedProps
+        prop.update()
