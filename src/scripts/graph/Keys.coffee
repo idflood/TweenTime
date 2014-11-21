@@ -44,7 +44,7 @@ define (require) ->
 
       propValue = (d,i,j) -> d.keys
       propKey = (d, k) -> d.time
-      keys = properties.select('.keys--wrapper').selectAll('.key').data(propValue, propKey)
+      keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey)
 
       selectKey = (d) ->
         propertyObject = this.parentNode

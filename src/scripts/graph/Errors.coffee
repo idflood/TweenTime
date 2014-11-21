@@ -12,19 +12,19 @@ define (require) ->
       propertiesWithError = (d) -> d.errors?
       # use insert with :first-child to prepend.
       errorsGrp = subGrp.insert('svg', ':first-child')
-        .attr('class','property__errors')
+        .attr('class','line-item__errors')
         .attr('width', window.innerWidth - self.timeline.label_position_x)
         .attr('height', self.timeline.lineHeight)
       errorsValue = (d,i,j) -> d.errors
       errorTime = (d, k) -> d.time
-      errors = properties.filter(propertiesWithError).select('.property__errors').selectAll('.property__error').data(errorsValue, errorTime)
+      errors = properties.filter(propertiesWithError).select('.line-item__errors').selectAll('.error').data(errorsValue, errorTime)
       errors.enter().append('rect')
-        .attr('class', 'property__error')
+        .attr('class', 'error')
         .attr('width', 4)
         .attr('height', self.timeline.lineHeight - 1)
         .attr('y', '1')
 
-      properties.selectAll('.property__error')
+      properties.selectAll('.error')
         .attr 'x', (d) ->
           dx = self.timeline.x(d.time * 1000)
           return dx

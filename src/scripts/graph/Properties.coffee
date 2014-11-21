@@ -15,13 +15,13 @@ define (require) ->
       propKey = (d) -> d.name
       visibleProperties = (d) -> d.keys.length
 
-      properties = bar.selectAll('.line--sub').data(propVal, propKey)
+      properties = bar.selectAll('.line-item').data(propVal, propKey)
 
       dy = 0
       subGrp = properties.enter()
         .append('g')
         .filter(visibleProperties)
-        .attr("class", 'line--sub')
+        .attr("class", 'line-item')
 
       # Save subGrp in a variable for use in Errors.coffee
       self.subGrp = subGrp
@@ -59,7 +59,7 @@ define (require) ->
 
       # Mask
       subGrp.append('svg')
-        .attr('class','keys--wrapper timeline__right-mask')
+        .attr('class','line-item__keys timeline__right-mask')
         .attr('width', window.innerWidth - self.timeline.label_position_x)
         .attr('height', self.timeline.lineHeight)
         .attr('fill', '#f00')
@@ -78,7 +78,7 @@ define (require) ->
         .attr("y1", self.timeline.lineHeight)
         .attr("y2", self.timeline.lineHeight)
 
-      bar.selectAll('.line--sub').attr('display', (d) ->
+      bar.selectAll('.line-item').attr('display', (d) ->
           lineObject = this.parentNode
           lineValue = d3.select(lineObject).datum()
           return if !lineValue.collapsed then "block" else "none"
