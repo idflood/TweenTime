@@ -15,7 +15,7 @@ define (require) ->
 
       dragmove = (d) ->
         sourceEvent = d3.event.sourceEvent
-        propertyObject = this.parentNode.parentNode
+        propertyObject = this.parentNode
         lineObject = propertyObject.parentNode.parentNode
         propertyData = d3.select(propertyObject).datum()
         lineData = d3.select(lineObject).datum()
@@ -60,8 +60,6 @@ define (require) ->
       keys.enter()
         .append('g')
         .attr('class', 'key')
-        .append('g')
-        .attr('class', 'key__item')
         .call(drag)
         .on('click', selectKey)
         .append('rect')
@@ -71,10 +69,9 @@ define (require) ->
         .attr('class', 'line--key')
         .attr('transform', 'rotate(45)')
 
-      keys.selectAll('.key__item')
-        .attr 'transform', (d) ->
-          dx = self.timeline.x(d.time * 1000) + 3
-          dy = 9
-          return "translate(" + dx + "," + dy + ")"
+      keys.attr 'transform', (d) ->
+        dx = self.timeline.x(d.time * 1000) + 3
+        dy = 9
+        return "translate(" + dx + "," + dy + ")"
 
       keys.exit().remove()
