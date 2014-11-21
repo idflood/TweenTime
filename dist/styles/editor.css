@@ -1,7 +1,7 @@
 .graph-mask {
   fill: #2c2e2f; }
 
-.editor__menu {
+.timeline__menu {
   position: relative;
   border-top: 1px solid #181818;
   position: absolute;
@@ -11,7 +11,7 @@
   height: 25px;
   padding: 0 20px;
   background: #2c2e2f; }
-  .editor__menu:before {
+  .timeline__menu:before {
     content: "";
     position: absolute;
     top: 0;
@@ -68,16 +68,33 @@ a.menu-item--toggle {
   position: absolute;
   top: 10px;
   left: 20px; }
-  .controls .control {
-    display: inline-block;
-    margin-right: 10px;
-    font-size: 20px;
-    color: #ddd;
-    text-decoration: none; }
-    .controls .control:hover {
-      color: #fff; }
 
-.editor__time-main {
+.control {
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 18px;
+  color: #ddd;
+  text-decoration: none; }
+  .control:hover {
+    color: #fff; }
+
+.control--time {
+  position: relative;
+  top: -2px;
+  padding: 3px 10px;
+  width: 50px;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-align: right;
+  transition: background 0.2s; }
+  .control--time:focus {
+    outline: 0;
+    background: #474b4c; }
+
+.timeline__main {
   height: 220px;
   position: absolute;
   left: 0;
@@ -91,13 +108,11 @@ a.menu-item--toggle {
   fill-opacity: 0.05; }
 
 .line__toggle {
+  fill: #fff;
   font-size: 14px;
   cursor: pointer; }
 
-.line--label {
-  cursor: pointer; }
-
-.editor__time {
+.timeline {
   position: relative;
   border-top: 1px solid #181818;
   position: fixed;
@@ -107,7 +122,7 @@ a.menu-item--toggle {
   height: 270px;
   background: #2c2e2f;
   z-index: 9000; }
-  .editor__time:before {
+  .timeline:before {
     content: "";
     position: absolute;
     top: 0;
@@ -115,63 +130,39 @@ a.menu-item--toggle {
     right: 0;
     height: 1px;
     background: #484a4b; }
-  .timeline-is-closed .editor__time {
+  .timeline-is-closed .timeline {
     bottom: -200px; }
-  .editor__time text {
-    fill: #fff; }
-  .editor__time rect, .editor__time path, .editor__time line {
+  .timeline rect, .timeline path, .timeline line {
     shape-rendering: crispEdges; }
-  .editor__time .line--separator {
-    stroke: #515556; }
-  .editor__time .line--separator-secondary {
-    stroke: #3d4041; }
-  .editor__time .line--label {
-    font-size: 11px; }
-  .editor__time .line--label-small {
-    font-size: 10px;
-    fill: #919191; }
-  .editor__time .line--key {
-    fill: #919191;
-    cursor: move; }
-    .editor__time .line--key--selected {
-      fill: #fff; }
-  .editor__time .axis path, .editor__time .axis line {
+  .timeline .axis path, .timeline .axis line {
     fill: none;
     stroke: #fff; }
-  .editor__time .x.axis path {
+  .timeline .x.axis path {
     display: none; }
-  .editor__time .x.axis line {
+  .timeline .x.axis line {
     stroke: #515556; }
-  .editor__time .x.axis text {
+  .timeline .x.axis text {
     font-size: 10px;
     fill: #919191;
     font-weight: bold;
     -webkit-font-smoothing: antialiased; }
-  .editor__time .x.grid text {
+  .timeline .x.grid text {
     display: none; }
-  .editor__time .x.grid line {
+  .timeline .x.grid line {
     stroke: #3d4041; }
-  .editor__time .line {
+  .timeline .line {
     fill: none;
     stroke: steelblue;
     stroke-width: 1.5px; }
-  .editor__time .bar {
+  .timeline .bar {
     fill: rgba(92, 98, 99, 0.5);
     stroke: rgba(92, 98, 99, 0.9);
     cursor: move; }
-  .editor__time .bar-anchor {
+  .timeline .bar-anchor {
     fill-opacity: 0;
     cursor: ew-resize; }
-  .editor__time .click-handler {
+  .timeline .click-handler {
     fill-opacity: 0; }
-  .editor__time .time-indicator__line {
-    fill: #82898b; }
-  .editor__time .time-indicator__handle {
-    fill: #fff;
-    stroke: #565a5c; }
-
-.property__error {
-  fill: #CF3938; }
 
 .properties-editor {
   position: fixed;
@@ -314,11 +305,39 @@ a.menu-item--toggle-side {
   .actions__item:hover {
     background: #b32b2b; }
 
+.time-indicator__line {
+  fill: #82898b; }
+.time-indicator__handle {
+  fill: #fff;
+  stroke: #565a5c; }
+
+.line-label {
+  fill: #fff;
+  font-size: 11px;
+  cursor: pointer; }
+  .line-label--small {
+    fill: #919191;
+    font-size: 10px; }
+
+.line-separator {
+  stroke: #515556; }
+  .line-separator--secondary {
+    stroke: #3d4041; }
+
+.key__shape {
+  fill: #919191;
+  cursor: move; }
+  .key__shape--selected {
+    fill: #fff; }
+
+.error {
+  fill: #CF3938; }
+
 html, body {
   margin: 0;
   padding: 0; }
 
-.editor__time, .properties-editor {
+.timeline, .properties-editor {
   font-family: 'Source Sans Pro', Helvetica, sans-serif; }
 
 

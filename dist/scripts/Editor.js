@@ -832,7 +832,7 @@ define('text',['module'], function (module) {
 });
 
 
-define('text!templates/timeline.tpl.html',[],function () { return '<div class="editor__time">\n  <nav class="editor__menu">\n    <a href="#" class="menu-item" data-action="export">Export</a>\n    <a href="#" class="menu-item menu-item--toggle" data-action="toggle"><i class="icon-toggle"></i></a>\n  </nav>\n  <div class="editor__time-controls controls">\n    <a href="#" class="control control--first icon-first"></a>\n    <a href="#" class="control control--play-pause icon-play"></a>\n    <a href="#" class="control control--last icon-last"></a>\n  </div>\n  <div class="editor__time-header">\n\n  </div>\n  <div class="editor__time-main">\n\n  </div>\n</div>\n';});
+define('text!templates/timeline.tpl.html',[],function () { return '<div class="timeline">\n  <nav class="timeline__menu">\n    <a href="#" class="menu-item" data-action="export">Export</a>\n    <a href="#" class="menu-item menu-item--toggle" data-action="toggle"><i class="icon-toggle"></i></a>\n  </nav>\n  <div class="timeline__controls controls">\n    <a href="#" class="control control--first icon-first"></a>\n    <a href="#" class="control control--play-pause icon-play"></a>\n    <a href="#" class="control control--last icon-last"></a>\n    <input type="text" class="control control--time" />\n  </div>\n  <div class="timeline__header">\n\n  </div>\n  <div class="timeline__main">\n\n  </div>\n</div>\n';});
 
 /*jslint onevar:true, undef:true, newcap:true, regexp:true, bitwise:true, maxerr:50, indent:4, white:false, nomen:false, plusplus:false */
 /*global define:false, require:false, exports:false, module:false, signals:false */
@@ -1304,36 +1304,47 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         return output;
       };
 
-      Utils.getClosestTime = function(data, time, objectId, property_name, tolerance) {
-        var item, key, prop, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+      Utils.getClosestTime = function(data, time, objectId, property_name, timer, tolerance) {
+        var item, key, prop, timer_time, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
         if (objectId == null) {
           objectId = false;
         }
         if (property_name == null) {
           property_name = false;
         }
+        if (timer == null) {
+          timer = false;
+        }
         if (tolerance == null) {
           tolerance = 0.1;
         }
-        for (_i = 0, _len = data.length; _i < _len; _i++) {
-          item = data[_i];
-          if (item.id !== objectId || property_name) {
-            if (Math.abs(item.start - time) <= tolerance) {
-              return item.start;
-            }
-            if (Math.abs(item.end - time) <= tolerance) {
-              return item.end;
-            }
+        if (timer) {
+          timer_time = timer.getCurrentTime() / 1000;
+          if (Math.abs(timer_time - time) <= tolerance) {
+            return timer_time;
           }
-          _ref = item.properties;
-          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-            prop = _ref[_j];
-            if (prop.keys && (item.id !== objectId || prop.name !== property_name)) {
-              _ref1 = prop.keys;
-              for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
-                key = _ref1[_k];
-                if (Math.abs(key.time - time) <= tolerance) {
-                  return key.time;
+        }
+        if (objectId || property_name) {
+          for (_i = 0, _len = data.length; _i < _len; _i++) {
+            item = data[_i];
+            if (item.id !== objectId || property_name) {
+              if (Math.abs(item.start - time) <= tolerance) {
+                return item.start;
+              }
+              if (Math.abs(item.end - time) <= tolerance) {
+                return item.end;
+              }
+            }
+            _ref = item.properties;
+            for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+              prop = _ref[_j];
+              if (prop.keys && (item.id !== objectId || prop.name !== property_name)) {
+                _ref1 = prop.keys;
+                for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+                  key = _ref1[_k];
+                  if (Math.abs(key.time - time) <= tolerance) {
+                    return key.time;
+                  }
                 }
               }
             }
@@ -1375,9 +1386,10 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
     Signals = require('Signal');
     Utils = require('cs!core/Utils');
     return Header = (function() {
-      function Header(timer, initialDomain, width) {
+      function Header(timer, initialDomain, tweenTime, width) {
         this.timer = timer;
         this.initialDomain = initialDomain;
+        this.tweenTime = tweenTime;
         this.resize = __bind(this.resize, this);
         this.createTimeHandle = __bind(this.createTimeHandle, this);
         this.render = __bind(this.render, this);
@@ -1396,7 +1408,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         this.xDisplayed = d3.time.scale().range([0, width]);
         this.xDisplayed.domain(this.initialDomain);
         this.xAxis = d3.svg.axis().scale(this.x).orient("top").tickSize(-5, 0).tickFormat(Utils.formatMinutes);
-        this.svg = d3.select('.editor__time-header').append("svg").attr("width", width + this.margin.left + this.margin.right).attr("height", 56);
+        this.svg = d3.select('.timeline__header').append("svg").attr("width", width + this.margin.left + this.margin.right).attr("height", 56);
         this.svgContainer = this.svg.append("g").attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
         this.createBrushHandle();
         this.createTimeHandle();
@@ -1428,14 +1440,26 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         var dragTime, dragTimeMove, self, timeClicker, timeGrp, timeSelection;
         self = this;
         dragTimeMove = function(d) {
-          var dx, event, event_x;
-          d3.event.sourceEvent.stopPropagation();
+          var dx, event, event_x, time, timeMatch, tweenTime;
           event = d3.event.sourceEvent;
+          event.stopPropagation();
+          tweenTime = self.tweenTime;
           event_x = event.x != null ? event.x : event.clientX;
           dx = self.xDisplayed.invert(event_x - self.margin.left);
           dx = dx.getTime();
           dx = Math.max(0, dx);
-          return self.timer.seek([dx]);
+          timeMatch = false;
+          if (event.shiftKey) {
+            time = dx / 1000;
+            timeMatch = Utils.getClosestTime(tweenTime.data, time, '---non-existant');
+            if (timeMatch !== false) {
+              timeMatch = timeMatch * 1000;
+            }
+          }
+          if (timeMatch === false) {
+            timeMatch = dx;
+          }
+          return self.timer.seek([timeMatch]);
         };
         dragTime = d3.behavior.drag().origin(function(d) {
           return d;
@@ -1578,7 +1602,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
           dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
           timeMatch = false;
           if (sourceEvent.shiftKey) {
-            timeMatch = Utils.getClosestTime(tweenTime.data, dx, d.id);
+            timeMatch = Utils.getClosestTime(tweenTime.data, dx, d.id, false, tweenTime.timer);
           }
           if (!timeMatch) {
             diff = dx - d.start;
@@ -1595,7 +1619,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
           dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
           timeMatch = false;
           if (sourceEvent.shiftKey) {
-            timeMatch = Utils.getClosestTime(tweenTime.data, dx);
+            timeMatch = Utils.getClosestTime(tweenTime.data, dx, false, false, tweenTime.timer);
           }
           if (!timeMatch) {
             diff = dx - d.end;
@@ -1672,7 +1696,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         }).attr("width", function(d) {
           return Math.max(0, (self.timeline.x(d.end) - self.timeline.x(d.start)) * 1000 - bar_border);
         }).call(drag).on("click", selectBar);
-        barEnter.append("text").attr("class", "line--label").attr("x", self.timeline.label_position_x + 10).attr("y", 16).text(function(d) {
+        barEnter.append("text").attr("class", "line-label").attr("x", self.timeline.label_position_x + 10).attr("y", 16).text(function(d) {
           return d.label;
         }).on('click', selectBar);
         self = this;
@@ -1687,7 +1711,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
             return "▾";
           }
         });
-        barEnter.append("line").attr("class", 'line--separator').attr("x1", -200).attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100)).attr("y1", self.timeline.lineHeight).attr("y2", self.timeline.lineHeight);
+        barEnter.append("line").attr("class", 'line-separator').attr("x1", -200).attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100)).attr("y1", self.timeline.lineHeight).attr("y2", self.timeline.lineHeight);
         bar.exit().remove();
         return bar;
       };
@@ -1730,9 +1754,9 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         visibleProperties = function(d) {
           return d.keys.length;
         };
-        properties = bar.selectAll('.line--sub').data(propVal, propKey);
+        properties = bar.selectAll('.line-item').data(propVal, propKey);
         dy = 0;
-        subGrp = properties.enter().append('g').filter(visibleProperties).attr("class", 'line--sub');
+        subGrp = properties.enter().append('g').filter(visibleProperties).attr("class", 'line-item');
         self.subGrp = subGrp;
         properties.filter(visibleProperties).attr("transform", function(d, i) {
           var sub_height;
@@ -1765,12 +1789,12 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
           lineValue.isDirty = true;
           return self.onKeyAdded.dispatch();
         });
-        subGrp.append('svg').attr('class', 'keys--wrapper timeline__right-mask').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight).attr('fill', '#f00');
-        subGrp.append('text').attr("class", "line--label line--label-small").attr("x", self.timeline.label_position_x + 30).attr("y", 15).text(function(d) {
+        subGrp.append('svg').attr('class', 'line-item__keys timeline__right-mask').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight).attr('fill', '#f00');
+        subGrp.append('text').attr("class", "line-label line-label--small").attr("x", self.timeline.label_position_x + 30).attr("y", 15).text(function(d) {
           return d.name;
         });
-        subGrp.append("line").attr("class", 'line--separator-secondary').attr("x1", -200).attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100)).attr("y1", self.timeline.lineHeight).attr("y2", self.timeline.lineHeight);
-        bar.selectAll('.line--sub').attr('display', function(d) {
+        subGrp.append("line").attr("class", 'line-separator--secondary').attr("x1", -200).attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100)).attr("y1", self.timeline.lineHeight).attr("y2", self.timeline.lineHeight);
+        bar.selectAll('.line-item').attr('display', function(d) {
           var lineObject, lineValue;
           lineObject = this.parentNode;
           lineValue = d3.select(lineObject).datum();
@@ -1816,7 +1840,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         dragmove = function(d) {
           var currentDomainStart, dx, lineData, lineObject, mouse, propertyData, propertyObject, sourceEvent, timeMatch;
           sourceEvent = d3.event.sourceEvent;
-          propertyObject = this.parentNode.parentNode;
+          propertyObject = this.parentNode;
           lineObject = propertyObject.parentNode.parentNode;
           propertyData = d3.select(propertyObject).datum();
           lineData = d3.select(lineObject).datum();
@@ -1828,9 +1852,9 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
           dx = d.time + dx;
           timeMatch = false;
           if (sourceEvent.shiftKey) {
-            timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name);
+            timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name, tweenTime.timer);
           }
-          if (!timeMatch) {
+          if (timeMatch === false) {
             timeMatch = dx;
           }
           d.time = timeMatch;
@@ -1847,20 +1871,20 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         propKey = function(d, k) {
           return d.time;
         };
-        keys = properties.select('.keys--wrapper').selectAll('.key').data(propValue, propKey);
+        keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey);
         selectKey = function(d) {
           var lineData, lineObject, propertyData, propertyObject;
-          propertyObject = this.parentNode.parentNode;
+          propertyObject = this.parentNode;
           lineObject = propertyObject.parentNode.parentNode;
           lineData = d3.select(lineObject).datum();
           propertyData = d3.select(propertyObject).datum();
-          d3.selectAll('.line--key--selected').classed('line--key--selected', false);
-          d3.select(this).selectAll('rect').classed('line--key--selected', true);
+          d3.selectAll('.key__shape--selected').classed('key__shape--selected', false);
+          d3.select(this).selectAll('rect').classed('key__shape--selected', true);
           return self.timeline.onSelect.dispatch(lineData, d, propertyData, this);
         };
         key_size = 6;
-        keys.enter().append('g').attr('class', 'key').append('g').attr('class', 'key__item').call(drag).on('click', selectKey).append('rect').attr('x', -3).attr('width', key_size).attr('height', key_size).attr('class', 'line--key').attr('transform', 'rotate(45)');
-        keys.selectAll('.key__item').attr('transform', function(d) {
+        keys.enter().append('g').attr('class', 'key').call(drag).on('click', selectKey).append('rect').attr('x', -3).attr('width', key_size).attr('height', key_size).attr('class', 'key__shape').attr('transform', 'rotate(45)');
+        keys.attr('transform', function(d) {
           var dx, dy;
           dx = self.timeline.x(d.time * 1000) + 3;
           dy = 9;
@@ -1896,16 +1920,16 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         propertiesWithError = function(d) {
           return d.errors != null;
         };
-        errorsGrp = subGrp.insert('svg', ':first-child').attr('class', 'property__errors').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight);
+        errorsGrp = subGrp.insert('svg', ':first-child').attr('class', 'line-item__errors').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight);
         errorsValue = function(d, i, j) {
           return d.errors;
         };
         errorTime = function(d, k) {
           return d.time;
         };
-        errors = properties.filter(propertiesWithError).select('.property__errors').selectAll('.property__error').data(errorsValue, errorTime);
-        errors.enter().append('rect').attr('class', 'property__error').attr('width', 4).attr('height', self.timeline.lineHeight - 1).attr('y', '1');
-        properties.selectAll('.property__error').attr('x', function(d) {
+        errors = properties.filter(propertiesWithError).select('.line-item__errors').selectAll('.error').data(errorsValue, errorTime);
+        errors.enter().append('rect').attr('class', 'error').attr('width', 4).attr('height', self.timeline.lineHeight - 1).attr('y', '1');
+        properties.selectAll('.error').attr('x', function(d) {
           var dx;
           dx = self.timeline.x(d.time * 1000);
           return dx;
@@ -1954,7 +1978,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         this.onSelect = new Signals.Signal();
         this.timer = this.tweenTime.timer;
         this.currentTime = this.timer.time;
-        this.lastTime = this.currentTime[0];
         this.initialDomain = [0, this.timer.totalDuration - 220 * 1000];
         margin = {
           top: 6,
@@ -1970,11 +1993,11 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         this.x = d3.time.scale().range([0, width]);
         this.x.domain(this.initialDomain);
         this.xAxis = d3.svg.axis().scale(this.x).orient("top").tickSize(-height, 0).tickFormat(Utils.formatMinutes);
-        this.svg = d3.select('.editor__time-main').append("svg").attr("width", width + margin.left + margin.right).attr("height", 600);
+        this.svg = d3.select('.timeline__main').append("svg").attr("width", width + margin.left + margin.right).attr("height", 600);
         this.svgContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         this.svgContainerTime = this.svg.append("g").attr("transform", "translate(" + margin.left + ",0)");
         this.linesContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + (margin.top + 10) + ")");
-        this.header = new Header(this.timer, this.initialDomain, width);
+        this.header = new Header(this.timer, this.initialDomain, this.tweenTime, width);
         this.timeIndicator = new TimeIndicator(this, this.svgContainerTime);
         this.items = new Items(this, this.linesContainer);
         this.items.onUpdate.add((function(_this) {
@@ -2027,9 +2050,9 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
         })(this);
       }
 
-      Timeline.prototype.render = function() {
+      Timeline.prototype.render = function(time, time_changed) {
         var bar, height, properties;
-        if (this.isDirty || this.timer.time[0] !== this.lastTime) {
+        if (this.isDirty || time_changed) {
           this.header.render();
           this.timeIndicator.render();
         }
@@ -2044,10 +2067,8 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="e
           this.xAxisGrid.tickSize(-height, 0);
           this.xGrid.call(this.xAxisGrid);
           this.xAxisElement.call(this.xAxis);
-          this.svg.attr("height", height);
+          return this.svg.attr("height", height);
         }
-        this.lastTime = this.timer.time[0];
-        return window.requestAnimationFrame(this.render);
       };
 
       return Timeline;
@@ -2081,6 +2102,7 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         this.object = object;
         this.timer = timer;
         this.key_val = key_val != null ? key_val : false;
+        this.update = __bind(this.update, this);
         this.render = __bind(this.render, this);
         this.addKey = __bind(this.addKey, this);
         this.getProperty = __bind(this.getProperty, this);
@@ -2104,14 +2126,16 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
       };
 
       PropertyNumber.prototype.getCurrentVal = function() {
-        var val;
+        var prop_name, val;
         val = this.property.val;
+        prop_name = this.instance_property.name ? this.instance_property.name : this.property.name;
         if (this.key_val) {
           return this.key_val.val;
         }
-        if (this.values[this.property.name] != null) {
-          val = this.values[this.property.name];
-        } else if (this.instance_property && (this.instance_property.val != null)) {
+        if ((this.object.values != null) && this.object.values[prop_name]) {
+          return this.object.values[prop_name];
+        }
+        if (this.instance_property && (this.instance_property.val != null)) {
           val = this.instance_property.val;
         }
         return val;
@@ -2199,7 +2223,20 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         draggable = new DraggableNumber($input.get(0), {
           changeCallback: onInputChange
         });
+        $input.data('draggable', draggable);
         return $input.change(onInputChange);
+      };
+
+      PropertyNumber.prototype.update = function() {
+        var $input, draggable, val;
+        val = this.getCurrentVal();
+        $input = this.$el.find('input');
+        draggable = $input.data('draggable');
+        if (draggable) {
+          return draggable.set(val.toFixed(3));
+        } else {
+          return $input.val(val.toFixed(3));
+        }
       };
 
       return PropertyNumber;
@@ -2231,6 +2268,7 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         this.object = object;
         this.timer = timer;
         this.key_val = key_val != null ? key_val : false;
+        this.update = __bind(this.update, this);
         this.onChange = __bind(this.onChange, this);
         this.render = __bind(this.render, this);
         this.render();
@@ -2274,6 +2312,10 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         return this.object.isDirty = true;
       };
 
+      PropertyTween.prototype.update = function() {
+        return "todo...";
+      };
+
       return PropertyTween;
 
     })();
@@ -2301,11 +2343,13 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       function PropertiesEditor(timeline, timer) {
         this.timeline = timeline;
         this.timer = timer;
+        this.render = __bind(this.render, this);
         this.onSelect = __bind(this.onSelect, this);
         this.onKeyAdded = __bind(this.onKeyAdded, this);
         this.$el = $(tpl_propertiesEditor);
         this.$container = this.$el.find('.properties-editor__main');
         this.keyAdded = new Signals.Signal();
+        this.selectedProps = [];
         $('body').append(this.$el);
         this.timeline.onSelect.add(this.onSelect);
       }
@@ -2325,6 +2369,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         if (d3Object == null) {
           d3Object = false;
         }
+        this.selectedProps = [];
         this.$container.empty();
         property_name = false;
         if (propertyData) {
@@ -2343,6 +2388,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
               });
               prop = new PropertyNumber(prop, instance_prop, selectedObject, this.timer, data);
               prop.keyAdded.add(this.onKeyAdded);
+              this.selectedProps.push(prop);
               this.$container.append(prop.$el);
             }
           }
@@ -2355,6 +2401,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
                 label: instance_prop.name
               }, instance_prop, selectedObject, this.timer, data);
               prop.keyAdded.add(this.onKeyAdded);
+              this.selectedProps.push(prop);
               this.$container.append(prop.$el);
             }
           }
@@ -2363,6 +2410,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           tween = new PropertyTween({
             label: instance_prop.name
           }, instance_prop, selectedObject, this.timer, data);
+          this.selectedProps.push(tween);
           this.$container.append(tween.$el);
           $actions = $('<div class="properties-editor__actions actions"></div>');
           $remove_bt = $('<a href="#" class="actions__item">Remove key</a>');
@@ -2381,6 +2429,20 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
             };
           })(this));
         }
+      };
+
+      PropertiesEditor.prototype.render = function(time, time_changed) {
+        var prop, _i, _len, _ref, _results;
+        if (!time_changed) {
+          return;
+        }
+        _ref = this.selectedProps;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          prop = _ref[_i];
+          _results.push(prop.update());
+        }
+        return _results;
       };
 
       return PropertiesEditor;
@@ -2477,8 +2539,10 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       function EditorControls(tweenTime, $timeline) {
         this.tweenTime = tweenTime;
         this.$timeline = $timeline;
+        this.render = __bind(this.render, this);
         this.playPause = __bind(this.playPause, this);
         this.timer = this.tweenTime.timer;
+        this.$time = this.$timeline.find('.control--time');
         this.initControls();
         $(document).keypress((function(_this) {
           return function(e) {
@@ -2515,7 +2579,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           };
         })(this));
         $bt_last = this.$timeline.find('.control--last');
-        return $bt_last.click((function(_this) {
+        $bt_last.click((function(_this) {
           return function(e) {
             var total;
             e.preventDefault();
@@ -2523,6 +2587,21 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
             return _this.timer.seek([total * 1000]);
           };
         })(this));
+        return this.$time.change((function(_this) {
+          return function(e) {
+            var seconds;
+            seconds = parseFloat(_this.$time.val(), 10) * 1000;
+            return _this.timer.seek([seconds]);
+          };
+        })(this));
+      };
+
+      EditorControls.prototype.render = function(time, time_changed) {
+        var seconds;
+        if (time_changed) {
+          seconds = time / 1000;
+          return this.$time.val(seconds.toFixed(3));
+        }
       };
 
       return EditorControls;
@@ -2550,8 +2629,10 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         if (options == null) {
           options = {};
         }
+        this.render = __bind(this.render, this);
         this.onKeyAdded = __bind(this.onKeyAdded, this);
         this.timer = this.tweenTime.timer;
+        this.lastTime = -1;
         this.$timeline = $(tpl_timeline);
         $('body').append(this.$timeline);
         $('body').addClass('has-editor');
@@ -2565,10 +2646,22 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         this.controls = new EditorControls(this.tweenTime, this.$timeline);
         window.editorEnabled = true;
         window.dispatchEvent(new Event('resize'));
+        window.requestAnimationFrame(this.render);
       }
 
       Editor.prototype.onKeyAdded = function() {
         return this.timeline.isDirty = true;
+      };
+
+      Editor.prototype.render = function() {
+        var time, time_changed;
+        time = this.timer.time[0];
+        time_changed = this.lastTime === time ? false : true;
+        this.timeline.render(time, time_changed);
+        this.controls.render(time, time_changed);
+        this.propertiesEditor.render(time, time_changed);
+        this.lastTime = this.timer.time[0];
+        return window.requestAnimationFrame(this.render);
       };
 
       return Editor;
