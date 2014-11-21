@@ -72,7 +72,7 @@ define (require) ->
           d.name
 
       subGrp.append("line")
-        .attr("class", 'line--separator-secondary')
+        .attr("class", 'line-separator--secondary')
         .attr("x1", -200)
         .attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100))
         .attr("y1", self.timeline.lineHeight)

@@ -181,7 +181,7 @@ define (require) ->
         .text((d) -> if d.collapsed then "▸" else"▾")
 
       barEnter.append("line")
-        .attr("class", 'line--separator')
+        .attr("class", 'line-separator')
         .attr("x1", -200)
         .attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100))
         .attr("y1", self.timeline.lineHeight)
