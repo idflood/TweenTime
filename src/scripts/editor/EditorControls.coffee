@@ -3,7 +3,6 @@ define (require) ->
     constructor: (@tweenTime, @$timeline) ->
       @timer = @tweenTime.timer
       @$time = @$timeline.find('.control--time')
-      @last_time = -1
       @initControls()
 
       $(document).keypress (e) =>
@@ -11,8 +10,6 @@ define (require) ->
         if e.charCode == 32
           # Space
           @playPause()
-
-      window.requestAnimationFrame(@render)
 
     playPause: () =>
       @timer.toggle()
@@ -41,10 +38,7 @@ define (require) ->
         seconds = parseFloat(@$time.val(), 10) * 1000
         @timer.seek([seconds])
 
-    render: () =>
-      time = @timer.getCurrentTime() / 1000
-      if time != @last_time
-        @$time.val(time.toFixed(3))
-        @last_time = time
-
-      window.requestAnimationFrame(@render)
+    render: (time, time_changed) =>
+      if time_changed
+        seconds = time / 1000
+        @$time.val(seconds.toFixed(3))

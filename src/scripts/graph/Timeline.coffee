@@ -23,7 +23,6 @@ define (require) ->
       @onSelect = new Signals.Signal()
       @timer = @tweenTime.timer
       @currentTime = @timer.time #used in timeindicator.
-      @lastTime = @currentTime[0]
       @initialDomain = [0, @timer.totalDuration - 220 * 1000]
       margin = {top: 6, right: 20, bottom: 0, left: 190}
       this.margin = margin
@@ -106,8 +105,8 @@ define (require) ->
         @xAxisElement.call(@xAxis)
         @header.resize(INNER_WIDTH)
 
-    render: () =>
-      if @isDirty || @timer.time[0] != @lastTime
+    render: (time, time_changed) =>
+      if @isDirty || time_changed
         @header.render()
         @timeIndicator.render()
 
@@ -126,6 +125,3 @@ define (require) ->
         @xGrid.call(@xAxisGrid)
         @xAxisElement.call(@xAxis)
         @svg.attr("height", height)
-
-      @lastTime = @timer.time[0]
-      window.requestAnimationFrame(@render)
