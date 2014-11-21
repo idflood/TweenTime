@@ -162,7 +162,7 @@ define (require) ->
         .on("click", selectBar)
 
       barEnter.append("text")
-        .attr("class", "line--label")
+        .attr("class", "line-label")
         .attr("x", self.timeline.label_position_x + 10)
         .attr("y", 16)
         .text((d) -> d.label)
