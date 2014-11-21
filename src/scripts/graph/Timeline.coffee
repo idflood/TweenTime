@@ -42,7 +42,7 @@ define (require) ->
         .tickSize(-height, 0)
         .tickFormat(Utils.formatMinutes)
 
-      @svg = d3.select('.editor__time-main').append("svg")
+      @svg = d3.select('.timeline__main').append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", 600)
 
