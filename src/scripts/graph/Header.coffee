@@ -77,7 +77,7 @@ define (require) ->
         if event.shiftKey
           time = dx / 1000
           timeMatch = Utils.getClosestTime(tweenTime.data, time, '---non-existant')
-          timeMatch = timeMatch * 1000
+          if timeMatch != false then timeMatch = timeMatch * 1000
         if timeMatch == false
           timeMatch = dx
         self.timer.seek([timeMatch])
