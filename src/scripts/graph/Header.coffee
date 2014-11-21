@@ -76,11 +76,9 @@ define (require) ->
         timeMatch = false
         if event.shiftKey
           time = dx / 1000
-          console.log time
           timeMatch = Utils.getClosestTime(tweenTime.data, time, '---non-existant')
           timeMatch = timeMatch * 1000
-          console.log "found: " + timeMatch
-        if !timeMatch
+        if timeMatch == false
           timeMatch = dx
         self.timer.seek([timeMatch])
 
