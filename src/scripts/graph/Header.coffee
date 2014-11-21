@@ -6,7 +6,7 @@ define (require) ->
   Utils = require 'cs!core/Utils'
 
   class Header
-    constructor: (@timer, @initialDomain, width) ->
+    constructor: (@timer, @initialDomain, @tweenTime, width) ->
       @onBrush = new Signals.Signal()
       @margin = {top: 10, right: 20, bottom: 0, left: 190}
       @height = 50 - @margin.top - @margin.bottom + 20
@@ -65,13 +65,24 @@ define (require) ->
       self = this
 
       dragTimeMove = (d) ->
-        d3.event.sourceEvent.stopPropagation()
         event = d3.event.sourceEvent
+        event.stopPropagation()
+        tweenTime = self.tweenTime
         event_x = if event.x? then event.x else event.clientX
         dx = self.xDisplayed.invert(event_x - self.margin.left)
         dx = dx.getTime()
         dx = Math.max(0, dx)
-        self.timer.seek([dx])
+
+        timeMatch = false
+        if event.shiftKey
+          time = dx / 1000
+          console.log time
+          timeMatch = Utils.getClosestTime(tweenTime.data, time, '---non-existant')
+          timeMatch = timeMatch * 1000
+          console.log "found: " + timeMatch
+        if !timeMatch
+          timeMatch = dx
+        self.timer.seek([timeMatch])
 
       dragTime = d3.behavior.drag()
         .origin((d) -> return d;)
