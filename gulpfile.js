@@ -63,7 +63,7 @@ gulp.task('scripts', ['scripts:tweentime'], function(cb) {
   })
 });
 
-gulp.task('styles', [], function(cb) {
+gulp.task('styles', function() {
   gulp.src('src/styles/editor.sass')
     .pipe(sourcemaps.init())
     .pipe(sass({
@@ -79,15 +79,9 @@ gulp.task('livereload', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch([
-    'examples/*.html',
-    '!src/scripts/bower_components/**',
-    'dist/styles/*.css',
-    'dist/scripts/*.js'
-  ], livereload.changed);
-
-  gulp.watch(['src/styles/**'], ['styles']);
+  gulp.watch(['dist/styles/*.css', 'dist/scripts/*.js'], livereload.changed);
+  gulp.watch('src/styles/**', ['styles']);
   gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts']);
 });
 
-gulp.task('default', ['livereload', 'styles', 'scripts', 'watch']);
+gulp.task('default', ['watch', 'livereload', 'styles', 'scripts']);
