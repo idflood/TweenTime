@@ -11,7 +11,11 @@ define (require) ->
       output = hours + "h " + output  if hours
       return output
 
-    @getClosestTime: (data, time, objectId = false, property_name = false, tolerance = 0.1) ->
+    @getClosestTime: (data, time, objectId = false, property_name = false, timer = false, tolerance = 0.1) ->
+      if timer
+        timer_time = timer.getCurrentTime() / 1000
+        if Math.abs(timer_time - time) <= tolerance
+          return timer_time
 
       if objectId || property_name
         for item in data

@@ -53,7 +53,7 @@ define (require) ->
         timeMatch = false
 
         if sourceEvent.shiftKey
-          timeMatch = Utils.getClosestTime(tweenTime.data, dx, d.id)
+          timeMatch = Utils.getClosestTime(tweenTime.data, dx, d.id, false, tweenTime.timer)
         if !timeMatch
           diff = (dx - d.start)
           timeMatch = d.start + diff
@@ -68,7 +68,7 @@ define (require) ->
         dx = self.timeline.x.invert(d3.event.x).getTime() / 1000
         timeMatch = false
         if sourceEvent.shiftKey
-          timeMatch = Utils.getClosestTime(tweenTime.data, dx)
+          timeMatch = Utils.getClosestTime(tweenTime.data, dx, false, false, tweenTime.timer)
         if !timeMatch
           diff = (dx - d.end)
           timeMatch = d.end + diff

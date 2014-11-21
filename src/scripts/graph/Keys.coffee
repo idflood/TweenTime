@@ -29,7 +29,7 @@ define (require) ->
 
         timeMatch = false
         if sourceEvent.shiftKey
-          timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name)
+          timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name, tweenTime.timer)
         if timeMatch == false
           timeMatch = dx
 
