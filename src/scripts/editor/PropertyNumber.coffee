@@ -18,6 +18,9 @@ define (require) ->
       @keyAdded = new Signals.Signal()
       @render()
 
+      @$input = @$el.find('input')
+      @$key = @$el.find('.property__key')
+
     onKeyClick: (e) =>
       e.preventDefault()
       currentValue = @getCurrentVal()
@@ -41,6 +44,15 @@ define (require) ->
         # Use the instance property if defined (value changed but no key)
         val = @instance_property.val
       return val
+
+    getCurrentKey: () =>
+      time = @timer.getCurrentTime() / 1000
+
+      if !@instance_property || !@instance_property.keys then return false
+      if @instance_property.keys.length == 0 then return false
+      for key in @instance_property.keys
+        if key.time == time then return key
+      return false
 
     getProperty: () =>
       properties = @object.properties
@@ -121,9 +133,11 @@ define (require) ->
 
     update: () =>
       val = @getCurrentVal()
-      $input = @$el.find('input')
-      draggable = $input.data('draggable')
+      key = @getCurrentKey()
+
+      @$key.toggleClass('property__key--active', key)
+      draggable = @$input.data('draggable')
       if draggable
         draggable.set(val.toFixed(3))
       else
-        $input.val(val.toFixed(3))
+        @$input.val(val.toFixed(3))
