@@ -21,6 +21,7 @@ define (require) ->
   PropertiesEditor = require 'cs!editor/PropertiesEditor'
   EditorMenu = require 'cs!editor/EditorMenu'
   EditorControls = require 'cs!editor/EditorControls'
+  SelectionManager = require 'cs!editor/SelectionManager'
 
   class Editor
     constructor: (@tweenTime, options = {}) ->
@@ -31,11 +32,12 @@ define (require) ->
       $('body').append(@$timeline)
       $('body').addClass('has-editor')
 
-      @timeline = new Timeline(@tweenTime)
+      @selectionManager = new SelectionManager(@tweenTime)
+      @timeline = new Timeline(@tweenTime, @selectionManager)
       @menu = new EditorMenu(@tweenTime, @$timeline)
       if options.onMenuCreated? then options.onMenuCreated(@$timeline.find('.editor__menu'))
 
-      @propertiesEditor = new PropertiesEditor(@timeline, @timer)
+      @propertiesEditor = new PropertiesEditor(@timeline, @timer, @selectionManager)
       @propertiesEditor.keyAdded.add(@onKeyAdded)
 
       @controls = new EditorControls(@tweenTime, @$timeline)

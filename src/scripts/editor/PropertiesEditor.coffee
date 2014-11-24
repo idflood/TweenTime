@@ -8,7 +8,7 @@ define (require) ->
   tpl_propertiesEditor = require 'text!templates/propertiesEditor.tpl.html'
 
   class PropertiesEditor
-    constructor: (@timeline, @timer) ->
+    constructor: (@timeline, @timer, @selectionManager) ->
       @$el = $(tpl_propertiesEditor)
       @$container = @$el.find('.properties-editor__main')
       # todo: rename keyAdded to updated
@@ -23,9 +23,11 @@ define (require) ->
       @keyAdded.dispatch()
 
     # todo: rename data to key
-    onSelect: (selectedObject, data = false, propertyData = false, d3Object = false) =>
+    onSelect: (selectedObject, data = false, propertyData = false, d3Object = false, addToSelection = false) =>
       @selectedProps = []
-      @$container.empty()
+      console.log "on select :" + addToSelection
+      if addToSelection == false
+        @$container.empty()
       # data and propertyData are defined on key select.
       property_name = false
       if propertyData

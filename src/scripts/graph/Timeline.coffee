@@ -18,7 +18,7 @@ define (require) ->
     object
 
   class Timeline
-    constructor: (@tweenTime) ->
+    constructor: (@tweenTime, @selectionManager) ->
       @isDirty = true
       @onSelect = new Signals.Signal()
       @timer = @tweenTime.timer
