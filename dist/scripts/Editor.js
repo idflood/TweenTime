@@ -2219,8 +2219,7 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
     Mustache = require('Mustache');
     tpl_property = require('text!templates/propertyNumber.tpl.html');
     return PropertyNumber = (function() {
-      function PropertyNumber(property, instance_property, object, timer, key_val) {
-        this.property = property;
+      function PropertyNumber(instance_property, object, timer, key_val) {
         this.instance_property = instance_property;
         this.object = object;
         this.timer = timer;
@@ -2228,7 +2227,6 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         this.update = __bind(this.update, this);
         this.render = __bind(this.render, this);
         this.addKey = __bind(this.addKey, this);
-        this.getProperty = __bind(this.getProperty, this);
         this.getCurrentKey = __bind(this.getCurrentKey, this);
         this.getCurrentVal = __bind(this.getCurrentVal, this);
         this.getInputVal = __bind(this.getInputVal, this);
@@ -2253,16 +2251,13 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
 
       PropertyNumber.prototype.getCurrentVal = function() {
         var prop_name, val;
-        val = this.property.val;
-        prop_name = this.instance_property.name ? this.instance_property.name : this.property.name;
+        val = this.instance_property.val;
+        prop_name = this.instance_property.name;
         if (this.key_val) {
           return this.key_val.val;
         }
         if ((this.object.values != null) && this.object.values[prop_name]) {
           return this.object.values[prop_name];
-        }
-        if (this.instance_property && (this.instance_property.val != null)) {
-          val = this.instance_property.val;
         }
         return val;
       };
@@ -2286,39 +2281,20 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         return false;
       };
 
-      PropertyNumber.prototype.getProperty = function() {
-        var properties;
-        properties = this.object.properties;
-        return _.find(properties, (function(_this) {
-          return function(prop) {
-            return prop.name === _this.instance_property.name;
-          };
-        })(this));
-      };
-
       PropertyNumber.prototype.addKey = function(val) {
-        var currentTime, key, property, sortKeys;
-        property = this.getProperty();
-        if (!property) {
-          property = {
-            keys: [],
-            name: this.property.name,
-            val: current_value
-          };
-          properties.push(property);
-        }
+        var currentTime, key, sortKeys;
         currentTime = this.timer.getCurrentTime() / 1000;
         key = {
           time: currentTime,
           val: val
         };
-        property.keys.push(key);
+        this.instance_property.keys.push(key);
         sortKeys = function(keys) {
           return keys.sort(function(a, b) {
             return d3.ascending(a.time, b.time);
           });
         };
-        property.keys = sortKeys(property.keys);
+        this.instance_property.keys = sortKeys(this.instance_property.keys);
         this.object.isDirty = true;
         return this.keyAdded.dispatch();
       };
@@ -2328,8 +2304,8 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         this.values = this.object.values != null ? this.object.values : {};
         val = this.getCurrentVal();
         data = {
-          id: this.property.name,
-          label: this.property.label,
+          id: this.instance_property.name,
+          label: this.instance_property.label || this.instance_property.name,
           val: val
         };
         view = Mustache.render(tpl_property, data);
@@ -2338,15 +2314,14 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         $input = this.$el.find('input');
         onInputChange = (function(_this) {
           return function(e) {
-            var currentTime, current_key, current_property, current_value;
+            var currentTime, current_key, current_value;
             current_value = _this.getInputVal();
             currentTime = _this.timer.getCurrentTime() / 1000;
             if (_this.key_val) {
               currentTime = _this.key_val.time;
             }
-            current_property = _this.getProperty();
-            if (current_property.keys && current_property.keys.length) {
-              current_key = _.find(current_property.keys, function(key) {
+            if (_this.instance_property.keys && _this.instance_property.keys.length) {
+              current_key = _.find(_this.instance_property.keys, function(key) {
                 return key.time === currentTime;
               });
               if (current_key) {
@@ -2355,8 +2330,8 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
                 _this.addKey(current_value);
               }
             } else {
-              current_property.val = current_value;
-              _this.object.values[_this.property.name] = current_value;
+              _this.instance_property.val = current_value;
+              _this.object.values[_this.instance_property.name] = current_value;
               if (_this.object.object) {
                 currentTime = _this.timer.getCurrentTime() / 1000;
                 _this.object.object.update(currentTime - _this.object.start);
@@ -2506,7 +2481,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       };
 
       PropertiesEditor.prototype.onSelect = function(domElement, addToSelection) {
-        var $actions, $remove_bt, d3Object, instance_prop, key, key_val, lineData, lineObject, prop, propertyData, propertyObject, property_name, tween, type_properties, _ref;
+        var $actions, $remove_bt, d3Object, instance_prop, key, key_val, lineData, lineObject, prop, propertyData, propertyObject, property_name, tween, _ref;
         if (domElement == null) {
           domElement = false;
         }
@@ -2545,38 +2520,18 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         if (lineData.label) {
           this.$container.append('<h2 class="properties-editor__title">' + lineData.label + '</h2>');
         }
-        if (lineData.classObject) {
-          type_properties = lineData.classObject.properties;
-          for (key in type_properties) {
-            prop = type_properties[key];
-            if (!property_name || key === property_name) {
-              instance_prop = _.find(lineData.properties, function(d) {
-                return d.name === key;
-              });
-              prop = new PropertyNumber(prop, instance_prop, lineData, this.timer, key_val);
-              prop.keyAdded.add(this.onKeyAdded);
-              this.selectedProps.push(prop);
-              this.$container.append(prop.$el);
-            }
-          }
-        } else {
-          _ref = lineData.properties;
-          for (key in _ref) {
-            instance_prop = _ref[key];
-            if (!property_name || instance_prop.name === property_name) {
-              prop = new PropertyNumber({
-                label: instance_prop.name
-              }, instance_prop, lineData, this.timer, key_val);
-              prop.keyAdded.add(this.onKeyAdded);
-              this.selectedProps.push(prop);
-              this.$container.append(prop.$el);
-            }
+        _ref = lineData.properties;
+        for (key in _ref) {
+          instance_prop = _ref[key];
+          if (!property_name || instance_prop.name === property_name) {
+            prop = new PropertyNumber(instance_prop, lineData, this.timer, key_val);
+            prop.keyAdded.add(this.onKeyAdded);
+            this.selectedProps.push(prop);
+            this.$container.append(prop.$el);
           }
         }
         if (property_name) {
-          tween = new PropertyTween({
-            label: instance_prop.name
-          }, instance_prop, lineData, this.timer, key_val);
+          tween = new PropertyTween(instance_prop, lineData, this.timer, key_val);
           this.selectedProps.push(tween);
           this.$container.append(tween.$el);
           $actions = $('<div class="properties-editor__actions actions"></div>');
