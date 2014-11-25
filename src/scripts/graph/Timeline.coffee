@@ -62,7 +62,12 @@ define (require) ->
       @items.onUpdate.add () => @isDirty = true
 
       @properties = new Properties(this)
-      @properties.onKeyAdded.add () => @isDirty = true
+      @properties.onKeyAdded.add (newKey, keyContainer) =>
+        @isDirty = true
+        # render the timeline directly so that we can directly select
+        # the new key with it's domElement.
+        @render(0, false)
+        @keys.selectNewKey(newKey, keyContainer)
       @errors = new Errors(this)
       @keys = new Keys(this)
       @keys.onKeyUpdated.add () => @isDirty = true

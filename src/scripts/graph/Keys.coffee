@@ -8,6 +8,17 @@ define (require) ->
     constructor: (@timeline) ->
       @onKeyUpdated = new Signals.Signal()
 
+    selectNewKey: (data, container) ->
+      self = this
+      key = d3.select(container).selectAll('.key').filter((item) ->
+        return item.time == data.time
+      )
+      if key.length
+        d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
+        key.selectAll('rect').classed('key__shape--selected', true)
+        key = key[0][0]
+        self.timeline.selectionManager.select(key)
+
     render: (properties) ->
       self = this
       tweenTime = self.timeline.tweenTime

@@ -55,7 +55,8 @@ define (require) ->
           d.keys = sortKeys(d.keys)
 
           lineValue.isDirty = true
-          self.onKeyAdded.dispatch()
+          keyContainer = this.parentNode
+          self.onKeyAdded.dispatch(newKey, keyContainer)
 
       # Mask
       subGrp.append('svg')
