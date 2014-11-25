@@ -1,5 +1,3 @@
-# d3 selection frame example
-# http://bl.ocks.org/lgersman/5311083
 define (require) ->
   class SelectionManager
     constructor: (@tweenTime) ->
