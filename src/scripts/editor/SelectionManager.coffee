@@ -17,6 +17,9 @@ define (require) ->
 
       @selection = result
 
+    reset: () =>
+      @selection = []
+
     select: (item, addToSelection = false) ->
       if !addToSelection then @selection = []
       @selection.push(item)

@@ -90,6 +90,11 @@ define (require) ->
         .append('g')
         .attr('class', 'key')
         .on('click', selectKey)
+        .on('mousedown', () ->
+          # Don't trigger mousedown on linescontainer else
+          # it create the selection rectangle
+          d3.event.stopPropagation()
+        )
         .call(drag)
         .append('rect')
         .attr('x', -3)

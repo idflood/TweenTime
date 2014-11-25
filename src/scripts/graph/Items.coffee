@@ -160,13 +160,23 @@ define (require) ->
         )
         .call(drag)
         .on("click", selectBar)
+        .on('mousedown', () ->
+          # Don't trigger mousedown on linescontainer else
+          # it create the selection rectangle
+          d3.event.stopPropagation()
+        )
 
       barEnter.append("text")
         .attr("class", "line-label")
         .attr("x", self.timeline.label_position_x + 10)
         .attr("y", 16)
         .text((d) -> d.label)
-        .on 'click', selectBar
+        .on('click', selectBar)
+        .on('mousedown', () ->
+          # Don't trigger mousedown on linescontainer else
+          # it create the selection rectangle
+          d3.event.stopPropagation()
+        )
 
       self = this
       barEnter.append("text")

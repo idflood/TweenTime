@@ -33,6 +33,7 @@
     shape-rendering: crispEdges
 
   .axis
+    pointer-events: none
     path, line
       fill: none
       stroke: #fff
@@ -70,3 +71,13 @@
 
   .click-handler
     fill-opacity: 0
+
+// Disable text selection
+svg *
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+
+  &::selection, &::-moz-selection, &::-webkit-selection
+    background: transparent
