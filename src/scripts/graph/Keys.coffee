@@ -58,8 +58,10 @@ define (require) ->
       propKey = (d, k) -> d.time
       keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey)
 
+      # selectKey is triggered by dragstart event
       selectKey = (d) ->
         event = d3.event
+        console.log event
         # with dragstart event the mousevent is is inside the event.sourcEvent
         if event.sourceEvent then event = event.sourceEvent
 
@@ -85,7 +87,6 @@ define (require) ->
       keys.enter()
         .append('g')
         .attr('class', 'key')
-        .on('click', selectKey)
         .on('mousedown', () ->
           # Don't trigger mousedown on linescontainer else
           # it create the selection rectangle

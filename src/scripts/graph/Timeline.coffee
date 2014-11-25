@@ -1,7 +1,6 @@
 define (require) ->
   $ = require 'jquery'
   d3 = require 'd3'
-  Signals = require 'Signal'
 
   Utils = require 'cs!core/Utils'
   Header = require 'cs!graph/Header'
