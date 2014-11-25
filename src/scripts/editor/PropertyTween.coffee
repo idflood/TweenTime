@@ -7,10 +7,9 @@ define (require) ->
   tpl_property = require 'text!templates/propertyTween.tpl.html'
 
   class PropertyTween
-    # @property: Static property definition (ex: {name: 'x', label: 'x', val: 0})
     # @instance_property: The current property on the data object.
     # @object: The parent object.
-    constructor: (@property, @instance_property, @object, @timer, @key_val = false) ->
+    constructor: (@instance_property, @object, @timer, @key_val = false) ->
       @render()
 
     render: () =>
