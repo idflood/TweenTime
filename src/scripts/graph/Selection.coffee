@@ -45,10 +45,8 @@ define (require) ->
 
         s.attr(d)
 
-
         d.timeStart = self.timeline.x.invert(d.x).getTime() / 1000
         d.timeEnd = self.timeline.x.invert(d.x + d.width).getTime() / 1000
-
         containerBounding = self.linesContainer[0][0].getBoundingClientRect()
 
         # not sure why there is ~15px difference in y
@@ -58,7 +56,6 @@ define (require) ->
         d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
         self.timeline.selectionManager.reset()
         d3.selectAll('.key').each (state_data, i) ->
-          #console.log state_data
           itemBounding = d3.select(this)[0][0].getBoundingClientRect()
           y = itemBounding.top - containerBounding.top
           if state_data.time >= d.timeStart && state_data.time <= d.timeEnd
@@ -66,7 +63,6 @@ define (require) ->
             if (y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)
               d3.select(this).selectAll('rect').classed('key__shape--selected', true)
               self.timeline.selectionManager.select(this, true)
-          #console.log
 
       ).on("mouseup", () ->
         self.linesContainer.selectAll('.selection').remove()

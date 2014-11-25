@@ -25,7 +25,7 @@ define (require) ->
     # todo: rename data to key
     onSelect: (selectedObject, data = false, propertyData = false, d3Object = false, addToSelection = false) =>
       @selectedProps = []
-      console.log "on select :" + addToSelection
+
       if addToSelection == false
         @$container.empty()
       # data and propertyData are defined on key select.
