@@ -9,10 +9,10 @@ define (require) ->
   tpl_property = require 'text!templates/propertyNumber.tpl.html'
 
   class PropertyNumber
-    # @property: Static property definition (ex: {name: 'x', label: 'x', val: 0})
     # @instance_property: The current property on the data object.
     # @object: The parent object.
-    constructor: (@property, @instance_property, @object, @timer, @key_val = false) ->
+    # todo: rename @object to @data
+    constructor: (@instance_property, @object, @timer, @key_val = false) ->
       # key_val is defined if we selected a key
       @$el = false
       @keyAdded = new Signals.Signal()
@@ -30,8 +30,8 @@ define (require) ->
       parseFloat(@$el.find('input').val(), 10)
 
     getCurrentVal: () =>
-      val = @property.val
-      prop_name = if @instance_property.name then @instance_property.name else @property.name
+      val = @instance_property.val
+      prop_name = @instance_property.name
 
       # if we selected a key simply return it's value
       if @key_val
@@ -40,9 +40,6 @@ define (require) ->
       if @object.values? && @object.values[prop_name]
         return @object.values[prop_name]
 
-      if @instance_property and @instance_property.val?
-        # Use the instance property if defined (value changed but no key)
-        val = @instance_property.val
       return val
 
     getCurrentKey: () =>
@@ -54,22 +51,14 @@ define (require) ->
         if key.time == time then return key
       return false
 
-    getProperty: () =>
-      properties = @object.properties
-      return _.find(properties, (prop) => prop.name == @instance_property.name)
 
     addKey: (val) =>
-      property = @getProperty()
-      if !property
-        property = {keys: [], name: @property.name, val: current_value}
-        properties.push(property)
-      # We want seconds for keys and not milliseconds.
       currentTime = @timer.getCurrentTime() / 1000
       key = {time: currentTime, val: val}
 
-      property.keys.push(key)
+      @instance_property.keys.push(key)
       sortKeys = (keys) -> keys.sort((a, b) -> d3.ascending(a.time, b.time))
-      property.keys = sortKeys(property.keys)
+      @instance_property.keys = sortKeys(@instance_property.keys)
       # Todo: remove object.isDirty, make it nicer.
       @object.isDirty = true
       @keyAdded.dispatch()
@@ -81,11 +70,9 @@ define (require) ->
       val = @getCurrentVal()
 
       data =
-        id: @property.name # "circleRadius" instead of "circle radius"
-        label: @property.label
-        #has_keys: if @instance_property.keys then true else false
+        id: @instance_property.name # "circleRadius" instead of "circle radius"
+        label: @instance_property.label || @instance_property.name
         val: val
-
 
       view = Mustache.render(tpl_property, data)
       @$el = $(view)
@@ -96,13 +83,11 @@ define (require) ->
         current_value = @getInputVal()
         currentTime = @timer.getCurrentTime() / 1000
         # if we selected a key simply get the time from it.
-        if @key_val
-          currentTime = @key_val.time
-        current_property = @getProperty()
+        if @key_val then currentTime = @key_val.time
 
-        if current_property.keys && current_property.keys.length
+        if @instance_property.keys && @instance_property.keys.length
           # Add a new key if there is no other key at same time
-          current_key = _.find(current_property.keys, (key) => key.time == currentTime)
+          current_key = _.find(@instance_property.keys, (key) => key.time == currentTime)
 
           if current_key
             # if there is a key update it
@@ -112,9 +97,9 @@ define (require) ->
             @addKey(current_value)
         else
           # There is no keys, simply update the property value (for data saving)
-          current_property.val = current_value
+          @instance_property.val = current_value
           # Also directly set the object value.
-          @object.values[@property.name] = current_value
+          @object.values[@instance_property.name] = current_value
 
           # Simply update the custom object with new values.
           if @object.object

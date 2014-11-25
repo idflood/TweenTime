@@ -60,30 +60,18 @@ define (require) ->
       if lineData.label
         @$container.append('<h2 class="properties-editor__title">' + lineData.label + '</h2>')
 
-      if lineData.classObject
-        # if we uuse the ElementFactory we have access to more informations
-        type_properties = lineData.classObject.properties
-
-        for key, prop of type_properties
-          # show all properties or only 1 if we selected a key.
-          if !property_name || key == property_name
-            instance_prop = _.find(lineData.properties, (d) -> d.name == key)
-            prop = new PropertyNumber(prop, instance_prop, lineData, @timer, key_val)
-            prop.keyAdded.add(@onKeyAdded)
-            @selectedProps.push(prop)
-            @$container.append(prop.$el)
-      else
-        # Basic data, loop through properties.
-        for key, instance_prop of lineData.properties
-          if !property_name || instance_prop.name == property_name
-            prop = new PropertyNumber({label: instance_prop.name}, instance_prop, lineData, @timer, key_val)
-            prop.keyAdded.add(@onKeyAdded)
-            @selectedProps.push(prop)
-            @$container.append(prop.$el)
+      # Basic data, loop through properties.
+      for key, instance_prop of lineData.properties
+        # show all properties or only 1 if we selected a key.
+        if !property_name || instance_prop.name == property_name
+          prop = new PropertyNumber(instance_prop, lineData, @timer, key_val)
+          prop.keyAdded.add(@onKeyAdded)
+          @selectedProps.push(prop)
+          @$container.append(prop.$el)
 
       if property_name
         # Add tween select if we are editing a key.
-        tween = new PropertyTween({label: instance_prop.name}, instance_prop, lineData, @timer, key_val)
+        tween = new PropertyTween(instance_prop, lineData, @timer, key_val)
         @selectedProps.push(tween)
         @$container.append(tween.$el)
 
