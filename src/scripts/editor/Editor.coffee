@@ -35,7 +35,7 @@ define (require) ->
       @selectionManager = new SelectionManager(@tweenTime)
       @timeline = new Timeline(@tweenTime, @selectionManager)
       @menu = new EditorMenu(@tweenTime, @$timeline)
-      if options.onMenuCreated? then options.onMenuCreated(@$timeline.find('.editor__menu'))
+      if options.onMenuCreated? then options.onMenuCreated(@$timeline.find('.timeline__menu'))
 
       @propertiesEditor = new PropertiesEditor(@timeline, @timer, @selectionManager)
       @propertiesEditor.keyAdded.add(@onKeyAdded)
