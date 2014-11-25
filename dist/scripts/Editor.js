@@ -2871,7 +2871,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         this.timeline = new Timeline(this.tweenTime, this.selectionManager);
         this.menu = new EditorMenu(this.tweenTime, this.$timeline);
         if (options.onMenuCreated != null) {
-          options.onMenuCreated(this.$timeline.find('.editor__menu'));
+          options.onMenuCreated(this.$timeline.find('.timeline__menu'));
         }
         this.propertiesEditor = new PropertiesEditor(this.timeline, this.timer, this.selectionManager);
         this.propertiesEditor.keyAdded.add(this.onKeyAdded);
