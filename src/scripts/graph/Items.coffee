@@ -30,7 +30,7 @@ define (require) ->
           if has_prop == false
             d.properties.push({keys: [], name: key, val: property.val})
 
-        self.timeline.onSelect.dispatch(d)
+        self.timeline.onSelect.dispatch(this)
 
       dragmove = (d) ->
         dx = self.timeline.x.invert(d3.event.x).getTime() / 1000

@@ -23,7 +23,32 @@ define (require) ->
       @keyAdded.dispatch()
 
     # todo: rename data to key
-    onSelect: (selectedObject, data = false, propertyData = false, d3Object = false, addToSelection = false) =>
+    onSelect: (domElement = false, addToSelection = false) =>
+      d3Object = d3.select(domElement)
+
+      key_val = false
+      propertyObject = false
+      propertyData = false
+      lineObject = false
+      lineData = false
+
+      if d3Object.classed('key')
+        propertyObject = domElement.parentNode
+        lineObject = propertyObject.parentNode.parentNode
+        lineData = d3.select(lineObject).datum()
+        propertyData = d3.select(propertyObject).datum()
+        key_val = d3Object.datum()
+
+      # click on bar
+      if d3Object.classed('bar')
+        lineData = d3Object.datum()
+
+      # click on bar label
+      if d3Object.classed('line-label')
+        domElement = domElement.parentNode
+        d3Object = d3.select(domElement)
+        lineData = d3Object.datum()
+
       @selectedProps = []
 
       if addToSelection == false
@@ -33,33 +58,33 @@ define (require) ->
       if propertyData
         property_name = propertyData.name
 
-      if selectedObject.label
-        @$container.append('<h2 class="properties-editor__title">' + selectedObject.label + '</h2>')
+      if lineData.label
+        @$container.append('<h2 class="properties-editor__title">' + lineData.label + '</h2>')
 
-      if selectedObject.classObject
+      if lineData.classObject
         # if we uuse the ElementFactory we have access to more informations
-        type_properties = selectedObject.classObject.properties
+        type_properties = lineData.classObject.properties
 
         for key, prop of type_properties
           # show all properties or only 1 if we selected a key.
           if !property_name || key == property_name
-            instance_prop = _.find(selectedObject.properties, (d) -> d.name == key)
-            prop = new PropertyNumber(prop, instance_prop, selectedObject, @timer, data)
+            instance_prop = _.find(lineData.properties, (d) -> d.name == key)
+            prop = new PropertyNumber(prop, instance_prop, lineData, @timer, key_val)
             prop.keyAdded.add(@onKeyAdded)
             @selectedProps.push(prop)
             @$container.append(prop.$el)
       else
         # Basic data, loop through properties.
-        for key, instance_prop of selectedObject.properties
+        for key, instance_prop of lineData.properties
           if !property_name || instance_prop.name == property_name
-            prop = new PropertyNumber({label: instance_prop.name}, instance_prop, selectedObject, @timer, data)
+            prop = new PropertyNumber({label: instance_prop.name}, instance_prop, lineData, @timer, key_val)
             prop.keyAdded.add(@onKeyAdded)
             @selectedProps.push(prop)
             @$container.append(prop.$el)
 
       if property_name
         # Add tween select if we are editing a key.
-        tween = new PropertyTween({label: instance_prop.name}, instance_prop, selectedObject, @timer, data)
+        tween = new PropertyTween({label: instance_prop.name}, instance_prop, lineData, @timer, key_val)
         @selectedProps.push(tween)
         @$container.append(tween.$el)
 
@@ -71,12 +96,11 @@ define (require) ->
 
         $remove_bt.click (e) =>
           e.preventDefault()
-          index = propertyData.keys.indexOf(data)
+          index = propertyData.keys.indexOf(key_val)
           if index > -1
             propertyData.keys.splice(index, 1)
-            selectedObject.isDirty = true
+            lineData.isDirty = true
             @keyAdded.dispatch()
-            #if d3Object then $(d3Object).remove()
 
     render: (time, time_changed) =>
       if !time_changed then return

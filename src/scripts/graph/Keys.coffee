@@ -60,13 +60,8 @@ define (require) ->
 
       selectKey = (d) ->
         event = d3.event
-
         # with dragstart event the mousevent is is inside the event.sourcEvent
         if event.sourceEvent then event = event.sourceEvent
-        propertyObject = this.parentNode
-        lineObject = propertyObject.parentNode.parentNode
-        lineData = d3.select(lineObject).datum()
-        propertyData = d3.select(propertyObject).datum()
 
         addToSelection = event.shiftKey
         # if element is already selectionned and we are on
@@ -78,9 +73,9 @@ define (require) ->
         if !addToSelection
           d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
         d3.select(this).selectAll('rect').classed('key__shape--selected', true)
-        #console.log d3.select(this).datum()
+
         self.timeline.selectionManager.select(this, addToSelection)
-        self.timeline.onSelect.dispatch(lineData, d, propertyData, this, addToSelection)
+        self.timeline.onSelect.dispatch(this, addToSelection)
 
       drag = d3.behavior.drag()
         .origin((d) -> return d;)
