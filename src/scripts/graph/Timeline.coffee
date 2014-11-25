@@ -62,8 +62,7 @@ define (require) ->
 
       @items = new Items(this, @linesContainer)
       @items.onUpdate.add () => @isDirty = true
-      # Propagate onSelect event.
-      @items.onSelect.add (d) => @onSelect.dispatch(d)
+
       @properties = new Properties(this)
       @properties.onKeyAdded.add () => @isDirty = true
       @errors = new Errors(this)

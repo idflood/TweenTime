@@ -8,7 +8,6 @@ define (require) ->
     constructor: (@timeline, @container) ->
       @dy = 10 + @timeline.margin.top
       @onUpdate = new Signals.Signal()
-      @onSelect = new Signals.Signal()
 
     render: () =>
       self = this
@@ -31,7 +30,7 @@ define (require) ->
           if has_prop == false
             d.properties.push({keys: [], name: key, val: property.val})
 
-        self.onSelect.dispatch(d)
+        self.timeline.onSelect.dispatch(d)
 
       dragmove = (d) ->
         dx = self.timeline.x.invert(d3.event.x).getTime() / 1000
