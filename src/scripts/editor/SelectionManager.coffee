@@ -1,7 +1,10 @@
 define (require) ->
+  Signals = require 'Signal'
+
   class SelectionManager
     constructor: (@tweenTime) ->
       @selection = []
+      @onSelect = new Signals.Signal()
 
     removeDuplicates: () =>
       result = []
@@ -22,6 +25,7 @@ define (require) ->
       if !addToSelection then @selection = []
       @selection.push(item)
       @removeDuplicates()
+      @onSelect.dispatch(item, addToSelection)
 
     getSelection: () =>
       return @selection

@@ -21,7 +21,6 @@ define (require) ->
   class Timeline
     constructor: (@tweenTime, @selectionManager) ->
       @isDirty = true
-      @onSelect = new Signals.Signal()
       @timer = @tweenTime.timer
       @currentTime = @timer.time #used in timeindicator.
       @initialDomain = [0, @timer.totalDuration - 220 * 1000]

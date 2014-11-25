@@ -17,7 +17,7 @@ define (require) ->
 
       $('body').append(@$el)
 
-      @timeline.onSelect.add(@onSelect)
+      @selectionManager.onSelect.add(@onSelect)
 
     onKeyAdded: () =>
       @keyAdded.dispatch()

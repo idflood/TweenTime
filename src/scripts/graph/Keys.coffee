@@ -75,7 +75,6 @@ define (require) ->
         d3.select(this).selectAll('rect').classed('key__shape--selected', true)
 
         self.timeline.selectionManager.select(this, addToSelection)
-        self.timeline.onSelect.dispatch(this, addToSelection)
 
       drag = d3.behavior.drag()
         .origin((d) -> return d;)
