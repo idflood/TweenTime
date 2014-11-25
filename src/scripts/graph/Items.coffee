@@ -147,10 +147,20 @@ define (require) ->
       bar.selectAll('.bar-anchor--left')
         .filter(barWithStartAndEnd)
         .attr("x", (d) -> return self.timeline.x(d.start * 1000) - 1)
+        .on('mousedown', () ->
+          # Don't trigger mousedown on linescontainer else
+          # it create the selection rectangle
+          d3.event.stopPropagation()
+        )
 
       bar.selectAll('.bar-anchor--right')
         .filter(barWithStartAndEnd)
         .attr("x", (d) -> return self.timeline.x(d.end * 1000) - 1)
+        .on('mousedown', () ->
+          # Don't trigger mousedown on linescontainer else
+          # it create the selection rectangle
+          d3.event.stopPropagation()
+        )
 
       bar.selectAll('.bar')
         .filter(barWithStartAndEnd)
