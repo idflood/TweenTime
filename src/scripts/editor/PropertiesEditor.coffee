@@ -22,7 +22,6 @@ define (require) ->
     onKeyAdded: () =>
       @keyAdded.dispatch()
 
-    # todo: rename data to key
     onSelect: (domElement = false, addToSelection = false) =>
       d3Object = d3.select(domElement)
 

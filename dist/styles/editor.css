@@ -134,9 +134,11 @@ a.menu-item--toggle {
     bottom: -200px; }
   .timeline rect, .timeline path, .timeline line {
     shape-rendering: crispEdges; }
-  .timeline .axis path, .timeline .axis line {
-    fill: none;
-    stroke: #fff; }
+  .timeline .axis {
+    pointer-events: none; }
+    .timeline .axis path, .timeline .axis line {
+      fill: none;
+      stroke: #fff; }
   .timeline .x.axis path {
     display: none; }
   .timeline .x.axis line {
@@ -163,6 +165,14 @@ a.menu-item--toggle {
     cursor: ew-resize; }
   .timeline .click-handler {
     fill-opacity: 0; }
+
+svg * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+  svg *::selection, svg *::-moz-selection, svg *::-webkit-selection {
+    background: transparent; }
 
 .properties-editor {
   position: fixed;
@@ -231,6 +241,8 @@ a.menu-item--toggle {
   z-index: 500; }
   .property__key:focus {
     outline: 0; }
+  .property__key--active {
+    background: #39C2C8; }
 
 .property__input {
   background: #57595a;
@@ -332,6 +344,12 @@ a.menu-item--toggle-side {
 
 .error {
   fill: #CF3938; }
+
+.selection {
+  stroke: #fff;
+  stroke-dasharray: 5px;
+  stroke-opacity: 0.5;
+  fill: rgba(255, 255, 255, 0.05); }
 
 html, body {
   margin: 0;
