@@ -10,9 +10,8 @@ define (require) ->
 
   class PropertyNumber
     # @instance_property: The current property on the data object.
-    # @object: The parent object.
-    # todo: rename @object to @data
-    constructor: (@instance_property, @object, @timer, @key_val = false) ->
+    # @lineData: The line data object.
+    constructor: (@instance_property, @lineData, @timer, @key_val = false) ->
       # key_val is defined if we selected a key
       @$el = false
       @keyAdded = new Signals.Signal()
@@ -37,8 +36,8 @@ define (require) ->
       if @key_val
         return @key_val.val
 
-      if @object.values? && @object.values[prop_name]
-        return @object.values[prop_name]
+      if @lineData.values? && @lineData.values[prop_name]
+        return @lineData.values[prop_name]
 
       return val
 
@@ -59,13 +58,13 @@ define (require) ->
       @instance_property.keys.push(key)
       sortKeys = (keys) -> keys.sort((a, b) -> d3.ascending(a.time, b.time))
       @instance_property.keys = sortKeys(@instance_property.keys)
-      # Todo: remove object.isDirty, make it nicer.
-      @object.isDirty = true
+      # Todo: remove lineData.isDirty, make it nicer.
+      @lineData.isDirty = true
       @keyAdded.dispatch()
 
     render: () =>
-      # current values are defined in @object.values
-      @values = if @object.values? then @object.values else {}
+      # current values are defined in @lineData.values
+      @values = if @lineData.values? then @lineData.values else {}
       # By default assign the property default value
       val = @getCurrentVal()
 
@@ -98,17 +97,17 @@ define (require) ->
         else
           # There is no keys, simply update the property value (for data saving)
           @instance_property.val = current_value
-          # Also directly set the object value.
-          @object.values[@instance_property.name] = current_value
+          # Also directly set the lineData value.
+          @lineData.values[@instance_property.name] = current_value
 
           # Simply update the custom object with new values.
-          if @object.object
+          if @lineData.object
             currentTime = @timer.getCurrentTime() / 1000
             # Set the property on the instance object.
-            @object.object.update(currentTime - @object.start)
+            @lineData.object.update(currentTime - @lineData.start)
 
-        # Something changed, make the object dirty to rebuild things.
-        @object.isDirty = true
+        # Something changed, make the lineData dirty to rebuild things.
+        @lineData.isDirty = true
 
       draggable = new DraggableNumber($input.get(0), {
         changeCallback: onInputChange

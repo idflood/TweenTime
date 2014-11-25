@@ -8,8 +8,8 @@ define (require) ->
 
   class PropertyTween
     # @instance_property: The current property on the data object.
-    # @object: The parent object.
-    constructor: (@instance_property, @object, @timer, @key_val = false) ->
+    # @lineData: The line data object.
+    constructor: (@instance_property, @lineData, @timer, @key_val = false) ->
       @render()
 
     render: () =>
@@ -38,7 +38,7 @@ define (require) ->
       @key_val.ease = ease
       console.log "on change: " + ease
       console.log this
-      @object.isDirty = true
+      @lineData.isDirty = true
 
     update: () =>
       return "todo..."
