@@ -23,10 +23,11 @@ define (require) ->
 
         currentDomainStart = self.timeline.x.domain()[0]
         mouse = d3.mouse(this)
+        old_time = d.time
         dx = self.timeline.x.invert(mouse[0])
         dx = dx.getTime()
-        time_offset = dx / 1000 - currentDomainStart / 1000
-        dx = d.time + time_offset
+        dx = dx / 1000 - currentDomainStart / 1000
+        dx = d.time + dx
 
         timeMatch = false
         if sourceEvent.shiftKey
@@ -35,6 +36,7 @@ define (require) ->
           timeMatch = dx
 
         d.time = timeMatch
+        time_offset = d.time - old_time
 
         selection = self.timeline.selectionManager.getSelection()
         selection = _.filter(selection, (item) => item.isEqualNode(this) == false)
