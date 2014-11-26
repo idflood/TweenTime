@@ -7,6 +7,7 @@ define (require) ->
     constructor: (@timer, @data) ->
       @mainTimeline = new TimelineMax({paused: true})
 
+      @updating = false
       @onUpdate = new Signals.Signal()
       @timer.updated.add(@update)
       @update(0)
@@ -21,7 +22,7 @@ define (require) ->
       return Quad.easeOut
 
     update: (timestamp) =>
-      @data.updating = false
+      @updating = false
       seconds = timestamp / 1000
       has_dirty_items = false
 
@@ -46,7 +47,7 @@ define (require) ->
         if item.isDirty then has_dirty_items = true
 
         if item.timeline and item.isDirty and item.properties
-          @data.updating = true
+          @updating = true
           item.isDirty = false
           #item.timeline.clear()
 

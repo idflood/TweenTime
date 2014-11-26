@@ -7,4 +7,6 @@ define (require) ->
       @timer = new Timer()
       @orchestrator = new Orchestrator(@timer, @data)
 
-    getTotalDuration: () => @orchestrator.getTotalDuration()
+    getTotalDuration: () => return @orchestrator.getTotalDuration()
+
+    isUpdating: () => return @orchestrator.updating

@@ -175,7 +175,7 @@
 
       function animate() {
         var box_values = data[0].values;
-        if (!data.updating) {
+        if (!tweenTime.isUpdating()) {
           $('.box--blue').css({
             'opacity': box_values.opacity,
             'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
