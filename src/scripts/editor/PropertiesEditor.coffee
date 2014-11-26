@@ -63,8 +63,22 @@ define (require) ->
       if propertyData
         property_name = propertyData.name
 
-      if lineData.label
-        @$container.append('<h2 class="properties-editor__title">' + lineData.label + '</h2>')
+      $el = false
+      if lineData.id
+        # try to find a container for this object
+        $el = $('#property--' + lineData.id)
+        if !$el.length
+          # If no container for the specific item, create it
+          $el = $el = $('<div class="properties__wrapper" id="property--' + lineData.id + '"></div>')
+          @$container.append($el)
+
+          if lineData.label
+            # Also add the object name
+            $el.append('<h2 class="properties-editor__title">' + lineData.label + '</h2>')
+
+      if $el == false
+        $el = $('<div class="properties__wrapper" id="no-item"></div>')
+        @$container.append($el)
 
       # Basic data, loop through properties.
       for key, instance_prop of lineData.properties
@@ -73,19 +87,19 @@ define (require) ->
           prop = new PropertyNumber(instance_prop, lineData, @timer, key_val)
           prop.keyAdded.add(@onKeyAdded)
           @selectedProps.push(prop)
-          @$container.append(prop.$el)
+          $el.append(prop.$el)
 
       if property_name
         # Add tween select if we are editing a key.
         tween = new PropertyTween(instance_prop, lineData, @timer, key_val)
         @selectedProps.push(tween)
-        @$container.append(tween.$el)
+        $el.append(tween.$el)
 
         # Add a remove key button
         $actions = $('<div class="properties-editor__actions actions"></div>')
         $remove_bt = $('<a href="#" class="actions__item">Remove key</a>')
         $actions.append($remove_bt)
-        @$container.append($actions)
+        $el.append($actions)
 
         $remove_bt.click (e) =>
           e.preventDefault()
