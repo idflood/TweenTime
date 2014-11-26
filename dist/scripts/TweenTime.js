@@ -1010,7 +1010,6 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
 
       Orchestrator.prototype.update = function(timestamp) {
         var easing, first_key, has_dirty_items, item, key, key_index, next_key, propName, property, propertyTimeline, seconds, tween, tween_duration, tween_time, val, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
-        this.updating = false;
         seconds = timestamp / 1000;
         has_dirty_items = false;
         _ref = this.data;
@@ -1036,7 +1035,6 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
             has_dirty_items = true;
           }
           if (item.timeline && item.isDirty && item.properties) {
-            this.updating = true;
             item.isDirty = false;
             _ref2 = item.properties;
             for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
@@ -1075,6 +1073,7 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
                   propertyTimeline.add(tween, key.time);
                 }
               }
+              propertyTimeline.seek(seconds);
             }
             seconds = seconds - 0.0000001;
           }
@@ -1104,7 +1103,6 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
     return TweenTime = (function() {
       function TweenTime(data) {
         this.data = data;
-        this.isUpdating = __bind(this.isUpdating, this);
         this.getTotalDuration = __bind(this.getTotalDuration, this);
         this.timer = new Timer();
         this.orchestrator = new Orchestrator(this.timer, this.data);
@@ -1112,10 +1110,6 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
 
       TweenTime.prototype.getTotalDuration = function() {
         return this.orchestrator.getTotalDuration();
-      };
-
-      TweenTime.prototype.isUpdating = function() {
-        return this.orchestrator.updating;
       };
 
       return TweenTime;
