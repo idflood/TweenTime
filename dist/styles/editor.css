@@ -67,7 +67,8 @@ a.menu-item--toggle {
 .controls {
   position: absolute;
   top: 10px;
-  left: 20px; }
+  left: 20px;
+  color: #aaa; }
 
 .control {
   display: inline-block;
@@ -78,10 +79,11 @@ a.menu-item--toggle {
   .control:hover {
     color: #fff; }
 
-.control--time {
+.control--input {
   position: relative;
   top: -2px;
   padding: 3px 10px;
+  margin-right: -1px;
   width: 50px;
   border: 0;
   background: none;
@@ -90,9 +92,17 @@ a.menu-item--toggle {
   letter-spacing: 0.5px;
   text-align: right;
   transition: background 0.2s; }
-  .control--time:focus {
+  .control--input:focus {
     outline: 0;
     background: #474b4c; }
+
+.control--time-end {
+  text-align: left; }
+
+.control__time-separator {
+  position: relative;
+  top: -3px;
+  font-size: 11px; }
 
 .timeline__main {
   height: 220px;
@@ -289,18 +299,19 @@ a.menu-item--toggle-side {
 
 .actions {
   position: relative;
-  border-top: 1px solid #181818;
+  border-bottom: 1px solid #181818;
   margin-left: -10px;
   margin-right: -10px;
   padding-left: 10px;
   padding-right: 10px;
-  margin-top: 40px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
   padding-top: 20px;
   text-align: right; }
   .actions:before {
     content: "";
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
     height: 1px;
