@@ -29,7 +29,7 @@ define (require) ->
       else
         @selection.push(item)
       @removeDuplicates()
-      @onSelect.dispatch(item, addToSelection)
+      @onSelect.dispatch(@selection, addToSelection)
 
     getSelection: () =>
       return @selection

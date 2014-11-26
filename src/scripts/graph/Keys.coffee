@@ -78,10 +78,10 @@ define (require) ->
 
         addToSelection = event.shiftKey
         # if element is already selectionned and we are on
-        # the dragstart event, we add it to the selection.
+        # the dragstart event, we stop there since it is already selected.
         if d3.event.type && d3.event.type == "dragstart"
           if d3.select(this).selectAll('rect').classed('key__shape--selected')
-            addToSelection = true
+            return
 
         if !addToSelection
           d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
