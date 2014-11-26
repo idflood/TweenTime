@@ -67,14 +67,14 @@ define (require) ->
 
       subGrp.append('text')
         .attr("class", "line-label line-label--small")
-        .attr("x", self.timeline.label_position_x + 30)
+        .attr("x", self.timeline.label_position_x + 10)
         .attr("y", 15)
         .text (d) ->
           d.name
 
       subGrp.append("line")
         .attr("class", 'line-separator--secondary')
-        .attr("x1", -200)
+        .attr("x1", -self.timeline.margin.left)
         .attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100))
         .attr("y1", self.timeline.lineHeight)
         .attr("y2", self.timeline.lineHeight)

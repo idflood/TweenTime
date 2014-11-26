@@ -23,13 +23,13 @@ define (require) ->
       @timer = @tweenTime.timer
       @currentTime = @timer.time #used in timeindicator.
       @initialDomain = [0, @timer.totalDuration - 220 * 1000]
-      margin = {top: 6, right: 20, bottom: 0, left: 190}
+      margin = {top: 6, right: 20, bottom: 0, left: 265}
       this.margin = margin
 
       width = window.innerWidth - margin.left - margin.right
       height = 270 - margin.top - margin.bottom - 40
       @lineHeight = 20
-      @label_position_x = -170
+      @label_position_x = -margin.left + 20
 
       @x = d3.time.scale().range([0, width])
       @x.domain(@initialDomain)
@@ -53,7 +53,7 @@ define (require) ->
       @linesContainer = @svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + (margin.top + 10) + ")")
 
-      @header = new Header(@timer, @initialDomain, @tweenTime, width)
+      @header = new Header(@timer, @initialDomain, @tweenTime, width, margin)
       @timeIndicator = new TimeIndicator(this, @svgContainerTime)
 
       @selection = new Selection(this, @linesContainer)

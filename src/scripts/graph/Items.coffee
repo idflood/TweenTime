@@ -201,7 +201,7 @@ define (require) ->
 
       barEnter.append("line")
         .attr("class", 'line-separator')
-        .attr("x1", -200)
+        .attr("x1", -self.timeline.margin.left)
         .attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100))
         .attr("y1", self.timeline.lineHeight)
         .attr("y2", self.timeline.lineHeight)

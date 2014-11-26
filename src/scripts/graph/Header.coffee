@@ -6,9 +6,9 @@ define (require) ->
   Utils = require 'cs!core/Utils'
 
   class Header
-    constructor: (@timer, @initialDomain, @tweenTime, width) ->
+    constructor: (@timer, @initialDomain, @tweenTime, width, margin) ->
       @onBrush = new Signals.Signal()
-      @margin = {top: 10, right: 20, bottom: 0, left: 190}
+      @margin = {top: 10, right: 20, bottom: 0, left: margin.left}
       @height = 50 - @margin.top - @margin.bottom + 20
 
       @currentTime = @timer.time
