@@ -33,6 +33,15 @@ define (require) ->
 
       @createBrushHandle()
       @createTimeHandle()
+      @timer.durationChanged.add(@onDurationChanged)
+
+    onDurationChanged: (seconds) =>
+      @x.domain([0, @timer.totalDuration])
+      @xAxisElement.call(@xAxis)
+
+      @brush.x(@x).extent(@initialDomain)
+      @svgContainer.select('.brush').call(@brush)
+      @render()
 
     createBrushHandle: () =>
       @xAxisElement = @svgContainer.append("g")
@@ -51,7 +60,7 @@ define (require) ->
         .extent(@initialDomain)
         .on("brush", onBrush)
 
-      gBrush = @svgContainer.append("g")
+      @gBrush = @svgContainer.append("g")
         .attr("class", "brush")
         .call(@brush)
         .selectAll("rect")

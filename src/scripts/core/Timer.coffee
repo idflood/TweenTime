@@ -12,10 +12,18 @@ define (require) ->
       @last_time = -1
       @updated = new Signals.Signal()
       @statusChanged = new Signals.Signal()
+      @durationChanged = new Signals.Signal()
       @seeked = new Signals.Signal()
       window.requestAnimationFrame(@update)
 
     getCurrentTime: () => @time[0]
+
+    getDuration: () ->
+      return @totalDuration / 1000
+
+    setDuration: (seconds) ->
+      @totalDuration = seconds * 1000
+      @durationChanged.dispatch(seconds)
 
     play: () ->
       @is_playing = true

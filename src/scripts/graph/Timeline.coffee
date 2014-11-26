@@ -22,7 +22,8 @@ define (require) ->
       @isDirty = true
       @timer = @tweenTime.timer
       @currentTime = @timer.time #used in timeindicator.
-      @initialDomain = [0, @timer.totalDuration - 220 * 1000]
+
+      @initialDomain = [0, 20 * 1000] # show from 0 to 20 seconds
       margin = {top: 6, right: 20, bottom: 0, left: 265}
       this.margin = margin
 
@@ -95,6 +96,8 @@ define (require) ->
         @xAxisElement.call(@xAxis)
         @isDirty = true
 
+      @tweenTime.timer.durationChanged.add(@onDurationChanged)
+
       # First render
       window.requestAnimationFrame(@render)
 
@@ -109,6 +112,10 @@ define (require) ->
         @xGrid.call(@xAxisGrid)
         @xAxisElement.call(@xAxis)
         @header.resize(INNER_WIDTH)
+
+    onDurationChanged: (seconds) =>
+      #@isDirty = true
+      #@render()
 
     render: (time, time_changed) =>
       if @isDirty || time_changed

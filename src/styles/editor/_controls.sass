@@ -2,6 +2,7 @@
   position: absolute
   top: 10px
   left: 20px
+  color: #aaa
 
 .control
   display: inline-block
@@ -12,10 +13,11 @@
   &:hover
     color: #fff
 
-.control--time
+.control--input
   position: relative
   top: -2px
   padding: 3px 10px
+  margin-right: -1px
   width: 50px
   border: 0
   background: none
@@ -28,3 +30,12 @@
   &:focus
     outline: 0
     background: lighten($editor_bg, 11%)
+
+
+.control--time-end
+  text-align: left
+
+.control__time-separator
+  position: relative
+  top: -3px
+  font-size: 11px

@@ -3,7 +3,10 @@ define (require) ->
     constructor: (@tweenTime, @$timeline) ->
       @timer = @tweenTime.timer
       @$time = @$timeline.find('.control--time')
+      @$time_end = @$timeline.find('.control--time-end')
       @initControls()
+
+      @$time_end.val(@tweenTime.timer.getDuration())
 
       $(document).keypress (e) =>
         console.log e
@@ -37,6 +40,10 @@ define (require) ->
       @$time.change (e) =>
         seconds = parseFloat(@$time.val(), 10) * 1000
         @timer.seek([seconds])
+
+      @$time_end.change (e) =>
+        seconds = parseFloat(@$time_end.val(), 10)
+        @timer.setDuration(seconds)
 
     render: (time, time_changed) =>
       if time_changed
