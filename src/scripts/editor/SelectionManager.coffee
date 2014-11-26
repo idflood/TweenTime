@@ -23,7 +23,11 @@ define (require) ->
 
     select: (item, addToSelection = false) ->
       if !addToSelection then @selection = []
-      @selection.push(item)
+      if item instanceof Array
+        for el in item
+          @selection.push(el)
+      else
+        @selection.push(item)
       @removeDuplicates()
       @onSelect.dispatch(item, addToSelection)
 

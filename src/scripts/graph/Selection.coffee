@@ -55,6 +55,7 @@ define (require) ->
         # deselect all previously selected items
         d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
         self.timeline.selectionManager.reset()
+        selection = []
         d3.selectAll('.key').each (state_data, i) ->
           itemBounding = d3.select(this)[0][0].getBoundingClientRect()
           y = itemBounding.top - containerBounding.top
@@ -62,7 +63,10 @@ define (require) ->
             # use or condition for top and bottom
             if (y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)
               d3.select(this).selectAll('rect').classed('key__shape--selected', true)
-              self.timeline.selectionManager.select(this, true)
+              #self.timeline.selectionManager.select(this, true)
+              selection.push(this)
+
+        self.timeline.selectionManager.select(selection)
 
       ).on("mouseup", () ->
         self.linesContainer.selectAll('.selection').remove()

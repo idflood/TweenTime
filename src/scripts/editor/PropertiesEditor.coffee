@@ -22,7 +22,15 @@ define (require) ->
     onKeyAdded: () =>
       @keyAdded.dispatch()
 
-    onSelect: (domElement = false, addToSelection = false) =>
+    onSelect: (domElement = false) =>
+      @$container.empty()
+      if domElement instanceof Array
+        for element in domElement
+          @addProperty(element)
+      else
+        @addProperty(domElement)
+
+    addProperty: (domElement) =>
       d3Object = d3.select(domElement)
 
       key_val = false
@@ -50,8 +58,6 @@ define (require) ->
 
       @selectedProps = []
 
-      if addToSelection == false
-        @$container.empty()
       # data and propertyData are defined on key select.
       property_name = false
       if propertyData
