@@ -2632,9 +2632,10 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
   define('cs!editor/EditorMenu',['require'],function(require) {
     var EditorMenu;
     return EditorMenu = (function() {
-      function EditorMenu(tweenTime, $timeline) {
+      function EditorMenu(tweenTime, $timeline, editor) {
         this.tweenTime = tweenTime;
         this.$timeline = $timeline;
+        this.editor = editor;
         this.timer = this.tweenTime.timer;
         this.initExport();
         this.initToggle();
@@ -2688,10 +2689,27 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           return val;
         };
         return this.$timeline.find('[data-action="export"]').click(function(e) {
-          var data;
+          var a, blob, data, domain, domain_end, domain_start;
           e.preventDefault();
-          data = JSON.stringify(self.tweenTime.data, json_replacer, 2);
-          return console.log(data);
+          domain = self.editor.timeline.x.domain();
+          domain_start = domain[0];
+          domain_end = domain[1];
+          data = {
+            settings: {
+              time: self.tweenTime.timer.getCurrentTime(),
+              duration: self.tweenTime.timer.getDuration(),
+              domain: [domain_start.getTime(), domain_end.getTime()]
+            },
+            data: self.tweenTime.data
+          };
+          data = JSON.stringify(data, json_replacer, 2);
+          a = document.createElement('a');
+          a.target = '_blank';
+          blob = new Blob([data], {
+            "type": "text/plain;charset=utf-8"
+          });
+          a.href = (window.URL || webkitURL).createObjectURL(blob);
+          return a.click();
         });
       };
 
@@ -2896,7 +2914,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         $('body').addClass('has-editor');
         this.selectionManager = new SelectionManager(this.tweenTime);
         this.timeline = new Timeline(this.tweenTime, this.selectionManager);
-        this.menu = new EditorMenu(this.tweenTime, this.$timeline);
+        this.menu = new EditorMenu(this.tweenTime, this.$timeline, this);
         if (options.onMenuCreated != null) {
           options.onMenuCreated(this.$timeline.find('.timeline__menu'));
         }
