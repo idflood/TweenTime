@@ -28,6 +28,7 @@ define (require) ->
 
     initExport: () ->
       self = this
+      options = self.editor.options
       json_replacer = (key, val) ->
         if key == 'timeline' then return undefined
         if key == 'tween' then return undefined
@@ -35,6 +36,7 @@ define (require) ->
         if key == 'isDirty' then return undefined
         # Disable all private properies from TweenMax/TimelineMax
         if key.indexOf('_') == 0 then return undefined
+        if options.json_replacer? then return options.json_replacer(key, val)
         return val
 
       @$timeline.find('[data-action="export"]').click (e) ->

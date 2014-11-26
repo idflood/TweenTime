@@ -24,7 +24,7 @@ define (require) ->
   SelectionManager = require 'cs!editor/SelectionManager'
 
   class Editor
-    constructor: (@tweenTime, options = {}) ->
+    constructor: (@tweenTime, @options = {}) ->
       @timer = @tweenTime.timer
       @lastTime = -1
 
@@ -35,7 +35,7 @@ define (require) ->
       @selectionManager = new SelectionManager(@tweenTime)
       @timeline = new Timeline(@tweenTime, @selectionManager)
       @menu = new EditorMenu(@tweenTime, @$timeline, this)
-      if options.onMenuCreated? then options.onMenuCreated(@$timeline.find('.timeline__menu'))
+      if @options.onMenuCreated? then @options.onMenuCreated(@$timeline.find('.timeline__menu'))
 
       @propertiesEditor = new PropertiesEditor(@timeline, @timer, @selectionManager)
       @propertiesEditor.keyAdded.add(@onKeyAdded)
