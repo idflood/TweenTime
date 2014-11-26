@@ -41,4 +41,8 @@ define (require) ->
         e.preventDefault()
         # Alternative to have nice looking json string.
         data = JSON.stringify(self.tweenTime.data, json_replacer, 2)
-        console.log data
+        a = document.createElement('a')
+        a.target = '_blank'
+        blob = new Blob([data], {"type": "text/plain;charset=utf-8"})
+        a.href = (window.URL || webkitURL).createObjectURL(blob)
+        a.click()
