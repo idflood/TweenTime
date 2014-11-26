@@ -2668,8 +2668,9 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       };
 
       EditorMenu.prototype.initExport = function() {
-        var json_replacer, self;
+        var json_replacer, options, self;
         self = this;
+        options = self.editor.options;
         json_replacer = function(key, val) {
           if (key === 'timeline') {
             return void 0;
@@ -2685,6 +2686,9 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           }
           if (key.indexOf('_') === 0) {
             return void 0;
+          }
+          if (options.json_replacer != null) {
+            return options.json_replacer(key, val);
           }
           return val;
         };
@@ -2902,9 +2906,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
     return Editor = (function() {
       function Editor(tweenTime, options) {
         this.tweenTime = tweenTime;
-        if (options == null) {
-          options = {};
-        }
+        this.options = options != null ? options : {};
         this.render = __bind(this.render, this);
         this.onKeyAdded = __bind(this.onKeyAdded, this);
         this.timer = this.tweenTime.timer;
@@ -2915,8 +2917,8 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         this.selectionManager = new SelectionManager(this.tweenTime);
         this.timeline = new Timeline(this.tweenTime, this.selectionManager);
         this.menu = new EditorMenu(this.tweenTime, this.$timeline, this);
-        if (options.onMenuCreated != null) {
-          options.onMenuCreated(this.$timeline.find('.timeline__menu'));
+        if (this.options.onMenuCreated != null) {
+          this.options.onMenuCreated(this.$timeline.find('.timeline__menu'));
         }
         this.propertiesEditor = new PropertiesEditor(this.timeline, this.timer, this.selectionManager);
         this.propertiesEditor.keyAdded.add(this.onKeyAdded);
