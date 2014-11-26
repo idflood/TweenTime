@@ -1,6 +1,6 @@
 define (require) ->
   class EditorMenu
-    constructor: (@tweenTime, @$timeline) ->
+    constructor: (@tweenTime, @$timeline, @editor) ->
       @timer = @tweenTime.timer
 
       @initExport()
@@ -40,7 +40,19 @@ define (require) ->
       @$timeline.find('[data-action="export"]').click (e) ->
         e.preventDefault()
         # Alternative to have nice looking json string.
-        data = JSON.stringify(self.tweenTime.data, json_replacer, 2)
+        domain = self.editor.timeline.x.domain()
+        domain_start = domain[0]
+        domain_end = domain[1]
+
+        data = {
+          settings: {
+            time: self.tweenTime.timer.getCurrentTime(),
+            duration: self.tweenTime.timer.getDuration(),
+            domain: [domain_start.getTime(), domain_end.getTime()]
+          },
+          data: self.tweenTime.data
+        }
+        data = JSON.stringify(data, json_replacer, 2)
         a = document.createElement('a')
         a.target = '_blank'
         blob = new Blob([data], {"type": "text/plain;charset=utf-8"})
