@@ -62,7 +62,7 @@
                   "ease": "Quart.easeInOut"
                 }
               ],
-              "val": 0
+              "val": 42
             },
             {
               "name": "y",
@@ -108,12 +108,10 @@
 
       function animate() {
         var box_values = data[0].values;
-        if (!tweenTime.isUpdating()) {
-          $('.box').css({
-            'opacity': box_values.opacity,
-            'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
-          });
-        }
+        $('.box').css({
+          'opacity': box_values.opacity,
+          'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
+        });
         window.requestAnimationFrame(animate);
       }
 

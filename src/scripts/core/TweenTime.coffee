@@ -8,5 +8,3 @@ define (require) ->
       @orchestrator = new Orchestrator(@timer, @data)
 
     getTotalDuration: () => return @orchestrator.getTotalDuration()
-
-    isUpdating: () => return @orchestrator.updating

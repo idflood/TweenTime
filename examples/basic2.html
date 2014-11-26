@@ -175,17 +175,17 @@
 
       function animate() {
         var box_values = data[0].values;
-        if (!tweenTime.isUpdating()) {
-          $('.box--blue').css({
-            'opacity': box_values.opacity,
-            'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
-          });
-          box_values = data[1].values;
-          $('.box--red').css({
-            'opacity': box_values.opacity,
-            'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
-          });
-        }
+
+        $('.box--blue').css({
+          'opacity': box_values.opacity,
+          'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
+        });
+        box_values = data[1].values;
+        $('.box--red').css({
+          'opacity': box_values.opacity,
+          'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
+        });
+
         window.requestAnimationFrame(animate);
       }
 

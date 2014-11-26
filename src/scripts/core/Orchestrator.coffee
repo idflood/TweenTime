@@ -22,7 +22,6 @@ define (require) ->
       return Quad.easeOut
 
     update: (timestamp) =>
-      @updating = false
       seconds = timestamp / 1000
       has_dirty_items = false
 
@@ -47,7 +46,6 @@ define (require) ->
         if item.isDirty then has_dirty_items = true
 
         if item.timeline and item.isDirty and item.properties
-          @updating = true
           item.isDirty = false
           #item.timeline.clear()
 
@@ -86,6 +84,7 @@ define (require) ->
                 tween = TweenMax.to(item.values, tween_duration, val)
                 propertyTimeline.add(tween, key.time)
 
+            propertyTimeline.seek(seconds)
           # force main timeline to refresh
           seconds = seconds - 0.0000001
 
