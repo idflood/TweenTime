@@ -62,9 +62,6 @@ define (require) ->
         d.timeStart = self.timeline.x.invert(d.x - key_width).getTime() / 1000
         d.timeEnd = self.timeline.x.invert(d.x + d.width + key_width).getTime() / 1000
         containerBounding = self.linesContainer[0][0].getBoundingClientRect()
-        console.log containerBounding
-        # not sure why there is ~15px difference in y
-
 
         # deselect all previously selected items
         d3.selectAll('.key--selected').classed('key--selected', false)
