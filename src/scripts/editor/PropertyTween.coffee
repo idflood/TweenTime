@@ -1,7 +1,6 @@
 define (require) ->
   $ = require 'jquery'
   Signals = require 'Signal'
-  _ = require 'lodash'
 
   Mustache = require 'Mustache'
   tpl_property = require 'text!templates/propertyTween.tpl.html'
@@ -9,7 +8,7 @@ define (require) ->
   class PropertyTween
     # @instance_property: The current property on the data object.
     # @lineData: The line data object.
-    constructor: (@instance_property, @lineData, @timer, @key_val = false) ->
+    constructor: (@instance_property, @lineData, @timer, @key_val = false, @timeline) ->
       @render()
 
     render: () =>
@@ -36,9 +35,8 @@ define (require) ->
     onChange: () =>
       ease = @$el.find('select').val()
       @key_val.ease = ease
-      console.log "on change: " + ease
-      console.log this
       @lineData.isDirty = true
+      @timeline.isDirty = true
 
     update: () =>
       return "todo..."

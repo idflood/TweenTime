@@ -14,8 +14,8 @@ define (require) ->
         return item.time == data.time
       )
       if key.length
-        d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
-        key.selectAll('rect').classed('key__shape--selected', true)
+        d3.selectAll('.key--selected').classed('key--selected', false)
+        key.classed('key--selected', true)
         key = key[0][0]
         self.timeline.selectionManager.select(key)
 
@@ -79,11 +79,8 @@ define (require) ->
         # if element is already selectionned and we are on
         # the dragstart event, we stop there since it is already selected.
         if d3.event.type && d3.event.type == "dragstart"
-          if d3.select(this).selectAll('rect').classed('key__shape--selected')
+          if d3.select(this).classed('key--selected')
             return
-
-
-
 
         self.timeline.selectionManager.select(this, addToSelection)
 
@@ -92,8 +89,7 @@ define (require) ->
         .on("drag", dragmove)
         .on("dragstart", selectKey)
 
-      key_size = 6
-      keys.enter()
+      key_grp = keys.enter()
         .append('g')
         .attr('class', 'key')
         # Add a unique id for SelectionManager.removeDuplicates
@@ -104,16 +100,31 @@ define (require) ->
           d3.event.stopPropagation()
         )
         .call(drag)
-        .append('rect')
-        .attr('x', -3)
-        .attr('width', key_size)
-        .attr('height', key_size)
-        .attr('class', 'key__shape')
-        .attr('transform', 'rotate(45)')
+
+      properties.selectAll('.key')
+        .attr('class', (d) ->
+          cls = 'key'
+          # keep selected class
+          if d3.select(this).classed('key--selected')
+            cls += " key--selected"
+          if d.ease
+            ease = d.ease.split('.')
+            if ease.length == 2
+              cls += " " + ease[1]
+          return cls
+        )
+
+      key_grp.append('path')
+        .attr('class', 'key__shape-left')
+        .attr('d', 'M 0 -6 L -6 0 L 0 6')
+
+      key_grp.append('path')
+        .attr('class', 'key__shape-right')
+        .attr('d', 'M 0 -6 L 6 0 L 0 6')
 
       keys.attr 'transform', (d) ->
-        dx = self.timeline.x(d.time * 1000) + 2
-        dy = 9
+        dx = self.timeline.x(d.time * 1000)
+        dy = 10
         return "translate(" + dx + "," + dy + ")"
 
       keys.exit().remove()

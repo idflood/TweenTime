@@ -91,7 +91,7 @@ define (require) ->
 
       if property_name
         # Add tween select if we are editing a key.
-        tween = new PropertyTween(instance_prop, lineData, @timer, key_val)
+        tween = new PropertyTween(instance_prop, lineData, @timer, key_val, @timeline)
         @selectedProps.push(tween)
         $el.append(tween.$el)
 

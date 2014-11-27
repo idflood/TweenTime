@@ -55,7 +55,7 @@ define (require) ->
         d.y -= 15
 
         # deselect all previously selected items
-        d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
+        d3.selectAll('.key--selected').classed('key--selected', false)
         self.timeline.selectionManager.reset()
         selection = []
         d3.selectAll('.key').each (state_data, i) ->
@@ -64,7 +64,7 @@ define (require) ->
           if state_data.time >= d.timeStart && state_data.time <= d.timeEnd
             # use or condition for top and bottom
             if (y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)
-              d3.select(this).selectAll('rect').classed('key__shape--selected', true)
+              d3.select(this).classed('key--selected', true)
               #self.timeline.selectionManager.select(this, true)
               selection.push(this)
 
