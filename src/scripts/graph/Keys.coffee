@@ -72,7 +72,6 @@ define (require) ->
       # selectKey is triggered by dragstart event
       selectKey = (d) ->
         event = d3.event
-        console.log event
         # with dragstart event the mousevent is is inside the event.sourcEvent
         if event.sourceEvent then event = event.sourceEvent
 
@@ -83,9 +82,8 @@ define (require) ->
           if d3.select(this).selectAll('rect').classed('key__shape--selected')
             return
 
-        if !addToSelection
-          d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
-        d3.select(this).selectAll('rect').classed('key__shape--selected', true)
+
+
 
         self.timeline.selectionManager.select(this, addToSelection)
 

@@ -1,4 +1,5 @@
 define (require) ->
+  d3 = require 'd3'
   Signals = require 'Signal'
 
   class SelectionManager
@@ -28,8 +29,21 @@ define (require) ->
           @selection.push(el)
       else
         @selection.push(item)
+
       @removeDuplicates()
+      @highlightItems()
       @onSelect.dispatch(@selection, addToSelection)
 
     getSelection: () =>
       return @selection
+
+    highlightItems: () ->
+      d3.selectAll('.bar--selected').classed('bar--selected', false)
+      d3.selectAll('.key__shape--selected').classed('key__shape--selected', false)
+
+      for item in @selection
+        d3item = d3.select(item)
+        if d3item.classed('bar')
+          d3item.classed('bar--selected', true)
+        else if d3item.classed('key')
+          d3item.selectAll('rect').classed('key__shape--selected', true)
