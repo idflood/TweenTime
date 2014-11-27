@@ -6,8 +6,9 @@
 
 ## Demo
 
-[Basic example](http(s)://idflood.github.io/TweenTime/examples/basic.html)
-[Advanced](http(s)://idflood.github.io/TweenTime/examples/advanced.html)
+[Basic example](https://idflood.github.io/TweenTime/examples/basic.html)
+
+[Advanced](https://idflood.github.io/TweenTime/examples/advanced.html)
 
 ## Usage
 
