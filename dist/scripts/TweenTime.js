@@ -7770,7 +7770,6 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
         this.mainTimeline = new TimelineMax({
           paused: true
         });
-        this.updating = false;
         this.onUpdate = new Signals.Signal();
         this.timer.updated.add(this.update);
         this.update(0);
