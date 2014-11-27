@@ -4,6 +4,19 @@
 
 ![screenshot](screenshot.png)
 
+## Demo
+
+[Basic example](http(s)://idflood.github.io/TweenTime/examples/basic.html)
+[Advanced](http(s)://idflood.github.io/TweenTime/examples/advanced.html)
+
+## Usage
+
+- Use shift key while dragging keys to snap them to existing one or to current time cursor.
+- Click on a item label in the timeline to open the editor on the right. From there you can set values and add keys.
+- Double click on a property timeline to add a key.
+
+The API is relatively minimal and clearly not definitive now so there is no real documentation yet. But if you are curious check the code of the 2 exemples above.
+
 ## Another javascript timeline?
 
 At first I created this for an internal project. But to be honest it is also to learn a bit more about d3js, play with some ideas and see where it goes. Hopefully this may be useful for someone else.
