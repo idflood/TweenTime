@@ -1,6 +1,6 @@
 {
   "name": "TweenTime",
-  "author": "stimul.ch / David Mignot - Pierre Dumont",
+  "author": "stimul.ch / David Mignot",
   "devDependencies": {
     "requirejs": "^2.1.15",
     "coffee-script": "^1.8.0",
