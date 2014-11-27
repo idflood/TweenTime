@@ -112,7 +112,7 @@ define (require) ->
         .attr('transform', 'rotate(45)')
 
       keys.attr 'transform', (d) ->
-        dx = self.timeline.x(d.time * 1000) + 3
+        dx = self.timeline.x(d.time * 1000) + 2
         dy = 9
         return "translate(" + dx + "," + dy + ")"
 
