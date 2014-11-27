@@ -108,6 +108,8 @@ define (require) ->
 
       barContainerRight.append("rect")
         .attr("class", "bar")
+        # Add a unique id for SelectionManager.removeDuplicates
+        .attr('id', (d) -> Utils.guid())
         .attr("y", 3)
         .attr("height", 14)
 

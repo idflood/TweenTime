@@ -96,6 +96,8 @@ define (require) ->
       keys.enter()
         .append('g')
         .attr('class', 'key')
+        # Add a unique id for SelectionManager.removeDuplicates
+        .attr('id', (d) -> Utils.guid())
         .on('mousedown', () ->
           # Don't trigger mousedown on linescontainer else
           # it create the selection rectangle

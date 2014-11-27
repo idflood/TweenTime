@@ -13,6 +13,7 @@ define (require) ->
         found = false
         for item2 in result
           if item.isEqualNode(item2)
+            console.log item
             found = true
             break
         if found == false then result.push(item)
