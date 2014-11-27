@@ -1,4 +1,6 @@
 define (require) ->
+  saveAs = require 'FileSaver'
+
   class EditorMenu
     constructor: (@tweenTime, @$timeline, @editor) ->
       @timer = @tweenTime.timer
@@ -55,8 +57,5 @@ define (require) ->
           data: self.tweenTime.data
         }
         data = JSON.stringify(data, json_replacer, 2)
-        a = document.createElement('a')
-        a.target = '_blank'
-        blob = new Blob([data], {"type": "text/plain;charset=utf-8"})
-        a.href = (window.URL || webkitURL).createObjectURL(blob)
-        a.click()
+        blob = new Blob([data], {"type": "text/json;charset=utf-8"})
+        saveAs(blob, 'data.json')
