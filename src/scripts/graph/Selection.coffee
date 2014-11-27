@@ -1,13 +1,20 @@
 define (require) ->
   class Selection
-    constructor: (@timeline, @linesContainer, @margin) ->
+    constructor: (@timeline, @svg, @margin) ->
       @init()
+
+    onMouseUp: (e) =>
+      @svg.selectAll('.selection').remove()
+      # Enable again the default browser text selection.
+      $('body').css({
+        'user-select': 'all'
+      })
 
     init: () ->
       self = this
-      @linesContainer.on("mousedown", () ->
+      @svg.on("mousedown", () ->
         p = d3.mouse(this)
-        self.linesContainer.append('rect')
+        self.svg.append('rect')
           .attr({
             rx: 6,
             ry: 6,
@@ -24,7 +31,7 @@ define (require) ->
           'user-select': 'none'
         })
       ).on("mousemove", () ->
-        s = self.linesContainer.select('.selection')
+        s = self.svg.select('.selection')
         if s.empty() then return
         p = d3.mouse(this)
         margin: self.margin
@@ -61,7 +68,7 @@ define (require) ->
 
         d.timeStart = self.timeline.x.invert(d.x - key_width).getTime() / 1000
         d.timeEnd = self.timeline.x.invert(d.x + d.width + key_width).getTime() / 1000
-        containerBounding = self.linesContainer[0][0].getBoundingClientRect()
+        containerBounding = self.svg[0][0].getBoundingClientRect()
 
         # deselect all previously selected items
         d3.selectAll('.key--selected').classed('key--selected', false)
@@ -74,15 +81,11 @@ define (require) ->
             # use or condition for top and bottom
             if (y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)
               d3.select(this).classed('key--selected', true)
-              #self.timeline.selectionManager.select(this, true)
               selection.push(this)
 
         self.timeline.selectionManager.select(selection)
 
-      ).on("mouseup", () ->
-        self.linesContainer.selectAll('.selection').remove()
-        # Enable again the default browser text selection.
-        $('body').css({
-          'user-select': 'all'
-        })
       )
+      # Attach the mouseup event to window so that it catch it event if
+      # mouseup happen outside of the browser window.
+      $(window).on("mouseup", @onMouseUp)
