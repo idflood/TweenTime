@@ -109,9 +109,9 @@ define (require) ->
           .attr('width', INNER_WIDTH)
         @x.range([0, width])
 
-        @xGrid.call(@xAxisGrid)
-        @xAxisElement.call(@xAxis)
+        @isDirty = true
         @header.resize(INNER_WIDTH)
+        @render()
 
     onDurationChanged: (seconds) =>
       #@isDirty = true
