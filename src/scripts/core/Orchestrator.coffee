@@ -84,9 +84,14 @@ define (require) ->
                 tween = TweenMax.to(item.values, tween_duration, val)
                 propertyTimeline.add(tween, key.time)
 
+            # Directly seek the property timeline to update the value.
             propertyTimeline.seek(seconds)
-          # force main timeline to refresh
-          seconds = seconds - 0.0000001
+          # Force main timeline to refresh but never try to go to < 0
+          # to prevent glitches when current time is 0.
+          if seconds > 0
+            seconds = seconds - 0.0000001
+          else
+            seconds = seconds + 0.0000001
 
       # Finally update the main timeline.
       @mainTimeline.seek(seconds)
