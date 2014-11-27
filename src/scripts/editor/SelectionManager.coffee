@@ -22,6 +22,8 @@ define (require) ->
 
     reset: () =>
       @selection = []
+      @highlightItems()
+      @onSelect.dispatch(@selection, false)
 
     select: (item, addToSelection = false) ->
       if !addToSelection then @selection = []

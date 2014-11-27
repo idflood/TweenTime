@@ -17,6 +17,8 @@ define (require) ->
             width: 0,
             height: 0
           })
+        # Unselect items.
+        self.timeline.selectionManager.reset()
       ).on("mousemove", () ->
         s = self.linesContainer.select('.selection')
         if s.empty() then return
