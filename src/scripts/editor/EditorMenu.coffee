@@ -34,7 +34,6 @@ define (require) ->
       json_replacer = (key, val) ->
         if key == 'timeline' then return undefined
         if key == 'tween' then return undefined
-        if key == 'updating' then return undefined
         if key == 'isDirty' then return undefined
         # Disable all private properies from TweenMax/TimelineMax
         if key.indexOf('_') == 0 then return undefined

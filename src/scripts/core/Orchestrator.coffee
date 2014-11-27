@@ -6,8 +6,6 @@ define (require) ->
   class Orchestrator
     constructor: (@timer, @data) ->
       @mainTimeline = new TimelineMax({paused: true})
-
-      @updating = false
       @onUpdate = new Signals.Signal()
       @timer.updated.add(@update)
       @update(0)
