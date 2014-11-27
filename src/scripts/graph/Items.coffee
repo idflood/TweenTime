@@ -14,22 +14,6 @@ define (require) ->
       tweenTime = self.timeline.tweenTime
 
       selectBar = (d) ->
-        # Merge attributes with existing ones on click, so if we add
-        # an attribute we don't have to edit the json manually to allow
-        # existing object to use it.
-        factory = window.ElementFactory
-        type_properties = {}
-        if d.object then type_properties = d.object.constructor.properties
-
-        existing_options = _.map(d.properties, (prop) -> prop.name)
-
-        for key, property of type_properties
-          has_prop = if existing_options.indexOf(key) != -1 then true else false
-          # if prorperty doesn't exists in the d.options array create it
-          # and assign the default value. {keys: [], name: "n", val: 1}
-          if has_prop == false
-            d.properties.push({keys: [], name: key, val: property.val})
-
         self.timeline.selectionManager.select(this)
 
       dragmove = (d) ->
