@@ -79,6 +79,7 @@ gulp.task('livereload', function() {
 });
 
 gulp.task('watch', function() {
+  gulp.watch(['examples/*.html'], livereload.changed);
   gulp.watch(['dist/styles/*.css', 'dist/scripts/*.js'], livereload.changed);
   gulp.watch('src/styles/**', ['styles']);
   gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts']);
