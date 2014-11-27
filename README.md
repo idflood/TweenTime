@@ -7,7 +7,6 @@
 ## Demo
 
 [Basic example](https://idflood.github.io/TweenTime/examples/basic.html)
-
 [Advanced](https://idflood.github.io/TweenTime/examples/advanced.html)
 
 ## Usage
