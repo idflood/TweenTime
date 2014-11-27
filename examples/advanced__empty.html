@@ -1,0 +1,249 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TweenTime: Advanced example</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../dist/styles/editor.css">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../src/fonts/icomoon/style.css">
+    <style>
+      body {
+        background: #efefef;
+      }
+      .wrapper {
+        margin-right: 281px;
+      }
+      .thumb {
+        position: relative;
+        width: 220px;
+        margin: 50px auto;
+        padding: 5px 0;
+
+        font-family: 'Source Sans Pro', Helvetica, sans-serif;
+        color: #555;
+        perspective: 600;
+        -webkit-perspective: 600;
+      }
+      .thumb__top {
+        padding: 5px;
+        background: #fff;
+      }
+      .thumb__image {
+        position: relative;
+        overflow: hidden;
+      }
+      .thumb__zoom {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        margin-top: -15px;
+        margin-left: -15px;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeAQAAAAATS5MPAAAAAnRSTlMAAHaTzTgAAAAYSURBVHgBY2Cw/8BAGvH///8/JBGk2wEAjck/Z0GN9oEAAAAASUVORK5CYII=');
+        transform: translate(0, 60px);
+        opacity: 0;
+        z-index: 900;
+      }
+      .thumb__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(196, 170, 151, 0.5);
+        opacity: 0;
+        z-index: 800;
+      }
+      .thumb__caption {
+        padding: 5px 10px 10px 10px;
+        font-size: 12px;
+        background: #fff;
+        transform-origin: 50% 0;
+        -moz-transform-origin: 50% 0;
+        backface-visibility: hidden;
+        transform: rotateX(-100deg);
+        -webkit-font-smoothing: antialiased;
+      }
+      .thumb__title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+      }
+      .thumb img {
+        display: block;
+        max-width: 100%;
+      }
+      .thumb a {
+        color: #777 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <figure class="thumb">
+        <div class="thumb__top">
+          <div class="thumb__image">
+            <img src="images/forest.jpg" alt="Magical forest">
+            <div class="thumb__overlay"></div>
+            <div class="thumb__zoom"></div>
+          </div>
+        </div>
+        <figcaption class="thumb__caption">
+          <div class="thumb__title">Magical forest</div>
+          <div class="thumb__credit">By <a href="https://unsplash.com/jonasnilssonlee" target="_blank">Jonas Nilsson Lee</a></div>
+        </figcaption>
+      </figure>
+
+    </div>
+
+    <!-- TweenTime dependencies -->
+    <script src="../src/scripts/bower_components/gsap/src/uncompressed/TweenMax.js"></script>
+    <script src="../src/scripts/bower_components/gsap/src/uncompressed/TimelineMax.js"></script>
+
+    <!-- Editor dependencies -->
+    <script src="../src/scripts/bower_components/jquery/dist/jquery.js"></script>
+    <script src="../src/scripts/bower_components/d3/d3.js"></script>
+    <script src="../src/scripts/bower_components/lodash/dist/lodash.js"></script>
+    <script src="../src/scripts/bower_components/mustache.js/mustache.js"></script>
+    <script src="../src/scripts/bower_components/draggable-number.js/dist/draggable-number.js"></script>
+
+    <!-- TweenTime & Editor -->
+    <script src="../dist/scripts/TweenTime.js"></script>
+    <script src="../dist/scripts/Editor.js"></script>
+
+    <!-- Example script -->
+    <script>
+      var data = [
+        {
+          "id": "image",
+          "label": "image",
+          "properties": [
+            {
+              "name": "scale",
+              "keys": [],
+              "val": 1
+            }
+          ]
+        },
+        {
+          "id": "overlay",
+          "label": "overlay",
+          "properties": [
+            {
+              "name": "opacity",
+              "keys": [],
+              "val": 0
+            }
+          ]
+        },
+        {
+          "id": "zoom",
+          "label": "zoom",
+          "properties": [
+            {
+              "name": "opacity",
+              "keys": [],
+              "val": 0
+            },
+            {
+              "name": "y",
+              "keys": [],
+              "val": 60
+            }
+          ]
+        },
+        {
+          "id": "caption",
+          "label": "caption",
+          "properties": [
+            {
+              "name": "rotation",
+              "keys": [],
+              "val": -100
+            }
+          ]
+        },
+        {
+          "id": "title",
+          "label": "title",
+          "properties": [
+            {
+              "name": "x",
+              "keys": [],
+              "val": 0
+            },
+            {
+              "name": "opacity",
+              "keys": [],
+              "val": 0
+            }
+          ]
+        },
+        {
+          "id": "credit",
+          "label": "credit",
+          "properties": [
+            {
+              "name": "x",
+              "keys": [],
+              "val": 0
+            },
+            {
+              "name": "opacity",
+              "keys": [],
+              "val": 0
+            }
+          ]
+        }
+      ];
+      var tweenTime = new window.TweenTime(data);
+      var editor = new Editor(tweenTime);
+
+      $img = $('.thumb__image img');
+      $overlay = $('.thumb__overlay');
+      $zoom = $('.thumb__zoom');
+      $caption = $('.thumb__caption');
+      $title = $('.thumb__title');
+      $credit = $('.thumb__credit');
+
+      var image_values = tweenTime.getValues('image');
+      var overlay_values = tweenTime.getValues('overlay');
+      var zoom_values = tweenTime.getValues('zoom');
+      var caption_values = tweenTime.getValues('caption');
+      var title_values = tweenTime.getValues('title');
+      var credit_values = tweenTime.getValues('credit');
+
+      function animate() {
+        $img.css({
+          'transform': 'scale(' + image_values.scale + ', ' + image_values.scale + ')'
+        });
+        $overlay.css({
+          'opacity': overlay_values.opacity
+        });
+        $zoom.css({
+          'transform': 'translate(0, ' + zoom_values.y + 'px)',
+          'opacity': zoom_values.opacity
+        });
+        $caption.css({
+          'transform': 'rotateX(' + caption_values.rotation + 'deg)'
+        });
+        $title.css({
+          'transform': 'translate(' + title_values.x + 'px, 0)',
+          'opacity': title_values.opacity
+        });
+        $credit.css({
+          'transform': 'translate(' + credit_values.x + 'px, 0)',
+          'opacity': credit_values.opacity
+        });
+
+        window.requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>

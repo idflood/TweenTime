@@ -1,0 +1,26 @@
+{
+  "name": "require-cs",
+  "description": "An AMD loader plugin for CoffeeScript",
+  "version": "0.5.0",
+  "dependencies": {
+    "coffeescript": "~1.7.1"
+  },
+  "ignore": [
+    "demo",
+    "tools",
+    ".*",
+    "coffee-script.js",
+    "demoserver.js",
+    "package.json"
+  ],
+  "homepage": "https://github.com/jrburke/require-cs",
+  "_release": "0.5.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.5.0",
+    "commit": "58cf927cf7f37cecf83942c748a06b1c594aa011"
+  },
+  "_source": "git://github.com/jrburke/require-cs.git",
+  "_target": "~0.5.0",
+  "_originalSource": "require-cs"
+}
