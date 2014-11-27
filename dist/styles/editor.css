@@ -166,10 +166,6 @@ a.menu-item--toggle {
     fill: none;
     stroke: steelblue;
     stroke-width: 1.5px; }
-  .timeline .bar {
-    fill: rgba(92, 98, 99, 0.5);
-    stroke: rgba(92, 98, 99, 0.9);
-    cursor: move; }
   .timeline .bar-anchor {
     fill-opacity: 0;
     cursor: ew-resize; }
@@ -347,11 +343,36 @@ a.menu-item--toggle-side {
   .line-separator--secondary {
     stroke: #3d4041; }
 
-.key__shape {
-  fill: #919191;
+.bar {
+  fill: rgba(92, 98, 99, 0.5);
+  stroke: rgba(92, 98, 99, 0.9);
   cursor: move; }
-  .key__shape--selected {
-    fill: #fff; }
+  .bar--selected {
+    fill: rgba(169, 174, 175, 0.5);
+    stroke: rgba(143, 149, 150, 0.9); }
+
+.key path {
+  shape-rendering: geometricPrecision;
+  fill-opacity: 0.8;
+  cursor: move; }
+
+.key__shape-left {
+  fill: #9c9c9c; }
+
+.key__shape-right {
+  fill: #bbb; }
+
+.easeIn .key__shape-left, .easeInOut .key__shape-left {
+  fill: #3cbdd4; }
+
+.easeOut .key__shape-right, .easeInOut .key__shape-right {
+  fill: #6ECEDF; }
+
+.key--selected path {
+  fill-opacity: 1;
+  fill: #fff; }
+.key--selected.easeIn .key__shape-left, .key--selected.easeInOut .key__shape-left {
+  fill: #6ECEDF; }
 
 .error {
   fill: #CF3938; }

@@ -921,6 +921,14 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         return prevKey;
       };
 
+      Utils.guid = function() {
+        var s4;
+        s4 = function() {
+          return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        };
+        return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+      };
+
       return Utils;
 
     })();
@@ -1443,7 +1451,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       Header.prototype.render = function() {
         var timeSelection;
         timeSelection = this.svgContainer.selectAll('.time-indicator');
-        return timeSelection.attr('transform', 'translate(' + (this.xDisplayed(this.currentTime[0]) + 0.5) + ', 25)');
+        return timeSelection.attr('transform', 'translate(' + (this.xDisplayed(this.currentTime[0])) + ', 25)');
       };
 
       Header.prototype.createTimeHandle = function() {
@@ -1483,8 +1491,8 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           dx = Math.max(0, dx);
           return self.timer.seek([dx]);
         });
-        timeGrp = timeSelection.enter().append("g").attr('class', "time-indicator").attr("transform", "translate(0," + 30 + ")").call(dragTime);
-        timeGrp.append('rect').attr('class', 'time-indicator__line').attr('x', -1).attr('y', 0).attr('width', 1).attr('height', 1000);
+        timeGrp = timeSelection.enter().append("g").attr('class', "time-indicator").attr("transform", "translate(-0.5," + 30 + ")").call(dragTime);
+        timeGrp.append('rect').attr('class', 'time-indicator__line').attr('x', -0.5).attr('y', 0).attr('width', 1).attr('height', 1000);
         timeGrp.append('path').attr('class', 'time-indicator__handle').attr('d', 'M -5 -3 L -5 5 L 0 10 L 5 5 L 5 -3 L -5 -3');
         return this.svgContainer.append("rect").attr("class", "graph-mask").attr("x", -self.margin.left).attr("y", -self.margin.top).attr("width", self.margin.left - 20).attr("height", self.height);
       };
@@ -1562,26 +1570,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         self = this;
         tweenTime = self.timeline.tweenTime;
         selectBar = function(d) {
-          var existing_options, factory, has_prop, key, property, type_properties;
-          factory = window.ElementFactory;
-          type_properties = {};
-          if (d.object) {
-            type_properties = d.object.constructor.properties;
-          }
-          existing_options = _.map(d.properties, function(prop) {
-            return prop.name;
-          });
-          for (key in type_properties) {
-            property = type_properties[key];
-            has_prop = existing_options.indexOf(key) !== -1 ? true : false;
-            if (has_prop === false) {
-              d.properties.push({
-                keys: [],
-                name: key,
-                val: property.val
-              });
-            }
-          }
           return self.timeline.selectionManager.select(this);
         };
         dragmove = function(d) {
@@ -1668,7 +1656,9 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         });
         barEnter = bar.enter().append('g').attr('class', 'line-grp');
         barContainerRight = barEnter.append('svg').attr('class', 'timeline__right-mask').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight);
-        barContainerRight.append("rect").attr("class", "bar").attr("y", 3).attr("height", 14);
+        barContainerRight.append("rect").attr("class", "bar").attr('id', function(d) {
+          return Utils.guid();
+        }).attr("y", 3).attr("height", 14);
         barContainerRight.append("rect").attr("class", "bar-anchor bar-anchor--left").attr("y", 2).attr("height", 16).attr("width", 6).call(dragLeft);
         barContainerRight.append("rect").attr("class", "bar-anchor bar-anchor--right").attr("y", 2).attr("height", 16).attr("width", 6).call(dragRight);
         self.dy = 10 + this.timeline.margin.top;
@@ -1854,15 +1844,15 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           return item.time === data.time;
         });
         if (key.length) {
-          d3.selectAll('.key__shape--selected').classed('key__shape--selected', false);
-          key.selectAll('rect').classed('key__shape--selected', true);
+          d3.selectAll('.key--selected').classed('key--selected', false);
+          key.classed('key--selected', true);
           key = key[0][0];
           return self.timeline.selectionManager.select(key);
         }
       };
 
       Keys.prototype.render = function(properties) {
-        var drag, dragmove, key_size, keys, propKey, propValue, selectKey, self, sortKeys, tweenTime;
+        var drag, dragmove, key_grp, keys, propKey, propValue, selectKey, self, sortKeys, tweenTime;
         self = this;
         tweenTime = self.timeline.tweenTime;
         sortKeys = function(keys) {
@@ -1925,33 +1915,45 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         selectKey = function(d) {
           var addToSelection, event;
           event = d3.event;
-          console.log(event);
           if (event.sourceEvent) {
             event = event.sourceEvent;
           }
           addToSelection = event.shiftKey;
           if (d3.event.type && d3.event.type === "dragstart") {
-            if (d3.select(this).selectAll('rect').classed('key__shape--selected')) {
+            if (d3.select(this).classed('key--selected')) {
               return;
             }
           }
-          if (!addToSelection) {
-            d3.selectAll('.key__shape--selected').classed('key__shape--selected', false);
-          }
-          d3.select(this).selectAll('rect').classed('key__shape--selected', true);
           return self.timeline.selectionManager.select(this, addToSelection);
         };
         drag = d3.behavior.drag().origin(function(d) {
           return d;
         }).on("drag", dragmove).on("dragstart", selectKey);
-        key_size = 6;
-        keys.enter().append('g').attr('class', 'key').on('mousedown', function() {
+        key_grp = keys.enter().append('g').attr('class', 'key').attr('id', function(d) {
+          return Utils.guid();
+        }).on('mousedown', function() {
           return d3.event.stopPropagation();
-        }).call(drag).append('rect').attr('x', -3).attr('width', key_size).attr('height', key_size).attr('class', 'key__shape').attr('transform', 'rotate(45)');
+        }).call(drag);
+        properties.selectAll('.key').attr('class', function(d) {
+          var cls, ease;
+          cls = 'key';
+          if (d3.select(this).classed('key--selected')) {
+            cls += " key--selected";
+          }
+          if (d.ease) {
+            ease = d.ease.split('.');
+            if (ease.length === 2) {
+              cls += " " + ease[1];
+            }
+          }
+          return cls;
+        });
+        key_grp.append('path').attr('class', 'key__shape-left').attr('d', 'M 0 -6 L -6 0 L 0 6');
+        key_grp.append('path').attr('class', 'key__shape-right').attr('d', 'M 0 -6 L 6 0 L 0 6');
         keys.attr('transform', function(d) {
           var dx, dy;
-          dx = self.timeline.x(d.time * 1000) + 3;
-          dy = 9;
+          dx = self.timeline.x(d.time * 1000);
+          dy = 10;
           return "translate(" + dx + "," + dy + ")";
         });
         return keys.exit().remove();
@@ -2026,7 +2028,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         return this.linesContainer.on("mousedown", function() {
           var p;
           p = d3.mouse(this);
-          return self.linesContainer.append('rect').attr({
+          self.linesContainer.append('rect').attr({
             rx: 6,
             ry: 6,
             "class": 'selection',
@@ -2035,6 +2037,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             width: 0,
             height: 0
           });
+          return self.timeline.selectionManager.reset();
         }).on("mousemove", function() {
           var containerBounding, d, move, p, s, selection;
           s = self.linesContainer.select('.selection');
@@ -2069,7 +2072,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           d.timeEnd = self.timeline.x.invert(d.x + d.width).getTime() / 1000;
           containerBounding = self.linesContainer[0][0].getBoundingClientRect();
           d.y -= 15;
-          d3.selectAll('.key__shape--selected').classed('key__shape--selected', false);
+          d3.selectAll('.key--selected').classed('key--selected', false);
           self.timeline.selectionManager.reset();
           selection = [];
           d3.selectAll('.key').each(function(state_data, i) {
@@ -2078,7 +2081,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             y = itemBounding.top - containerBounding.top;
             if (state_data.time >= d.timeStart && state_data.time <= d.timeEnd) {
               if ((y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)) {
-                d3.select(this).selectAll('rect').classed('key__shape--selected', true);
+                d3.select(this).classed('key--selected', true);
                 return selection.push(this);
               }
             }
@@ -2406,19 +2409,19 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/PropertyTween',['require','jquery','Signal','lodash','Mustache','text!templates/propertyTween.tpl.html'],function(require) {
-    var $, Mustache, PropertyTween, Signals, tpl_property, _;
+  define('cs!editor/PropertyTween',['require','jquery','Signal','Mustache','text!templates/propertyTween.tpl.html'],function(require) {
+    var $, Mustache, PropertyTween, Signals, tpl_property;
     $ = require('jquery');
     Signals = require('Signal');
-    _ = require('lodash');
     Mustache = require('Mustache');
     tpl_property = require('text!templates/propertyTween.tpl.html');
     return PropertyTween = (function() {
-      function PropertyTween(instance_property, lineData, timer, key_val) {
+      function PropertyTween(instance_property, lineData, timer, key_val, timeline) {
         this.instance_property = instance_property;
         this.lineData = lineData;
         this.timer = timer;
         this.key_val = key_val != null ? key_val : false;
+        this.timeline = timeline;
         this.update = __bind(this.update, this);
         this.onChange = __bind(this.onChange, this);
         this.render = __bind(this.render, this);
@@ -2458,9 +2461,8 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         var ease;
         ease = this.$el.find('select').val();
         this.key_val.ease = ease;
-        console.log("on change: " + ease);
-        console.log(this);
-        return this.lineData.isDirty = true;
+        this.lineData.isDirty = true;
+        return this.timeline.isDirty = true;
       };
 
       PropertyTween.prototype.update = function() {
@@ -2583,7 +2585,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           }
         }
         if (property_name) {
-          tween = new PropertyTween(instance_prop, lineData, this.timer, key_val);
+          tween = new PropertyTween(instance_prop, lineData, this.timer, key_val, this.timeline);
           this.selectedProps.push(tween);
           $el.append(tween.$el);
           $actions = $('<div class="properties-editor__actions actions"></div>');
@@ -2626,11 +2628,256 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
 
 }).call(this);
 
+/* FileSaver.js
+ * A saveAs() FileSaver implementation.
+ * 2014-08-29
+ *
+ * By Eli Grey, http://eligrey.com
+ * License: X11/MIT
+ *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+ */
+
+/*global self */
+/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+
+var saveAs = saveAs
+  // IE 10+ (native saveAs)
+  || (typeof navigator !== "undefined" &&
+      navigator.msSaveOrOpenBlob && navigator.msSaveOrOpenBlob.bind(navigator))
+  // Everyone else
+  || (function(view) {
+	
+	// IE <10 is explicitly unsupported
+	if (typeof navigator !== "undefined" &&
+	    /MSIE [1-9]\./.test(navigator.userAgent)) {
+		return;
+	}
+	var
+		  doc = view.document
+		  // only get URL when necessary in case Blob.js hasn't overridden it yet
+		, get_URL = function() {
+			return view.URL || view.webkitURL || view;
+		}
+		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		, can_use_save_link = "download" in save_link
+		, click = function(node) {
+			var event = doc.createEvent("MouseEvents");
+			event.initMouseEvent(
+				"click", true, false, view, 0, 0, 0, 0, 0
+				, false, false, false, false, 0, null
+			);
+			node.dispatchEvent(event);
+		}
+		, webkit_req_fs = view.webkitRequestFileSystem
+		, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
+		, throw_outside = function(ex) {
+			(view.setImmediate || view.setTimeout)(function() {
+				throw ex;
+			}, 0);
+		}
+		, force_saveable_type = "application/octet-stream"
+		, fs_min_size = 0
+		// See https://code.google.com/p/chromium/issues/detail?id=375297#c7 for
+		// the reasoning behind the timeout and revocation flow
+		, arbitrary_revoke_timeout = 10
+		, revoke = function(file) {
+			var revoker = function() {
+				if (typeof file === "string") { // file is an object URL
+					get_URL().revokeObjectURL(file);
+				} else { // file is a File
+					file.remove();
+				}
+			};
+			if (view.chrome) {
+				revoker();
+			} else {
+				setTimeout(revoker, arbitrary_revoke_timeout);
+			}
+		}
+		, dispatch = function(filesaver, event_types, event) {
+			event_types = [].concat(event_types);
+			var i = event_types.length;
+			while (i--) {
+				var listener = filesaver["on" + event_types[i]];
+				if (typeof listener === "function") {
+					try {
+						listener.call(filesaver, event || filesaver);
+					} catch (ex) {
+						throw_outside(ex);
+					}
+				}
+			}
+		}
+		, FileSaver = function(blob, name) {
+			// First try a.download, then web filesystem, then object URLs
+			var
+				  filesaver = this
+				, type = blob.type
+				, blob_changed = false
+				, object_url
+				, target_view
+				, dispatch_all = function() {
+					dispatch(filesaver, "writestart progress write writeend".split(" "));
+				}
+				// on any filesys errors revert to saving with object URLs
+				, fs_error = function() {
+					// don't create more object URLs than needed
+					if (blob_changed || !object_url) {
+						object_url = get_URL().createObjectURL(blob);
+					}
+					if (target_view) {
+						target_view.location.href = object_url;
+					} else {
+						var new_tab = view.open(object_url, "_blank");
+						if (new_tab == undefined && typeof safari !== "undefined") {
+							//Apple do not allow window.open, see http://bit.ly/1kZffRI
+							view.location.href = object_url
+						}
+					}
+					filesaver.readyState = filesaver.DONE;
+					dispatch_all();
+					revoke(object_url);
+				}
+				, abortable = function(func) {
+					return function() {
+						if (filesaver.readyState !== filesaver.DONE) {
+							return func.apply(this, arguments);
+						}
+					};
+				}
+				, create_if_not_found = {create: true, exclusive: false}
+				, slice
+			;
+			filesaver.readyState = filesaver.INIT;
+			if (!name) {
+				name = "download";
+			}
+			if (can_use_save_link) {
+				object_url = get_URL().createObjectURL(blob);
+				save_link.href = object_url;
+				save_link.download = name;
+				click(save_link);
+				filesaver.readyState = filesaver.DONE;
+				dispatch_all();
+				revoke(object_url);
+				return;
+			}
+			// Object and web filesystem URLs have a problem saving in Google Chrome when
+			// viewed in a tab, so I force save with application/octet-stream
+			// http://code.google.com/p/chromium/issues/detail?id=91158
+			// Update: Google errantly closed 91158, I submitted it again:
+			// https://code.google.com/p/chromium/issues/detail?id=389642
+			if (view.chrome && type && type !== force_saveable_type) {
+				slice = blob.slice || blob.webkitSlice;
+				blob = slice.call(blob, 0, blob.size, force_saveable_type);
+				blob_changed = true;
+			}
+			// Since I can't be sure that the guessed media type will trigger a download
+			// in WebKit, I append .download to the filename.
+			// https://bugs.webkit.org/show_bug.cgi?id=65440
+			if (webkit_req_fs && name !== "download") {
+				name += ".download";
+			}
+			if (type === force_saveable_type || webkit_req_fs) {
+				target_view = view;
+			}
+			if (!req_fs) {
+				fs_error();
+				return;
+			}
+			fs_min_size += blob.size;
+			req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
+				fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
+					var save = function() {
+						dir.getFile(name, create_if_not_found, abortable(function(file) {
+							file.createWriter(abortable(function(writer) {
+								writer.onwriteend = function(event) {
+									target_view.location.href = file.toURL();
+									filesaver.readyState = filesaver.DONE;
+									dispatch(filesaver, "writeend", event);
+									revoke(file);
+								};
+								writer.onerror = function() {
+									var error = writer.error;
+									if (error.code !== error.ABORT_ERR) {
+										fs_error();
+									}
+								};
+								"writestart progress write abort".split(" ").forEach(function(event) {
+									writer["on" + event] = filesaver["on" + event];
+								});
+								writer.write(blob);
+								filesaver.abort = function() {
+									writer.abort();
+									filesaver.readyState = filesaver.DONE;
+								};
+								filesaver.readyState = filesaver.WRITING;
+							}), fs_error);
+						}), fs_error);
+					};
+					dir.getFile(name, {create: false}, abortable(function(file) {
+						// delete file if it already exists
+						file.remove();
+						save();
+					}), abortable(function(ex) {
+						if (ex.code === ex.NOT_FOUND_ERR) {
+							save();
+						} else {
+							fs_error();
+						}
+					}));
+				}), fs_error);
+			}), fs_error);
+		}
+		, FS_proto = FileSaver.prototype
+		, saveAs = function(blob, name) {
+			return new FileSaver(blob, name);
+		}
+	;
+	FS_proto.abort = function() {
+		var filesaver = this;
+		filesaver.readyState = filesaver.DONE;
+		dispatch(filesaver, "abort");
+	};
+	FS_proto.readyState = FS_proto.INIT = 0;
+	FS_proto.WRITING = 1;
+	FS_proto.DONE = 2;
+
+	FS_proto.error =
+	FS_proto.onwritestart =
+	FS_proto.onprogress =
+	FS_proto.onwrite =
+	FS_proto.onabort =
+	FS_proto.onerror =
+	FS_proto.onwriteend =
+		null;
+
+	return saveAs;
+}(
+	   typeof self !== "undefined" && self
+	|| typeof window !== "undefined" && window
+	|| this.content
+));
+// `self` is undefined in Firefox for Android content script context
+// while `this` is nsIContentFrameMessageManager
+// with an attribute `content` that corresponds to the window
+
+if (typeof module !== "undefined" && module !== null) {
+  module.exports = saveAs;
+} else if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) {
+  define('FileSaver',[], function() {
+    return saveAs;
+  });
+}
+;
 
 // Generated by CoffeeScript 1.8.0
 (function() {
-  define('cs!editor/EditorMenu',['require'],function(require) {
-    var EditorMenu;
+  define('cs!editor/EditorMenu',['require','FileSaver'],function(require) {
+    var EditorMenu, saveAs;
+    saveAs = require('FileSaver');
     return EditorMenu = (function() {
       function EditorMenu(tweenTime, $timeline, editor) {
         this.tweenTime = tweenTime;
@@ -2693,7 +2940,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           return val;
         };
         return this.$timeline.find('[data-action="export"]').click(function(e) {
-          var a, blob, data, domain, domain_end, domain_start;
+          var blob, data, domain, domain_end, domain_start;
           e.preventDefault();
           domain = self.editor.timeline.x.domain();
           domain_start = domain[0];
@@ -2707,13 +2954,10 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
             data: self.tweenTime.data
           };
           data = JSON.stringify(data, json_replacer, 2);
-          a = document.createElement('a');
-          a.target = '_blank';
           blob = new Blob([data], {
-            "type": "text/plain;charset=utf-8"
+            "type": "text/json;charset=utf-8"
           });
-          a.href = (window.URL || webkitURL).createObjectURL(blob);
-          return a.click();
+          return saveAs(blob, 'data.json');
         });
       };
 
@@ -2821,8 +3065,9 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/SelectionManager',['require','Signal'],function(require) {
-    var SelectionManager, Signals;
+  define('cs!editor/SelectionManager',['require','d3','Signal'],function(require) {
+    var SelectionManager, Signals, d3;
+    d3 = require('d3');
     Signals = require('Signal');
     return SelectionManager = (function() {
       function SelectionManager(tweenTime) {
@@ -2844,6 +3089,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           for (_j = 0, _len1 = result.length; _j < _len1; _j++) {
             item2 = result[_j];
             if (item.isEqualNode(item2)) {
+              console.log(item);
               found = true;
               break;
             }
@@ -2856,7 +3102,9 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       };
 
       SelectionManager.prototype.reset = function() {
-        return this.selection = [];
+        this.selection = [];
+        this.highlightItems();
+        return this.onSelect.dispatch(this.selection, false);
       };
 
       SelectionManager.prototype.select = function(item, addToSelection) {
@@ -2876,11 +3124,32 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           this.selection.push(item);
         }
         this.removeDuplicates();
+        this.highlightItems();
         return this.onSelect.dispatch(this.selection, addToSelection);
       };
 
       SelectionManager.prototype.getSelection = function() {
         return this.selection;
+      };
+
+      SelectionManager.prototype.highlightItems = function() {
+        var d3item, item, _i, _len, _ref, _results;
+        d3.selectAll('.bar--selected').classed('bar--selected', false);
+        d3.selectAll('.key--selected').classed('key--selected', false);
+        _ref = this.selection;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          d3item = d3.select(item);
+          if (d3item.classed('bar')) {
+            _results.push(d3item.classed('bar--selected', true));
+          } else if (d3item.classed('key')) {
+            _results.push(d3item.classed('key--selected', true));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
       };
 
       return SelectionManager;
