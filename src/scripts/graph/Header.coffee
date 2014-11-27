@@ -68,7 +68,7 @@ define (require) ->
 
     render: () =>
       timeSelection = @svgContainer.selectAll('.time-indicator')
-      timeSelection.attr('transform', 'translate(' + (@xDisplayed(@currentTime[0]) + 0.5) + ', 25)')
+      timeSelection.attr('transform', 'translate(' + (@xDisplayed(@currentTime[0])) + ', 25)')
 
     createTimeHandle: () =>
       self = this
@@ -113,11 +113,11 @@ define (require) ->
 
       timeGrp = timeSelection.enter().append("g")
         .attr('class', "time-indicator")
-        .attr("transform", "translate(0," + 30 + ")")
+        .attr("transform", "translate(-0.5," + 30 + ")")
         .call(dragTime)
       timeGrp.append('rect')
         .attr('class', 'time-indicator__line')
-        .attr('x', -1)
+        .attr('x', -0.5)
         .attr('y', 0)
         .attr('width', 1)
         .attr('height', 1000)
