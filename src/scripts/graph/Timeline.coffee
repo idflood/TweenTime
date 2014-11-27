@@ -57,7 +57,7 @@ define (require) ->
       @header = new Header(@timer, @initialDomain, @tweenTime, width, margin)
       @timeIndicator = new TimeIndicator(this, @svgContainerTime)
 
-      @selection = new Selection(this, @linesContainer)
+      @selection = new Selection(this, @svg, margin)
 
       @items = new Items(this, @linesContainer)
       @items.onUpdate.add () => @isDirty = true

@@ -1,6 +1,6 @@
 define (require) ->
   class Selection
-    constructor: (@timeline, @linesContainer) ->
+    constructor: (@timeline, @linesContainer, @margin) ->
       @init()
 
     init: () ->
@@ -19,16 +19,24 @@ define (require) ->
           })
         # Unselect items.
         self.timeline.selectionManager.reset()
+        # Prevent default browser text selection.
+        $('body').css({
+          'user-select': 'none'
+        })
       ).on("mousemove", () ->
         s = self.linesContainer.select('.selection')
         if s.empty() then return
         p = d3.mouse(this)
+        margin: self.margin
         d = {
           x: parseInt(s.attr('x'), 10),
           y: parseInt(s.attr('y'), 10),
           width: parseInt(s.attr('width'), 10),
           height: parseInt(s.attr('height'), 10)
         }
+        # Apply margin to mouse selection.
+        p[0] = Math.max(self.margin.left, p[0])
+
         move = {
           x: p[0] - d.x,
           y: p[1] - d.y
@@ -47,12 +55,16 @@ define (require) ->
 
         s.attr(d)
 
-        d.timeStart = self.timeline.x.invert(d.x).getTime() / 1000
-        d.timeEnd = self.timeline.x.invert(d.x + d.width).getTime() / 1000
-        containerBounding = self.linesContainer[0][0].getBoundingClientRect()
+        # remove margins from selection
+        d.x -= self.margin.left
+        key_width = 6
 
+        d.timeStart = self.timeline.x.invert(d.x - key_width).getTime() / 1000
+        d.timeEnd = self.timeline.x.invert(d.x + d.width + key_width).getTime() / 1000
+        containerBounding = self.linesContainer[0][0].getBoundingClientRect()
+        console.log containerBounding
         # not sure why there is ~15px difference in y
-        d.y -= 15
+
 
         # deselect all previously selected items
         d3.selectAll('.key--selected').classed('key--selected', false)
@@ -72,4 +84,8 @@ define (require) ->
 
       ).on("mouseup", () ->
         self.linesContainer.selectAll('.selection').remove()
+        # Enable again the default browser text selection.
+        $('body').css({
+          'user-select': 'all'
+        })
       )
