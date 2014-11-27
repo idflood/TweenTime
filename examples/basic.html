@@ -103,11 +103,13 @@
           ]
         }
       ];
+
       var tweenTime = new window.TweenTime(data);
       var editor = new Editor(tweenTime);
 
+      var box_values = tweenTime.getValues('box');
+
       function animate() {
-        var box_values = data[0].values;
         $('.box').css({
           'opacity': box_values.opacity,
           'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'

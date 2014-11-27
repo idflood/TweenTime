@@ -170,20 +170,22 @@
           ]
         }
       ];
+
       var tweenTime = new window.TweenTime(data);
       var editor = new Editor(tweenTime);
 
-      function animate() {
-        var box_values = data[0].values;
+      var box_values = tweenTime.getValues('box');
+      var box2_values = tweenTime.getValues('box2');
 
+      function animate() {
         $('.box--blue').css({
           'opacity': box_values.opacity,
           'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
         });
-        box_values = data[1].values;
+
         $('.box--red').css({
-          'opacity': box_values.opacity,
-          'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
+          'opacity': box2_values.opacity,
+          'transform': 'translate(' + box2_values.x + 'px, ' + box2_values.y + 'px)'
         });
 
         window.requestAnimationFrame(animate);

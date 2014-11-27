@@ -133,7 +133,7 @@
                 },
                 {
                   "time": 2.718,
-                  "val": 1.2,
+                  "val": 1.5,
                   "ease": "Cubic.easeInOut"
                 }
               ],
@@ -292,7 +292,7 @@
           }
         }
       ];
-      var tweenTime = new window.TweenTime(data);
+      var tweenTime = new TweenTime(data);
       var editor = new Editor(tweenTime);
 
       $img = $('.thumb__image img');
@@ -302,13 +302,14 @@
       $title = $('.thumb__title');
       $credit = $('.thumb__credit');
 
+      var image_values = tweenTime.getValues('image');
+      var overlay_values = tweenTime.getValues('overlay');
+      var zoom_values = tweenTime.getValues('zoom');
+      var caption_values = tweenTime.getValues('caption');
+      var title_values = tweenTime.getValues('title');
+      var credit_values = tweenTime.getValues('credit');
+
       function animate() {
-        var image_values = data[0].values;
-        var overlay_values = data[1].values;
-        var zoom_values = data[2].values;
-        var caption_values = data[3].values;
-        var title_values = data[4].values;
-        var credit_values = data[5].values;
         $img.css({
           'transform': 'scale(' + image_values.scale + ', ' + image_values.scale + ')'
         });
