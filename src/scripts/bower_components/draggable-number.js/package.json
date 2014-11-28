@@ -1,7 +1,7 @@
 {
   "name": "draggable-number.js",
   "description": "Minimal numeric input widget",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.",
   "author": {
     "name": "David Mignot",

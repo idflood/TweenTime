@@ -4,7 +4,7 @@
  *
  * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
  * @author David Mignot - http://idflood.com
- * @version 0.4.1
+ * @version 0.4.2
  **/
 (function(root, factory) {
     if(typeof exports === 'object') {
@@ -34,6 +34,7 @@ DraggableNumber = function (input, options) {
   this._lastMousePosition = {x: 0, y: 0};
   this._value = 0;
   this._startValue = this._value;
+  this._step = 1;
 
   // Minimum mouse movement before a drag start.
   this._dragThreshold = this._setOption('dragThreshold', 10);
@@ -298,6 +299,7 @@ DraggableNumber.prototype = {
     this._isDragging = false;
     this._lastMousePosition = {x: e.clientX, y: e.clientY};
     this._startValue = this._value;
+    this._step = this._getStep(this._value);
 
     document.addEventListener('mouseup', this._onMouseUp, false);
     document.addEventListener('mousemove', this._onMouseMove, false);
@@ -372,8 +374,10 @@ DraggableNumber.prototype = {
     // Get the number offset.
     var offset = this._getNumberOffset(delta, modifier);
 
+    var step = this._step * offset;
+
     // Update the input number.
-    var new_value = this.get() + offset;
+    var new_value = this.get() + step;
     // Hack for rounding errors.
     new_value = parseFloat(new_value.toFixed(10));
     this.set(new_value);
@@ -387,6 +391,15 @@ DraggableNumber.prototype = {
     this._lastMousePosition = newMousePosition;
   },
 
+  _getStep: function (value) {
+    var step = 1;
+    // The line below was taken from dat.gui: https://code.google.com/p/dat-gui/source/browse/src/dat/controllers/NumberController.js
+    if (value !== 0 && isNaN(value) === false) {
+      step = Math.pow(10, Math.floor(Math.log(Math.abs(value))/Math.LN10))/10;
+    }
+    return step;
+  },
+
   /**
    * Return the number offset based on a delta and a modifier.
    * @private
@@ -397,10 +410,6 @@ DraggableNumber.prototype = {
   _getNumberOffset: function (delta, modifier) {
     var increment = 1;
 
-    // The line below was taken from dat.gui: https://code.google.com/p/dat-gui/source/browse/src/dat/controllers/NumberController.js
-    if (this._value !== 0 && isNaN(this._value) === false) {
-      increment = Math.pow(10, Math.floor(Math.log(Math.abs(this._value))/Math.LN10))/10;
-    }
     if (modifier == DraggableNumber.MODIFIER_SMALL) {
       increment *= 0.1;
     }
