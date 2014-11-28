@@ -4,7 +4,7 @@
  *
  * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
  * @author David Mignot - http://idflood.com
- * @version 0.3.4
+ * @version 0.4.1
  **/
 (function(root, factory) {
     if(typeof exports === 'object') {
@@ -17,7 +17,6 @@
         root['DraggableNumber'] = factory();
     }
 }(this, function() {
-
 // Utility function to replace .bind(this) since it is not available in all browsers.
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -34,6 +33,7 @@ DraggableNumber = function (input, options) {
   this._isDragging = false;
   this._lastMousePosition = {x: 0, y: 0};
   this._value = 0;
+  this._startValue = this._value;
 
   // Minimum mouse movement before a drag start.
   this._dragThreshold = this._setOption('dragThreshold', 10);
@@ -237,6 +237,7 @@ DraggableNumber.prototype = {
    * @private
    */
   _showInput: function () {
+    this._startValue = this._value;
     this._input.style.display = this._inputDisplayStyle;
     this._span.style.display = 'none';
     this._input.focus();
@@ -259,6 +260,12 @@ DraggableNumber.prototype = {
   _onInputBlur: function (e) {
     this._onInputChange();
     this._showSpan();
+    // Call onchange callback if it exists.
+    if ("endCallback" in this._options) {
+      if (this._value != this._startValue) {
+        this._options.endCallback(this._value);
+      }
+    }
   },
 
   /**
@@ -290,6 +297,7 @@ DraggableNumber.prototype = {
     this._preventSelection(true);
     this._isDragging = false;
     this._lastMousePosition = {x: e.clientX, y: e.clientY};
+    this._startValue = this._value;
 
     document.addEventListener('mouseup', this._onMouseUp, false);
     document.addEventListener('mousemove', this._onMouseMove, false);
@@ -310,6 +318,15 @@ DraggableNumber.prototype = {
 
     document.removeEventListener('mouseup', this._onMouseUp, false);
     document.removeEventListener('mousemove', this._onMouseMove, false);
+
+    // Call complete callback if it exists.
+    if ("endCallback" in this._options) {
+      // Don't call end callback if nothing changed.
+      if (this._startValue != this._value) {
+        this._options.endCallback(this._value);
+      }
+    }
+    this._startValue = this._value;
   },
 
   /**
@@ -357,6 +374,8 @@ DraggableNumber.prototype = {
 
     // Update the input number.
     var new_value = this.get() + offset;
+    // Hack for rounding errors.
+    new_value = parseFloat(new_value.toFixed(10));
     this.set(new_value);
 
     // Call onchange callback if it exists.
@@ -377,6 +396,11 @@ DraggableNumber.prototype = {
    */
   _getNumberOffset: function (delta, modifier) {
     var increment = 1;
+
+    // The line below was taken from dat.gui: https://code.google.com/p/dat-gui/source/browse/src/dat/controllers/NumberController.js
+    if (this._value !== 0 && isNaN(this._value) === false) {
+      increment = Math.pow(10, Math.floor(Math.log(Math.abs(this._value))/Math.LN10))/10;
+    }
     if (modifier == DraggableNumber.MODIFIER_SMALL) {
       increment *= 0.1;
     }
@@ -426,7 +450,5 @@ DraggableNumber.prototype = {
   }
 };
 
-
-return DraggableNumber;
-
+    return DraggableNumber;
 }));
