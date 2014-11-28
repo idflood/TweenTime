@@ -250,6 +250,12 @@ svg * {
   .property__key--active {
     background: #39C2C8; }
 
+.property__key-time {
+  margin-right: 10px;
+  color: #777; }
+  .property__key-time strong {
+    color: #ddd; }
+
 .property__input {
   background: #57595a;
   border: 1px solid #2f3132;
