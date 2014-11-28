@@ -11,7 +11,8 @@ define (require) ->
   class PropertyNumber
     # @instance_property: The current property on the data object.
     # @lineData: The line data object.
-    constructor: (@instance_property, @lineData, @timer, @key_val = false) ->
+    constructor: (@instance_property, @lineData, @editor, @key_val = false) ->
+      @timer = @editor.timer
       # key_val is defined if we selected a key
       @$el = false
       @keyAdded = new Signals.Signal()
@@ -105,11 +106,15 @@ define (require) ->
             # Set the property on the instance object.
             @lineData.object.update(currentTime - @lineData.start)
 
-        # Something changed, make the lineData dirty to rebuild things.
+        # Something changed, make the lineData dirty to rebuild things. d
         @lineData.isDirty = true
 
+      onChangeEnd = (new_val) =>
+        @editor.undoManager.addState()
+
       draggable = new DraggableNumber($input.get(0), {
-        changeCallback: onInputChange
+        changeCallback: onInputChange,
+        endCallback: onChangeEnd
       })
       $input.data('draggable', draggable)
       $input.change(onInputChange)
@@ -120,4 +125,8 @@ define (require) ->
 
       @$key.toggleClass('property__key--active', key)
       draggable = @$input.data('draggable')
-      draggable.set(val.toFixed(3))
+
+      if draggable
+        draggable.set(val.toFixed(3))
+      else
+        @$input.val(val.toFixed(3))

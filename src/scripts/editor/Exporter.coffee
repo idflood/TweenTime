@@ -18,7 +18,7 @@ define (require) ->
       }
 
     getJSON: () =>
-      options = self.editor.options
+      options = @editor.options
       json_replacer = (key, val) ->
         if key == 'timeline' then return undefined
         if key == 'tween' then return undefined

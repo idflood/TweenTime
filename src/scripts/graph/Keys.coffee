@@ -84,10 +84,14 @@ define (require) ->
 
         self.timeline.selectionManager.select(this, addToSelection)
 
+      dragend = (d) =>
+        self.timeline.editor.undoManager.addState()
+
       drag = d3.behavior.drag()
         .origin((d) -> return d;)
         .on("drag", dragmove)
         .on("dragstart", selectKey)
+        .on("dragend", dragend)
 
       key_grp = keys.enter()
         .append('g')

@@ -8,7 +8,8 @@ define (require) ->
   class PropertyTween
     # @instance_property: The current property on the data object.
     # @lineData: The line data object.
-    constructor: (@instance_property, @lineData, @timer, @key_val = false, @timeline) ->
+    constructor: (@instance_property, @lineData, @editor, @key_val = false, @timeline) ->
+      @timer = @editor.timer
       @render()
 
     render: () =>
@@ -35,6 +36,7 @@ define (require) ->
     onChange: () =>
       ease = @$el.find('select').val()
       @key_val.ease = ease
+      @editor.undoManager.addState()
       @lineData.isDirty = true
       @timeline.isDirty = true
 

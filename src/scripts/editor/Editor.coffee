@@ -20,11 +20,11 @@ define (require) ->
       @selectionManager = new SelectionManager(@tweenTime)
       @exporter = new Exporter(this)
 
-      @timeline = new Timeline(@tweenTime, @selectionManager)
+      @timeline = new Timeline(this)
       @menu = new EditorMenu(@tweenTime, @$timeline, this)
       if @options.onMenuCreated? then @options.onMenuCreated(@$timeline.find('.timeline__menu'))
 
-      @propertiesEditor = new PropertiesEditor(@timeline, @timer, @selectionManager)
+      @propertiesEditor = new PropertiesEditor(this, @selectionManager)
       @propertiesEditor.keyAdded.add(@onKeyAdded)
 
       @controls = new EditorControls(@tweenTime, @$timeline)

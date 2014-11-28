@@ -18,7 +18,10 @@ define (require) ->
     object
 
   class Timeline
-    constructor: (@tweenTime, @selectionManager) ->
+    constructor: (@editor) ->
+      @tweenTime = @editor.tweenTime
+      @selectionManager = @editor.selectionManager
+
       @isDirty = true
       @timer = @tweenTime.timer
       @currentTime = @timer.time #used in timeindicator.

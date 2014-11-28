@@ -8,7 +8,11 @@ define (require) ->
   tpl_propertiesEditor = require 'text!templates/propertiesEditor.tpl.html'
 
   class PropertiesEditor
-    constructor: (@timeline, @timer, @selectionManager) ->
+    constructor: (@editor) ->
+      @timeline = @editor.timeline
+      @timer = @editor.timer
+      @selectionManager = editor.selectionManager
+
       @$el = $(tpl_propertiesEditor)
       @$container = @$el.find('.properties-editor__main')
       # todo: rename keyAdded to updated
@@ -84,14 +88,14 @@ define (require) ->
       for key, instance_prop of lineData.properties
         # show all properties or only 1 if we selected a key.
         if !property_name || instance_prop.name == property_name
-          prop = new PropertyNumber(instance_prop, lineData, @timer, key_val)
+          prop = new PropertyNumber(instance_prop, lineData, @editor, key_val)
           prop.keyAdded.add(@onKeyAdded)
           @selectedProps.push(prop)
           $el.append(prop.$el)
 
       if property_name
         # Add tween select if we are editing a key.
-        tween = new PropertyTween(instance_prop, lineData, @timer, key_val, @timeline)
+        tween = new PropertyTween(instance_prop, lineData, @editor, key_val, @timeline)
         @selectedProps.push(tween)
         $el.append(tween.$el)
 
