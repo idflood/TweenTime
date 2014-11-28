@@ -100,12 +100,7 @@ define (require) ->
         $el.append(tween.$el)
 
         # Add a remove key button
-        $actions = $('<div class="properties-editor__actions actions"></div>')
-        $remove_bt = $('<a href="#" class="actions__item">Remove key</a>')
-        $actions.append($remove_bt)
-        $el.append($actions)
-
-        $remove_bt.click (e) =>
+        tween.$el.find('[data-action-remove]').click (e) =>
           e.preventDefault()
           index = propertyData.keys.indexOf(key_val)
           if index > -1

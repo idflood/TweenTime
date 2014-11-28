@@ -18,6 +18,7 @@ define (require) ->
       data =
         id: @instance_property.name + "_tween"
         val: @key_val.ease
+        time: @key_val.time.toFixed(3)
         options: [
           'Linear.easeNone'
         ]
@@ -41,4 +42,6 @@ define (require) ->
       @timeline.isDirty = true
 
     update: () =>
-      return "todo..."
+      # todo: use mustache instead...
+      @$el.find('.property__key-time strong').html(@key_val.time.toFixed(3))
+      return
