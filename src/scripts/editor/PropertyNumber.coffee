@@ -50,7 +50,6 @@ define (require) ->
         if key.time == time then return key
       return false
 
-
     addKey: (val) =>
       currentTime = @timer.getCurrentTime() / 1000
       key = {time: currentTime, val: val}
@@ -121,7 +120,4 @@ define (require) ->
 
       @$key.toggleClass('property__key--active', key)
       draggable = @$input.data('draggable')
-      if draggable
-        draggable.set(val.toFixed(3))
-      else
-        @$input.val(val.toFixed(3))
+      draggable.set(val.toFixed(3))
