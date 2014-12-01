@@ -74,9 +74,10 @@ a.menu-item--toggle {
   display: inline-block;
   margin-right: 5px;
   font-size: 18px;
-  color: #ddd;
   text-decoration: none; }
-  .control:hover {
+  .control, .control:active, .control:visited {
+    color: #ddd; }
+  .control:hover, .control:focus {
     color: #fff; }
 
 .control--input {
@@ -250,6 +251,12 @@ svg * {
   .property__key--active {
     background: #39C2C8; }
 
+.property__key-time {
+  margin-right: 10px;
+  color: #777; }
+  .property__key-time strong {
+    color: #ddd; }
+
 .property__input {
   background: #57595a;
   border: 1px solid #2f3132;
@@ -351,38 +358,59 @@ a.menu-item--toggle-side {
     fill: rgba(169, 174, 175, 0.5);
     stroke: rgba(143, 149, 150, 0.9); }
 
-.key path {
+.key path, .key circle {
   shape-rendering: geometricPrecision;
+  fill: #bbb;
   fill-opacity: 0.8;
   cursor: move; }
 
-.key__shape-left {
-  fill: #9c9c9c; }
-
-.key__shape-right {
-  fill: #bbb; }
-
-.easeIn .key__shape-left, .easeInOut .key__shape-left {
-  fill: #3cbdd4; }
-
-.easeOut .key__shape-right, .easeInOut .key__shape-right {
-  fill: #6ECEDF; }
-
-.key--selected path {
+.key--selected path, .key--selected circle {
   fill-opacity: 1;
-  fill: #fff; }
-.key--selected.easeIn .key__shape-left, .key--selected.easeInOut .key__shape-left {
   fill: #6ECEDF; }
+
+.key__shape-rect {
+  fill-opacity: 0.6 !important; }
+
+.ease-in, .ease-out, .ease-inout, .ease-linear {
+  display: none; }
+
+.easeNone .ease-linear {
+  display: block; }
+
+.easeIn .ease-in {
+  display: block; }
+
+.easeOut .ease-out {
+  display: block; }
+
+.easeInOut .ease-inout {
+  display: block; }
 
 .error {
   fill: #CF3938; }
 
 .selection {
   stroke: #fff;
-  stroke-dasharray: 5px;
+  stroke-dasharray: 3px;
   stroke-opacity: 0.5;
   fill: rgba(255, 255, 255, 0.05);
-  pointer-events: none; }
+  pointer-events: none;
+  animation: dash 0.5s linear infinite;
+  -webkit-animation: dash 0.5s linear infinite; }
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 0; }
+
+  to {
+    stroke-dashoffset: -6; } }
+
+@-webkit-keyframes dash {
+  from {
+    stroke-dashoffset: 0; }
+
+  to {
+    stroke-dashoffset: -6; } }
 
 html, body {
   margin: 0;

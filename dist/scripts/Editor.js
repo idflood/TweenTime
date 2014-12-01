@@ -921,6 +921,20 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         return prevKey;
       };
 
+      Utils.sortKeys = function(keys) {
+        var compare;
+        compare = function(a, b) {
+          if (a.time < b.time) {
+            return -1;
+          }
+          if (a.time > b.time) {
+            return 1;
+          }
+          return 0;
+        };
+        return keys.sort(compare);
+      };
+
       Utils.guid = function() {
         var s4;
         s4 = function() {
@@ -1746,7 +1760,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       }
 
       Properties.prototype.render = function(bar) {
-        var dy, propKey, propVal, properties, self, sortKeys, subGrp, visibleProperties;
+        var dy, propKey, propVal, properties, self, subGrp, visibleProperties;
         self = this;
         propVal = function(d, i) {
           if (d.properties) {
@@ -1770,11 +1784,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           sub_height = (i + 1) * self.timeline.lineHeight;
           return "translate(0," + sub_height + ")";
         });
-        sortKeys = function(keys) {
-          return keys.sort(function(a, b) {
-            return d3.ascending(a.time, b.time);
-          });
-        };
         subGrp.append('rect').attr('class', 'click-handler click-handler--property').attr('x', 0).attr('y', 0).attr('width', self.timeline.x(self.timeline.timer.totalDuration + 100)).attr('height', self.timeline.lineHeight).on('dblclick', function(d) {
           var def, dx, keyContainer, lineObject, lineValue, mouse, newKey, prevKey;
           lineObject = this.parentNode.parentNode;
@@ -1792,7 +1801,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             val: def
           };
           d.keys.push(newKey);
-          d.keys = sortKeys(d.keys);
+          d.keys = Utils.sortKeys(d.keys);
           lineValue.isDirty = true;
           keyContainer = this.parentNode;
           return self.onKeyAdded.dispatch(newKey, keyContainer);
@@ -1852,16 +1861,11 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       };
 
       Keys.prototype.render = function(properties) {
-        var drag, dragmove, key_grp, keys, propKey, propValue, selectKey, self, sortKeys, tweenTime;
+        var drag, dragend, dragmove, grp_in, grp_inout, grp_linear, grp_out, key_grp, keys, propKey, propValue, selectKey, self, tweenTime;
         self = this;
         tweenTime = self.timeline.tweenTime;
-        sortKeys = function(keys) {
-          return keys.sort(function(a, b) {
-            return d3.ascending(a.time, b.time);
-          });
-        };
         dragmove = function(d) {
-          var currentDomainStart, data, dx, item, itemLineData, itemLineObject, itemPropertyData, itemPropertyObject, lineData, lineObject, mouse, old_time, propertyData, propertyObject, selection, sourceEvent, timeMatch, time_offset, _i, _len;
+          var currentDomainStart, data, dx, is_first, item, key_scale, lineData, lineObject, mouse, old_time, propertyData, propertyObject, selection, selection_first_time, selection_last_time, sourceEvent, timeMatch, time_offset, updateKeyItem, _i, _len;
           sourceEvent = d3.event.sourceEvent;
           propertyObject = this.parentNode;
           lineObject = propertyObject.parentNode.parentNode;
@@ -1874,6 +1878,18 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           dx = dx.getTime();
           dx = dx / 1000 - currentDomainStart / 1000;
           dx = d.time + dx;
+          selection = self.timeline.selectionManager.getSelection();
+          selection_first_time = false;
+          selection_last_time = false;
+          if (selection.length) {
+            selection_first_time = d3.select(selection[0]).datum().time;
+            selection_last_time = d3.select(selection[selection.length - 1]).datum().time;
+          }
+          selection = _.filter(selection, (function(_this) {
+            return function(item) {
+              return item.isEqualNode(_this) === false;
+            };
+          })(this));
           timeMatch = false;
           if (sourceEvent.shiftKey) {
             timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name, tweenTime.timer);
@@ -1882,24 +1898,41 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             timeMatch = dx;
           }
           d.time = timeMatch;
+          propertyData.keys = Utils.sortKeys(propertyData.keys);
           time_offset = d.time - old_time;
-          selection = self.timeline.selectionManager.getSelection();
-          selection = _.filter(selection, (function(_this) {
-            return function(item) {
-              return item.isEqualNode(_this) === false;
-            };
-          })(this));
+          updateKeyItem = function(item) {
+            var itemLineData, itemLineObject, itemPropertyData, itemPropertyObject;
+            itemPropertyObject = item.parentNode;
+            itemPropertyData = d3.select(itemPropertyObject).datum();
+            itemLineObject = itemPropertyObject.parentNode.parentNode;
+            itemLineData = d3.select(itemLineObject).datum();
+            itemLineData.isDirty = true;
+            return itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys);
+          };
+          key_scale = false;
+          is_first = false;
           if (selection.length) {
+            if (sourceEvent.altKey && (selection_first_time != null) && (selection_last_time != null)) {
+              is_first = selection_first_time === old_time;
+              if (is_first) {
+                key_scale = (selection_last_time - d.time) / (selection_last_time - old_time);
+              } else {
+                key_scale = (d.time - selection_first_time) / (old_time - selection_first_time);
+              }
+            }
             for (_i = 0, _len = selection.length; _i < _len; _i++) {
               item = selection[_i];
               data = d3.select(item).datum();
-              data.time += time_offset;
-              itemPropertyObject = item.parentNode;
-              itemPropertyData = d3.select(itemPropertyObject).datum();
-              itemLineObject = itemPropertyObject.parentNode.parentNode;
-              itemLineData = d3.select(itemLineObject).datum();
-              itemLineData.isDirty = true;
-              itemPropertyData.keys = sortKeys(itemPropertyData.keys);
+              if (key_scale === false) {
+                data.time += time_offset;
+              } else {
+                if (is_first) {
+                  data.time = selection_last_time - (selection_last_time - data.time) * key_scale;
+                } else {
+                  data.time = selection_first_time + (data.time - selection_first_time) * key_scale;
+                }
+              }
+              updateKeyItem(item);
             }
           }
           lineData.isDirty = true;
@@ -1926,9 +1959,14 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           }
           return self.timeline.selectionManager.select(this, addToSelection);
         };
+        dragend = (function(_this) {
+          return function(d) {
+            return self.timeline.editor.undoManager.addState();
+          };
+        })(this);
         drag = d3.behavior.drag().origin(function(d) {
           return d;
-        }).on("drag", dragmove).on("dragstart", selectKey);
+        }).on("drag", dragmove).on("dragstart", selectKey).on("dragend", dragend);
         key_grp = keys.enter().append('g').attr('class', 'key').attr('id', function(d) {
           return Utils.guid();
         }).on('mousedown', function() {
@@ -1948,11 +1986,21 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           }
           return cls;
         });
-        key_grp.append('path').attr('class', 'key__shape-left').attr('d', 'M 0 -6 L -6 0 L 0 6');
-        key_grp.append('path').attr('class', 'key__shape-right').attr('d', 'M 0 -6 L 6 0 L 0 6');
+        grp_linear = key_grp.append('g').attr('class', 'ease-linear');
+        grp_linear.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L 6 0 L 0 6');
+        grp_linear.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L -6 0 L 0 6');
+        grp_in = key_grp.append('g').attr('class', 'ease-in');
+        grp_in.append('path').attr('class', 'key__shape-rect').attr('d', 'M 0 -6 L 0 6 L 4 5 L 1 0 L 4 -5');
+        grp_in.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L -6 0 L 0 6');
+        grp_out = key_grp.append('g').attr('class', 'ease-out');
+        grp_out.append('path').attr('class', 'key__shape-rect').attr('d', 'M 0 -6 L 0 6 L -4 5 L -1 0 L -4 -5');
+        grp_out.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L 6 0 L 0 6');
+        grp_inout = key_grp.append('g').attr('class', 'ease-inout');
+        grp_inout.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 5);
         keys.attr('transform', function(d) {
           var dx, dy;
           dx = self.timeline.x(d.time * 1000);
+          dx = parseInt(dx, 10);
           dy = 10;
           return "translate(" + dx + "," + dy + ")";
         });
@@ -2040,8 +2088,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           var p;
           p = d3.mouse(this);
           self.svg.append('rect').attr({
-            rx: 6,
-            ry: 6,
             "class": 'selection',
             x: p[0],
             y: p[1],
@@ -2143,12 +2189,13 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       return object;
     };
     return Timeline = (function() {
-      function Timeline(tweenTime, selectionManager) {
+      function Timeline(editor) {
         var height, margin, width;
-        this.tweenTime = tweenTime;
-        this.selectionManager = selectionManager;
+        this.editor = editor;
         this.render = __bind(this.render, this);
         this.onDurationChanged = __bind(this.onDurationChanged, this);
+        this.tweenTime = this.editor.tweenTime;
+        this.selectionManager = this.editor.selectionManager;
         this.isDirty = true;
         this.timer = this.tweenTime.timer;
         this.currentTime = this.timer.time;
@@ -2170,7 +2217,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.svg = d3.select('.timeline__main').append("svg").attr("width", width + margin.left + margin.right).attr("height", 600);
         this.svgContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         this.svgContainerTime = this.svg.append("g").attr("transform", "translate(" + margin.left + ",0)");
-        this.linesContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + (margin.top + 10) + ")");
+        this.linesContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         this.header = new Header(this.timer, this.initialDomain, this.tweenTime, width, margin);
         this.timeIndicator = new TimeIndicator(this, this.svgContainerTime);
         this.selection = new Selection(this, this.svg, margin);
@@ -2216,9 +2263,9 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             _this.svg.attr("width", width + margin.left + margin.right);
             _this.svg.selectAll('.timeline__right-mask').attr('width', INNER_WIDTH);
             _this.x.range([0, width]);
-            _this.xGrid.call(_this.xAxisGrid);
-            _this.xAxisElement.call(_this.xAxis);
-            return _this.header.resize(INNER_WIDTH);
+            _this.isDirty = true;
+            _this.header.resize(INNER_WIDTH);
+            return _this.render();
           };
         })(this);
       }
@@ -2261,20 +2308,21 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/PropertyNumber',['require','jquery','Signal','lodash','d3','draggablenumber','Mustache','text!templates/propertyNumber.tpl.html'],function(require) {
-    var $, DraggableNumber, Mustache, PropertyNumber, Signals, d3, tpl_property, _;
+  define('cs!editor/PropertyNumber',['require','jquery','Signal','lodash','d3','cs!core/Utils','draggablenumber','Mustache','text!templates/propertyNumber.tpl.html'],function(require) {
+    var $, DraggableNumber, Mustache, PropertyNumber, Signals, Utils, d3, tpl_property, _;
     $ = require('jquery');
     Signals = require('Signal');
     _ = require('lodash');
     d3 = require('d3');
+    Utils = require('cs!core/Utils');
     DraggableNumber = require('draggablenumber');
     Mustache = require('Mustache');
     tpl_property = require('text!templates/propertyNumber.tpl.html');
     return PropertyNumber = (function() {
-      function PropertyNumber(instance_property, lineData, timer, key_val) {
+      function PropertyNumber(instance_property, lineData, editor, key_val) {
         this.instance_property = instance_property;
         this.lineData = lineData;
-        this.timer = timer;
+        this.editor = editor;
         this.key_val = key_val != null ? key_val : false;
         this.update = __bind(this.update, this);
         this.render = __bind(this.render, this);
@@ -2283,6 +2331,7 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         this.getCurrentVal = __bind(this.getCurrentVal, this);
         this.getInputVal = __bind(this.getInputVal, this);
         this.onKeyClick = __bind(this.onKeyClick, this);
+        this.timer = this.editor.timer;
         this.$el = false;
         this.keyAdded = new Signals.Signal();
         this.render();
@@ -2334,25 +2383,20 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
       };
 
       PropertyNumber.prototype.addKey = function(val) {
-        var currentTime, key, sortKeys;
+        var currentTime, key;
         currentTime = this.timer.getCurrentTime() / 1000;
         key = {
           time: currentTime,
           val: val
         };
         this.instance_property.keys.push(key);
-        sortKeys = function(keys) {
-          return keys.sort(function(a, b) {
-            return d3.ascending(a.time, b.time);
-          });
-        };
-        this.instance_property.keys = sortKeys(this.instance_property.keys);
+        this.instance_property.keys = Utils.sortKeys(this.instance_property.keys);
         this.lineData.isDirty = true;
         return this.keyAdded.dispatch();
       };
 
       PropertyNumber.prototype.render = function() {
-        var $input, data, draggable, onInputChange, val, view;
+        var $input, data, draggable, onChangeEnd, onInputChange, val, view;
         this.values = this.lineData.values != null ? this.lineData.values : {};
         val = this.getCurrentVal();
         data = {
@@ -2392,8 +2436,14 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
             return _this.lineData.isDirty = true;
           };
         })(this);
+        onChangeEnd = (function(_this) {
+          return function(new_val) {
+            return _this.editor.undoManager.addState();
+          };
+        })(this);
         draggable = new DraggableNumber($input.get(0), {
-          changeCallback: onInputChange
+          changeCallback: onInputChange,
+          endCallback: onChangeEnd
         });
         $input.data('draggable', draggable);
         return $input.change(onInputChange);
@@ -2420,7 +2470,7 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
 }).call(this);
 
 
-define('text!templates/propertyTween.tpl.html',[],function () { return '<div class="property property--tween">\n  <label for="{{id}}" class="property__label">easing</label>\n  <select id="{{id}}" class="property__select">\n    {{#options}}\n    <option value="{{.}}" {{selected}}>{{.}}</option>\n    {{/options}}\n  </select>\n</div>\n';});
+define('text!templates/propertyTween.tpl.html',[],function () { return '<div class="property property--tween">\n  <label for="{{id}}" class="property__label">easing</label>\n  <select id="{{id}}" class="property__select">\n    {{#options}}\n    <option value="{{.}}" {{selected}}>{{.}}</option>\n    {{/options}}\n  </select>\n</div>\n<div class="properties-editor__actions actions">\n  <span class="property__key-time">key at <strong>{{time}}</strong> seconds</span>\n  <a href="#" class="actions__item" data-action-remove>Remove key</a>\n</div>';});
 
 
 // Generated by CoffeeScript 1.8.0
@@ -2434,15 +2484,17 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
     Mustache = require('Mustache');
     tpl_property = require('text!templates/propertyTween.tpl.html');
     return PropertyTween = (function() {
-      function PropertyTween(instance_property, lineData, timer, key_val, timeline) {
+      function PropertyTween(instance_property, lineData, editor, key_val, timeline) {
         this.instance_property = instance_property;
         this.lineData = lineData;
-        this.timer = timer;
+        this.editor = editor;
         this.key_val = key_val != null ? key_val : false;
         this.timeline = timeline;
         this.update = __bind(this.update, this);
         this.onChange = __bind(this.onChange, this);
         this.render = __bind(this.render, this);
+        this.timer = this.editor.timer;
+        this.$time = false;
         this.render();
       }
 
@@ -2455,6 +2507,7 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         data = {
           id: this.instance_property.name + "_tween",
           val: this.key_val.ease,
+          time: this.key_val.time.toFixed(3),
           options: ['Linear.easeNone'],
           selected: function() {
             if (this.toString() === self.key_val.ease) {
@@ -2472,19 +2525,21 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
           data.options.push(tween + ".easeInOut");
         }
         this.$el = $(Mustache.render(tpl_property, data));
-        return this.$el.find('select').change(this.onChange);
+        this.$time = this.$el.find('.property__key-time strong');
+        this.$el.find('select').change(this.onChange);
       };
 
       PropertyTween.prototype.onChange = function() {
         var ease;
         ease = this.$el.find('select').val();
         this.key_val.ease = ease;
+        this.editor.undoManager.addState();
         this.lineData.isDirty = true;
-        return this.timeline.isDirty = true;
+        this.timeline.isDirty = true;
       };
 
       PropertyTween.prototype.update = function() {
-        return "todo...";
+        this.$time.html(this.key_val.time.toFixed(3));
       };
 
       return PropertyTween;
@@ -2511,14 +2566,15 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
     PropertyTween = require('cs!editor/PropertyTween');
     tpl_propertiesEditor = require('text!templates/propertiesEditor.tpl.html');
     return PropertiesEditor = (function() {
-      function PropertiesEditor(timeline, timer, selectionManager) {
-        this.timeline = timeline;
-        this.timer = timer;
-        this.selectionManager = selectionManager;
+      function PropertiesEditor(editor) {
+        this.editor = editor;
         this.render = __bind(this.render, this);
         this.addProperty = __bind(this.addProperty, this);
         this.onSelect = __bind(this.onSelect, this);
         this.onKeyAdded = __bind(this.onKeyAdded, this);
+        this.timeline = this.editor.timeline;
+        this.timer = this.editor.timer;
+        this.selectionManager = editor.selectionManager;
         this.$el = $(tpl_propertiesEditor);
         this.$container = this.$el.find('.properties-editor__main');
         this.keyAdded = new Signals.Signal();
@@ -2536,6 +2592,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         if (domElement == null) {
           domElement = false;
         }
+        this.selectedProps = [];
         this.$container.empty();
         if (domElement instanceof Array) {
           _results = [];
@@ -2550,7 +2607,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       };
 
       PropertiesEditor.prototype.addProperty = function(domElement) {
-        var $actions, $el, $remove_bt, d3Object, instance_prop, key, key_val, lineData, lineObject, prop, propertyData, propertyObject, property_name, tween, _ref;
+        var $el, d3Object, instance_prop, key, key_val, lineData, lineObject, prop, propertyData, propertyObject, property_name, tween, _ref;
         d3Object = d3.select(domElement);
         key_val = false;
         propertyObject = false;
@@ -2572,7 +2629,6 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           d3Object = d3.select(domElement);
           lineData = d3Object.datum();
         }
-        this.selectedProps = [];
         property_name = false;
         if (propertyData) {
           property_name = propertyData.name;
@@ -2596,21 +2652,17 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         for (key in _ref) {
           instance_prop = _ref[key];
           if (!property_name || instance_prop.name === property_name) {
-            prop = new PropertyNumber(instance_prop, lineData, this.timer, key_val);
+            prop = new PropertyNumber(instance_prop, lineData, this.editor, key_val);
             prop.keyAdded.add(this.onKeyAdded);
             this.selectedProps.push(prop);
             $el.append(prop.$el);
           }
         }
         if (property_name) {
-          tween = new PropertyTween(instance_prop, lineData, this.timer, key_val, this.timeline);
+          tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
           this.selectedProps.push(tween);
           $el.append(tween.$el);
-          $actions = $('<div class="properties-editor__actions actions"></div>');
-          $remove_bt = $('<a href="#" class="actions__item">Remove key</a>');
-          $actions.append($remove_bt);
-          $el.append($actions);
-          return $remove_bt.click((function(_this) {
+          return tween.$el.find('[data-action-remove]').click((function(_this) {
             return function(e) {
               var index;
               e.preventDefault();
@@ -2933,42 +2985,13 @@ if (typeof module !== "undefined" && module !== null) {
       };
 
       EditorMenu.prototype.initExport = function() {
-        var json_replacer, options, self;
+        var exporter, self;
         self = this;
-        options = self.editor.options;
-        json_replacer = function(key, val) {
-          if (key === 'timeline') {
-            return void 0;
-          }
-          if (key === 'tween') {
-            return void 0;
-          }
-          if (key === 'isDirty') {
-            return void 0;
-          }
-          if (key.indexOf('_') === 0) {
-            return void 0;
-          }
-          if (options.json_replacer != null) {
-            return options.json_replacer(key, val);
-          }
-          return val;
-        };
+        exporter = this.editor.exporter;
         return this.$timeline.find('[data-action="export"]').click(function(e) {
-          var blob, data, domain, domain_end, domain_start;
+          var blob, data;
           e.preventDefault();
-          domain = self.editor.timeline.x.domain();
-          domain_start = domain[0];
-          domain_end = domain[1];
-          data = {
-            settings: {
-              time: self.tweenTime.timer.getCurrentTime(),
-              duration: self.tweenTime.timer.getDuration(),
-              domain: [domain_start.getTime(), domain_end.getTime()]
-            },
-            data: self.tweenTime.data
-          };
-          data = JSON.stringify(data, json_replacer, 2);
+          data = exporter.getJSON();
           blob = new Blob([data], {
             "type": "text/json;charset=utf-8"
           });
@@ -3080,15 +3103,17 @@ if (typeof module !== "undefined" && module !== null) {
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/SelectionManager',['require','d3','Signal'],function(require) {
-    var SelectionManager, Signals, d3;
+  define('cs!editor/SelectionManager',['require','d3','Signal','cs!core/Utils'],function(require) {
+    var SelectionManager, Signals, Utils, d3;
     d3 = require('d3');
     Signals = require('Signal');
+    Utils = require('cs!core/Utils');
     return SelectionManager = (function() {
       function SelectionManager(tweenTime) {
         this.tweenTime = tweenTime;
         this.getSelection = __bind(this.getSelection, this);
         this.reset = __bind(this.reset, this);
+        this.sortSelection = __bind(this.sortSelection, this);
         this.removeDuplicates = __bind(this.removeDuplicates, this);
         this.selection = [];
         this.onSelect = new Signals.Signal();
@@ -3104,7 +3129,6 @@ if (typeof module !== "undefined" && module !== null) {
           for (_j = 0, _len1 = result.length; _j < _len1; _j++) {
             item2 = result[_j];
             if (item.isEqualNode(item2)) {
-              console.log(item);
               found = true;
               break;
             }
@@ -3114,6 +3138,23 @@ if (typeof module !== "undefined" && module !== null) {
           }
         }
         return this.selection = result;
+      };
+
+      SelectionManager.prototype.sortSelection = function() {
+        var compare;
+        compare = function(a, b) {
+          if (!a.__data__ || !b.__data__) {
+            return 0;
+          }
+          if (a.__data__.time < b.__data__.time) {
+            return -1;
+          }
+          if (a.__data__.time > b.__data__.time) {
+            return 1;
+          }
+          return 0;
+        };
+        return this.selection = this.selection.sort(compare);
       };
 
       SelectionManager.prototype.reset = function() {
@@ -3140,6 +3181,7 @@ if (typeof module !== "undefined" && module !== null) {
         }
         this.removeDuplicates();
         this.highlightItems();
+        this.sortSelection();
         return this.onSelect.dispatch(this.selection, addToSelection);
       };
 
@@ -3179,18 +3221,193 @@ if (typeof module !== "undefined" && module !== null) {
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/Editor',['require','text!templates/timeline.tpl.html','cs!graph/Timeline','cs!editor/PropertiesEditor','cs!editor/EditorMenu','cs!editor/EditorControls','cs!editor/SelectionManager'],function(require) {
-    var Editor, EditorControls, EditorMenu, PropertiesEditor, SelectionManager, Timeline, tpl_timeline;
+  define('cs!editor/Exporter',['require'],function(require) {
+    var Exporter;
+    return Exporter = (function() {
+      function Exporter(editor) {
+        this.editor = editor;
+        this.getJSON = __bind(this.getJSON, this);
+        this.getData = __bind(this.getData, this);
+      }
+
+      Exporter.prototype.getData = function() {
+        var domain, domain_end, domain_start, tweenTime;
+        tweenTime = this.editor.tweenTime;
+        domain = this.editor.timeline.x.domain();
+        domain_start = domain[0];
+        domain_end = domain[1];
+        return {
+          settings: {
+            time: tweenTime.timer.getCurrentTime(),
+            duration: tweenTime.timer.getDuration(),
+            domain: [domain_start.getTime(), domain_end.getTime()]
+          },
+          data: tweenTime.data
+        };
+      };
+
+      Exporter.prototype.getJSON = function() {
+        var data, json, json_replacer, options;
+        options = this.editor.options;
+        json_replacer = function(key, val) {
+          if (key === 'timeline') {
+            return void 0;
+          }
+          if (key === 'tween') {
+            return void 0;
+          }
+          if (key === 'isDirty') {
+            return void 0;
+          }
+          if (key.indexOf('_') === 0) {
+            return void 0;
+          }
+          if (options.json_replacer != null) {
+            return options.json_replacer(key, val);
+          }
+          return val;
+        };
+        data = this.getData();
+        json = JSON.stringify(data, json_replacer, 2);
+        return json;
+      };
+
+      return Exporter;
+
+    })();
+  });
+
+}).call(this);
+
+
+// Generated by CoffeeScript 1.8.0
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  define('cs!editor/UndoManager',['require','jquery'],function(require) {
+    var UndoManager;
+    return UndoManager = (function() {
+      var $;
+
+      $ = require('jquery');
+
+      function UndoManager(editor) {
+        this.editor = editor;
+        this.setState = __bind(this.setState, this);
+        this.addState = __bind(this.addState, this);
+        this.redo = __bind(this.redo, this);
+        this.undo = __bind(this.undo, this);
+        this.history_max = 100;
+        this.history = [];
+        this.current_index = 0;
+        this.addState();
+        $(document).keydown((function(_this) {
+          return function(e) {
+            if (e.keyCode === 90) {
+              if (e.metaKey || e.ctrlKey) {
+                if (!e.shiftKey) {
+                  return _this.undo();
+                } else {
+                  return _this.redo();
+                }
+              }
+            }
+          };
+        })(this));
+      }
+
+      UndoManager.prototype.undo = function() {
+        if (this.current_index <= 0) {
+          return false;
+        }
+        this.current_index -= 1;
+        return this.setState(this.current_index);
+      };
+
+      UndoManager.prototype.redo = function() {
+        if (this.current_index >= this.history.length - 1) {
+          return false;
+        }
+        this.current_index += 1;
+        return this.setState(this.current_index);
+      };
+
+      UndoManager.prototype.addState = function() {
+        var data;
+        data = JSON.parse(this.editor.exporter.getJSON());
+        if (this.current_index + 1 < this.history.length) {
+          this.history.splice(this.current_index + 1, this.history.length - 1);
+        }
+        this.history.push(data);
+        if (this.history.length > this.history_max) {
+          this.history.shift();
+        }
+        return this.current_index = this.history.length - 1;
+      };
+
+      UndoManager.prototype.setState = function(index) {
+        var data, item, item_key, key, key_key, keys, prop, prop_key, state, tweenTime, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+        state = this.history[index];
+        data = state.data;
+        tweenTime = this.editor.tweenTime;
+        for (item_key = _i = 0, _len = data.length; _i < _len; item_key = ++_i) {
+          item = data[item_key];
+          if (!tweenTime.data[item_key]) {
+            tweenTime.data[item_key] = item;
+          } else {
+            _ref = item.properties;
+            for (prop_key = _j = 0, _len1 = _ref.length; _j < _len1; prop_key = ++_j) {
+              prop = _ref[prop_key];
+              if (!tweenTime.data[item_key].properties[prop_key]) {
+                tweenTime.data[item_key].properties[prop_key] = prop;
+              } else {
+                keys = tweenTime.data[item_key].properties[prop_key].keys;
+                _ref1 = prop.keys;
+                for (key_key = _k = 0, _len2 = _ref1.length; _k < _len2; key_key = ++_k) {
+                  key = _ref1[key_key];
+                  if (!keys[key_key]) {
+                    keys[key_key] = key;
+                  } else {
+                    keys[key_key].time = key.time;
+                    keys[key_key].val = key.val;
+                    keys[key_key].ease = key.ease;
+                  }
+                }
+              }
+            }
+          }
+          tweenTime.data[item_key].isDirty = true;
+        }
+        return this.editor.render(false, true);
+      };
+
+      return UndoManager;
+
+    })();
+  });
+
+}).call(this);
+
+
+// Generated by CoffeeScript 1.8.0
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  define('cs!editor/Editor',['require','text!templates/timeline.tpl.html','cs!graph/Timeline','cs!editor/PropertiesEditor','cs!editor/EditorMenu','cs!editor/EditorControls','cs!editor/SelectionManager','cs!editor/Exporter','cs!editor/UndoManager'],function(require) {
+    var Editor, EditorControls, EditorMenu, Exporter, PropertiesEditor, SelectionManager, Timeline, UndoManager, tpl_timeline;
     tpl_timeline = require('text!templates/timeline.tpl.html');
     Timeline = require('cs!graph/Timeline');
     PropertiesEditor = require('cs!editor/PropertiesEditor');
     EditorMenu = require('cs!editor/EditorMenu');
     EditorControls = require('cs!editor/EditorControls');
     SelectionManager = require('cs!editor/SelectionManager');
+    Exporter = require('cs!editor/Exporter');
+    UndoManager = require('cs!editor/UndoManager');
     return Editor = (function() {
       function Editor(tweenTime, options) {
         this.tweenTime = tweenTime;
         this.options = options != null ? options : {};
+        this.update = __bind(this.update, this);
         this.render = __bind(this.render, this);
         this.onKeyAdded = __bind(this.onKeyAdded, this);
         this.timer = this.tweenTime.timer;
@@ -3199,32 +3416,51 @@ if (typeof module !== "undefined" && module !== null) {
         $('body').append(this.$timeline);
         $('body').addClass('has-editor');
         this.selectionManager = new SelectionManager(this.tweenTime);
-        this.timeline = new Timeline(this.tweenTime, this.selectionManager);
+        this.exporter = new Exporter(this);
+        this.timeline = new Timeline(this);
         this.menu = new EditorMenu(this.tweenTime, this.$timeline, this);
         if (this.options.onMenuCreated != null) {
           this.options.onMenuCreated(this.$timeline.find('.timeline__menu'));
         }
-        this.propertiesEditor = new PropertiesEditor(this.timeline, this.timer, this.selectionManager);
+        this.propertiesEditor = new PropertiesEditor(this, this.selectionManager);
         this.propertiesEditor.keyAdded.add(this.onKeyAdded);
         this.controls = new EditorControls(this.tweenTime, this.$timeline);
+        this.undoManager = new UndoManager(this);
         window.editorEnabled = true;
         window.dispatchEvent(new Event('resize'));
-        window.requestAnimationFrame(this.render);
+        window.requestAnimationFrame(this.update);
       }
 
       Editor.prototype.onKeyAdded = function() {
-        return this.timeline.isDirty = true;
+        this.undoManager.addState();
+        return this.render(false, true);
       };
 
-      Editor.prototype.render = function() {
+      Editor.prototype.render = function(time, force) {
+        if (time == null) {
+          time = false;
+        }
+        if (force == null) {
+          force = false;
+        }
+        if (time === false) {
+          time = this.timer.time[0];
+        }
+        if (force) {
+          this.timeline.isDirty = true;
+        }
+        this.timeline.render(time, force);
+        this.controls.render(time, force);
+        return this.propertiesEditor.render(time, force);
+      };
+
+      Editor.prototype.update = function() {
         var time, time_changed;
         time = this.timer.time[0];
         time_changed = this.lastTime === time ? false : true;
-        this.timeline.render(time, time_changed);
-        this.controls.render(time, time_changed);
-        this.propertiesEditor.render(time, time_changed);
+        this.render(time, time_changed);
         this.lastTime = this.timer.time[0];
-        return window.requestAnimationFrame(this.render);
+        return window.requestAnimationFrame(this.update);
       };
 
       return Editor;
