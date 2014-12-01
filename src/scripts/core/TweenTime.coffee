@@ -44,4 +44,24 @@ define (require) ->
 
       if values[prop_name]? then return values[prop_name] else return undefined
 
+    getKeyAt: (property, time_in_seconds) =>
+      return _.find(property.keys, (key) ->
+        return key.time == time_in_seconds
+      )
+
+    setValue: (property, new_val, time_in_seconds = false) =>
+      if time_in_seconds == false then time_in_seconds = @timer.getCurrentTime() / 1000
+      key = @getKeyAt(property, time_in_seconds)
+
+      if key
+        # If we found a key, simply update the value.
+        key.val = new_val
+      else
+        # If no key, create it and add it to the array.
+        key = {val: new_val, time: time_in_seconds}
+        property.keys.push(key)
+        # Also sort the keys.
+        sortKeys = (keys) -> keys.sort((a, b) -> d3.ascending(a.time, b.time))
+        property.keys = sortKeys(property.keys)
+
     getTotalDuration: () => return @orchestrator.getTotalDuration()
