@@ -1,6 +1,7 @@
 define (require) ->
   d3 = require 'd3'
   Signals = require 'Signal'
+  Utils = require 'cs!core/Utils'
 
   class SelectionManager
     constructor: (@tweenTime) ->
@@ -13,12 +14,19 @@ define (require) ->
         found = false
         for item2 in result
           if item.isEqualNode(item2)
-            console.log item
             found = true
             break
         if found == false then result.push(item)
 
       @selection = result
+
+    sortSelection: () =>
+      compare = (a, b) ->
+        if !a.__data__ || !b.__data__ then return 0
+        if a.__data__.time < b.__data__.time then return -1
+        if a.__data__.time > b.__data__.time then return 1
+        return 0
+      @selection = @selection.sort(compare)
 
     reset: () =>
       @selection = []
@@ -35,6 +43,7 @@ define (require) ->
 
       @removeDuplicates()
       @highlightItems()
+      @sortSelection()
       @onSelect.dispatch(@selection, addToSelection)
 
     getSelection: () =>
