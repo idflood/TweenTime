@@ -154,6 +154,7 @@ define (require) ->
 
       keys.attr 'transform', (d) ->
         dx = self.timeline.x(d.time * 1000)
+        dx = parseInt(dx, 10)
         dy = 10
         return "translate(" + dx + "," + dy + ")"
 
