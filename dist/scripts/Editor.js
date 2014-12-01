@@ -921,6 +921,20 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         return prevKey;
       };
 
+      Utils.sortKeys = function(keys) {
+        var compare;
+        compare = function(a, b) {
+          if (a.time < b.time) {
+            return -1;
+          }
+          if (a.time > b.time) {
+            return 1;
+          }
+          return 0;
+        };
+        return keys.sort(compare);
+      };
+
       Utils.guid = function() {
         var s4;
         s4 = function() {
@@ -1746,7 +1760,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       }
 
       Properties.prototype.render = function(bar) {
-        var dy, propKey, propVal, properties, self, sortKeys, subGrp, visibleProperties;
+        var dy, propKey, propVal, properties, self, subGrp, visibleProperties;
         self = this;
         propVal = function(d, i) {
           if (d.properties) {
@@ -1770,11 +1784,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           sub_height = (i + 1) * self.timeline.lineHeight;
           return "translate(0," + sub_height + ")";
         });
-        sortKeys = function(keys) {
-          return keys.sort(function(a, b) {
-            return d3.ascending(a.time, b.time);
-          });
-        };
         subGrp.append('rect').attr('class', 'click-handler click-handler--property').attr('x', 0).attr('y', 0).attr('width', self.timeline.x(self.timeline.timer.totalDuration + 100)).attr('height', self.timeline.lineHeight).on('dblclick', function(d) {
           var def, dx, keyContainer, lineObject, lineValue, mouse, newKey, prevKey;
           lineObject = this.parentNode.parentNode;
@@ -1792,7 +1801,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             val: def
           };
           d.keys.push(newKey);
-          d.keys = sortKeys(d.keys);
+          d.keys = Utils.sortKeys(d.keys);
           lineValue.isDirty = true;
           keyContainer = this.parentNode;
           return self.onKeyAdded.dispatch(newKey, keyContainer);
@@ -1852,16 +1861,11 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       };
 
       Keys.prototype.render = function(properties) {
-        var drag, dragend, dragmove, key_grp, keys, propKey, propValue, selectKey, self, sortKeys, tweenTime;
+        var drag, dragend, dragmove, grp_in, grp_inout, grp_linear, grp_out, key_grp, keys, propKey, propValue, selectKey, self, tweenTime;
         self = this;
         tweenTime = self.timeline.tweenTime;
-        sortKeys = function(keys) {
-          return keys.sort(function(a, b) {
-            return d3.ascending(a.time, b.time);
-          });
-        };
         dragmove = function(d) {
-          var currentDomainStart, data, dx, item, itemLineData, itemLineObject, itemPropertyData, itemPropertyObject, lineData, lineObject, mouse, old_time, propertyData, propertyObject, selection, sourceEvent, timeMatch, time_offset, _i, _len;
+          var currentDomainStart, data, dx, is_first, item, key_scale, lineData, lineObject, mouse, old_time, propertyData, propertyObject, selection, selection_first_time, selection_last_time, sourceEvent, timeMatch, time_offset, updateKeyItem, _i, _len;
           sourceEvent = d3.event.sourceEvent;
           propertyObject = this.parentNode;
           lineObject = propertyObject.parentNode.parentNode;
@@ -1874,6 +1878,18 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           dx = dx.getTime();
           dx = dx / 1000 - currentDomainStart / 1000;
           dx = d.time + dx;
+          selection = self.timeline.selectionManager.getSelection();
+          selection_first_time = false;
+          selection_last_time = false;
+          if (selection.length) {
+            selection_first_time = d3.select(selection[0]).datum().time;
+            selection_last_time = d3.select(selection[selection.length - 1]).datum().time;
+          }
+          selection = _.filter(selection, (function(_this) {
+            return function(item) {
+              return item.isEqualNode(_this) === false;
+            };
+          })(this));
           timeMatch = false;
           if (sourceEvent.shiftKey) {
             timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name, tweenTime.timer);
@@ -1882,24 +1898,41 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             timeMatch = dx;
           }
           d.time = timeMatch;
+          propertyData.keys = Utils.sortKeys(propertyData.keys);
           time_offset = d.time - old_time;
-          selection = self.timeline.selectionManager.getSelection();
-          selection = _.filter(selection, (function(_this) {
-            return function(item) {
-              return item.isEqualNode(_this) === false;
-            };
-          })(this));
+          updateKeyItem = function(item) {
+            var itemLineData, itemLineObject, itemPropertyData, itemPropertyObject;
+            itemPropertyObject = item.parentNode;
+            itemPropertyData = d3.select(itemPropertyObject).datum();
+            itemLineObject = itemPropertyObject.parentNode.parentNode;
+            itemLineData = d3.select(itemLineObject).datum();
+            itemLineData.isDirty = true;
+            return itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys);
+          };
+          key_scale = false;
+          is_first = false;
           if (selection.length) {
+            if (sourceEvent.altKey && (selection_first_time != null) && (selection_last_time != null)) {
+              is_first = selection_first_time === old_time;
+              if (is_first) {
+                key_scale = (selection_last_time - d.time) / (selection_last_time - old_time);
+              } else {
+                key_scale = (d.time - selection_first_time) / (old_time - selection_first_time);
+              }
+            }
             for (_i = 0, _len = selection.length; _i < _len; _i++) {
               item = selection[_i];
               data = d3.select(item).datum();
-              data.time += time_offset;
-              itemPropertyObject = item.parentNode;
-              itemPropertyData = d3.select(itemPropertyObject).datum();
-              itemLineObject = itemPropertyObject.parentNode.parentNode;
-              itemLineData = d3.select(itemLineObject).datum();
-              itemLineData.isDirty = true;
-              itemPropertyData.keys = sortKeys(itemPropertyData.keys);
+              if (key_scale === false) {
+                data.time += time_offset;
+              } else {
+                if (is_first) {
+                  data.time = selection_last_time - (selection_last_time - data.time) * key_scale;
+                } else {
+                  data.time = selection_first_time + (data.time - selection_first_time) * key_scale;
+                }
+              }
+              updateKeyItem(item);
             }
           }
           lineData.isDirty = true;
@@ -1953,11 +1986,21 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           }
           return cls;
         });
-        key_grp.append('path').attr('class', 'key__shape-left').attr('d', 'M 0 -6 L -6 0 L 0 6');
-        key_grp.append('path').attr('class', 'key__shape-right').attr('d', 'M 0 -6 L 6 0 L 0 6');
+        grp_linear = key_grp.append('g').attr('class', 'ease-linear');
+        grp_linear.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L 6 0 L 0 6');
+        grp_linear.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L -6 0 L 0 6');
+        grp_in = key_grp.append('g').attr('class', 'ease-in');
+        grp_in.append('path').attr('class', 'key__shape-rect').attr('d', 'M 0 -6 L 0 6 L 4 5 L 1 0 L 4 -5');
+        grp_in.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L -6 0 L 0 6');
+        grp_out = key_grp.append('g').attr('class', 'ease-out');
+        grp_out.append('path').attr('class', 'key__shape-rect').attr('d', 'M 0 -6 L 0 6 L -4 5 L -1 0 L -4 -5');
+        grp_out.append('path').attr('class', 'key__shape-arrow').attr('d', 'M 0 -6 L 6 0 L 0 6');
+        grp_inout = key_grp.append('g').attr('class', 'ease-inout');
+        grp_inout.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 5);
         keys.attr('transform', function(d) {
           var dx, dy;
           dx = self.timeline.x(d.time * 1000);
+          dx = parseInt(dx, 10);
           dy = 10;
           return "translate(" + dx + "," + dy + ")";
         });
@@ -2045,8 +2088,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           var p;
           p = d3.mouse(this);
           self.svg.append('rect').attr({
-            rx: 6,
-            ry: 6,
             "class": 'selection',
             x: p[0],
             y: p[1],
@@ -2176,7 +2217,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.svg = d3.select('.timeline__main').append("svg").attr("width", width + margin.left + margin.right).attr("height", 600);
         this.svgContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         this.svgContainerTime = this.svg.append("g").attr("transform", "translate(" + margin.left + ",0)");
-        this.linesContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + (margin.top + 10) + ")");
+        this.linesContainer = this.svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         this.header = new Header(this.timer, this.initialDomain, this.tweenTime, width, margin);
         this.timeIndicator = new TimeIndicator(this, this.svgContainerTime);
         this.selection = new Selection(this, this.svg, margin);
@@ -2267,12 +2308,13 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/PropertyNumber',['require','jquery','Signal','lodash','d3','draggablenumber','Mustache','text!templates/propertyNumber.tpl.html'],function(require) {
-    var $, DraggableNumber, Mustache, PropertyNumber, Signals, d3, tpl_property, _;
+  define('cs!editor/PropertyNumber',['require','jquery','Signal','lodash','d3','cs!core/Utils','draggablenumber','Mustache','text!templates/propertyNumber.tpl.html'],function(require) {
+    var $, DraggableNumber, Mustache, PropertyNumber, Signals, Utils, d3, tpl_property, _;
     $ = require('jquery');
     Signals = require('Signal');
     _ = require('lodash');
     d3 = require('d3');
+    Utils = require('cs!core/Utils');
     DraggableNumber = require('draggablenumber');
     Mustache = require('Mustache');
     tpl_property = require('text!templates/propertyNumber.tpl.html');
@@ -2341,19 +2383,14 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
       };
 
       PropertyNumber.prototype.addKey = function(val) {
-        var currentTime, key, sortKeys;
+        var currentTime, key;
         currentTime = this.timer.getCurrentTime() / 1000;
         key = {
           time: currentTime,
           val: val
         };
         this.instance_property.keys.push(key);
-        sortKeys = function(keys) {
-          return keys.sort(function(a, b) {
-            return d3.ascending(a.time, b.time);
-          });
-        };
-        this.instance_property.keys = sortKeys(this.instance_property.keys);
+        this.instance_property.keys = Utils.sortKeys(this.instance_property.keys);
         this.lineData.isDirty = true;
         return this.keyAdded.dispatch();
       };
@@ -2457,6 +2494,7 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         this.onChange = __bind(this.onChange, this);
         this.render = __bind(this.render, this);
         this.timer = this.editor.timer;
+        this.$time = false;
         this.render();
       }
 
@@ -2487,7 +2525,8 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
           data.options.push(tween + ".easeInOut");
         }
         this.$el = $(Mustache.render(tpl_property, data));
-        return this.$el.find('select').change(this.onChange);
+        this.$time = this.$el.find('.property__key-time strong');
+        this.$el.find('select').change(this.onChange);
       };
 
       PropertyTween.prototype.onChange = function() {
@@ -2496,11 +2535,11 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         this.key_val.ease = ease;
         this.editor.undoManager.addState();
         this.lineData.isDirty = true;
-        return this.timeline.isDirty = true;
+        this.timeline.isDirty = true;
       };
 
       PropertyTween.prototype.update = function() {
-        this.$el.find('.property__key-time strong').html(this.key_val.time.toFixed(3));
+        this.$time.html(this.key_val.time.toFixed(3));
       };
 
       return PropertyTween;
@@ -2553,6 +2592,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         if (domElement == null) {
           domElement = false;
         }
+        this.selectedProps = [];
         this.$container.empty();
         if (domElement instanceof Array) {
           _results = [];
@@ -2589,7 +2629,6 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
           d3Object = d3.select(domElement);
           lineData = d3Object.datum();
         }
-        this.selectedProps = [];
         property_name = false;
         if (propertyData) {
           property_name = propertyData.name;
@@ -3064,15 +3103,17 @@ if (typeof module !== "undefined" && module !== null) {
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/SelectionManager',['require','d3','Signal'],function(require) {
-    var SelectionManager, Signals, d3;
+  define('cs!editor/SelectionManager',['require','d3','Signal','cs!core/Utils'],function(require) {
+    var SelectionManager, Signals, Utils, d3;
     d3 = require('d3');
     Signals = require('Signal');
+    Utils = require('cs!core/Utils');
     return SelectionManager = (function() {
       function SelectionManager(tweenTime) {
         this.tweenTime = tweenTime;
         this.getSelection = __bind(this.getSelection, this);
         this.reset = __bind(this.reset, this);
+        this.sortSelection = __bind(this.sortSelection, this);
         this.removeDuplicates = __bind(this.removeDuplicates, this);
         this.selection = [];
         this.onSelect = new Signals.Signal();
@@ -3088,7 +3129,6 @@ if (typeof module !== "undefined" && module !== null) {
           for (_j = 0, _len1 = result.length; _j < _len1; _j++) {
             item2 = result[_j];
             if (item.isEqualNode(item2)) {
-              console.log(item);
               found = true;
               break;
             }
@@ -3098,6 +3138,23 @@ if (typeof module !== "undefined" && module !== null) {
           }
         }
         return this.selection = result;
+      };
+
+      SelectionManager.prototype.sortSelection = function() {
+        var compare;
+        compare = function(a, b) {
+          if (!a.__data__ || !b.__data__) {
+            return 0;
+          }
+          if (a.__data__.time < b.__data__.time) {
+            return -1;
+          }
+          if (a.__data__.time > b.__data__.time) {
+            return 1;
+          }
+          return 0;
+        };
+        return this.selection = this.selection.sort(compare);
       };
 
       SelectionManager.prototype.reset = function() {
@@ -3124,6 +3181,7 @@ if (typeof module !== "undefined" && module !== null) {
         }
         this.removeDuplicates();
         this.highlightItems();
+        this.sortSelection();
         return this.onSelect.dispatch(this.selection, addToSelection);
       };
 
