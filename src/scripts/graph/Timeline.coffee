@@ -55,7 +55,7 @@ define (require) ->
         .attr("transform", "translate(" + margin.left + ",0)")
 
       @linesContainer = @svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + (margin.top + 10) + ")")
+        .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
 
       @header = new Header(@timer, @initialDomain, @tweenTime, width, margin)
       @timeIndicator = new TimeIndicator(this, @svgContainerTime)

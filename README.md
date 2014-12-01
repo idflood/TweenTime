@@ -13,6 +13,7 @@
 ## Usage
 
 - Use shift key while dragging keys to snap them to existing one or to current time cursor.
+- Use alt key while dragging keys to scale them.
 - Click on a item label in the timeline to open the editor on the right. From there you can set values and add keys.
 - Double click on a property timeline to add a key.
 

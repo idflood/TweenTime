@@ -38,6 +38,14 @@ define (require) ->
         dx = dx / 1000 - currentDomainStart / 1000
         dx = d.time + dx
 
+        selection = self.timeline.selectionManager.getSelection()
+        selection_first_time = false
+        selection_last_time = false
+        if selection.length
+          selection_first_time = d3.select(selection[0]).datum().time
+          selection_last_time = d3.select(selection[selection.length - 1]).datum().time
+        selection = _.filter(selection, (item) => item.isEqualNode(this) == false)
+
         timeMatch = false
         if sourceEvent.shiftKey
           timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name, tweenTime.timer)
@@ -49,18 +57,36 @@ define (require) ->
         propertyData.keys = Utils.sortKeys(propertyData.keys)
         time_offset = d.time - old_time
 
-        selection = self.timeline.selectionManager.getSelection()
-        selection = _.filter(selection, (item) => item.isEqualNode(this) == false)
+
+        updateKeyItem = (item) ->
+          itemPropertyObject = item.parentNode
+          itemPropertyData = d3.select(itemPropertyObject).datum()
+          itemLineObject = itemPropertyObject.parentNode.parentNode
+          itemLineData = d3.select(itemLineObject).datum()
+          itemLineData.isDirty = true
+          itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys)
+
+        key_scale = false
+        is_first = false
         if selection.length
+          if sourceEvent.altKey && selection_first_time? && selection_last_time?
+            # keys scaling.
+            is_first = selection_first_time == old_time
+            if is_first
+              key_scale = (selection_last_time - d.time) / (selection_last_time - old_time)
+            else
+              key_scale = (d.time - selection_first_time) / (old_time - selection_first_time)
+
           for item in selection
             data = d3.select(item).datum()
-            data.time += time_offset
-            itemPropertyObject = item.parentNode
-            itemPropertyData = d3.select(itemPropertyObject).datum()
-            itemLineObject = itemPropertyObject.parentNode.parentNode
-            itemLineData = d3.select(itemLineObject).datum()
-            itemLineData.isDirty = true
-            itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys)
+            if key_scale == false
+              data.time += time_offset
+            else
+              if is_first
+                data.time = selection_last_time - (selection_last_time - data.time) * key_scale
+              else
+                data.time = selection_first_time + (data.time - selection_first_time) * key_scale
+            updateKeyItem(item)
 
         lineData.isDirty = true
         self.onKeyUpdated.dispatch()
