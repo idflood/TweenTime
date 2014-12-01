@@ -1,33 +1,41 @@
 $key-color: #bbb
 $ease-color: #6ECEDF
 
-.key path
-  shape-rendering: geometricPrecision
-  fill-opacity: 0.8
-  cursor: move
-
-.key__shape-left
-  fill: darken($key-color, 12%)
-
-.key__shape-right
-  fill: $key-color
-
-.easeIn,
-.easeInOut
-  .key__shape-left
-    fill: darken($ease-color, 12%)
-
-.easeOut,
-.easeInOut
-  .key__shape-right
-    fill: $ease-color
+.key
+  path,
+  circle
+    shape-rendering: geometricPrecision
+    fill: $key-color
+    fill-opacity: 0.8
+    cursor: move
 
 .key--selected
-  path
+  path,
+  circle
     fill-opacity: 1
-    fill: #fff
+    fill: $ease-color
 
-  &.easeIn,
-  &.easeInOut
-    .key__shape-left
-      fill: $ease-color
+.key__shape-rect
+  fill-opacity: 0.6 !important
+
+.ease-in,
+.ease-out,
+.ease-inout,
+.ease-linear
+  display: none
+
+.easeNone
+  .ease-linear
+    display: block
+.easeIn
+  .ease-in
+    display: block
+.easeOut
+  .ease-out
+    display: block
+.easeInOut
+  .ease-inout
+    display: block
+
+.key
+  .ease-i

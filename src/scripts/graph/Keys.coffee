@@ -144,13 +144,47 @@ define (require) ->
           return cls
         )
 
-      key_grp.append('path')
-        .attr('class', 'key__shape-left')
+      grp_linear = key_grp.append('g')
+        .attr('class', 'ease-linear')
+      grp_linear.append('path')
+        .attr('class', 'key__shape-arrow')
+        .attr('d', 'M 0 -6 L 6 0 L 0 6')
+      grp_linear.append('path')
+        .attr('class', 'key__shape-arrow')
         .attr('d', 'M 0 -6 L -6 0 L 0 6')
 
-      key_grp.append('path')
-        .attr('class', 'key__shape-right')
+      grp_in = key_grp.append('g')
+        .attr('class', 'ease-in')
+      grp_in.append('path')
+        .attr('class', 'key__shape-rect')
+        .attr('d', 'M 0 -6 L 0 6 L 4 5 L 1 0 L 4 -5')
+      grp_in.append('path')
+        .attr('class', 'key__shape-arrow')
+        .attr('d', 'M 0 -6 L -6 0 L 0 6')
+
+      grp_out = key_grp.append('g')
+        .attr('class', 'ease-out')
+      grp_out.append('path')
+        .attr('class', 'key__shape-rect')
+        .attr('d', 'M 0 -6 L 0 6 L -4 5 L -1 0 L -4 -5')
+      grp_out.append('path')
+        .attr('class', 'key__shape-arrow')
         .attr('d', 'M 0 -6 L 6 0 L 0 6')
+
+      grp_inout = key_grp.append('g')
+        .attr('class', 'ease-inout')
+      grp_inout.append('circle')
+        .attr('cx', 0)
+        .attr('cy', 0)
+        .attr('r', 5)
+
+      #key_grp.append('path')
+      #  .attr('class', 'key__shape-left')
+      #  .attr('d', 'M 0 -6 L -6 0 L 0 6')
+
+      #key_grp.append('path')
+      #  .attr('class', 'key__shape-right')
+      #  .attr('d', 'M 0 -6 L 6 0 L 0 6')
 
       keys.attr 'transform', (d) ->
         dx = self.timeline.x(d.time * 1000)
