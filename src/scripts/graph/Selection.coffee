@@ -16,8 +16,6 @@ define (require) ->
         p = d3.mouse(this)
         self.svg.append('rect')
           .attr({
-            rx: 6,
-            ry: 6,
             class: 'selection',
             x: p[0],
             y: p[1],
