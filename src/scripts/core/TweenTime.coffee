@@ -1,5 +1,6 @@
 define (require) ->
   _ = require 'lodash'
+  Utils = require 'cs!core/Utils'
   Timer = require 'cs!core/Timer'
   Orchestrator = require 'cs!core/Orchestrator'
 
@@ -61,7 +62,6 @@ define (require) ->
         key = {val: new_val, time: time_in_seconds}
         property.keys.push(key)
         # Also sort the keys.
-        sortKeys = (keys) -> keys.sort((a, b) -> d3.ascending(a.time, b.time))
-        property.keys = sortKeys(property.keys)
+        property.keys = Utils.sortKeys(property.keys)
 
     getTotalDuration: () => return @orchestrator.getTotalDuration()

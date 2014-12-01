@@ -31,8 +31,6 @@ define (require) ->
           sub_height = (i + 1) * self.timeline.lineHeight
           return "translate(0," + sub_height + ")"
 
-      sortKeys = (keys) -> keys.sort((a, b) -> d3.ascending(a.time, b.time))
-
       subGrp.append('rect')
         .attr('class', 'click-handler click-handler--property')
         .attr('x', 0)
@@ -52,7 +50,7 @@ define (require) ->
           newKey = {time: dx, val: def}
           d.keys.push(newKey)
           # Sort the keys for tweens creation
-          d.keys = sortKeys(d.keys)
+          d.keys = Utils.sortKeys(d.keys)
 
           lineValue.isDirty = true
           keyContainer = this.parentNode

@@ -23,8 +23,6 @@ define (require) ->
       self = this
       tweenTime = self.timeline.tweenTime
 
-      sortKeys = (keys) -> keys.sort((a, b) -> d3.ascending(a.time, b.time))
-
       dragmove = (d) ->
         sourceEvent = d3.event.sourceEvent
         propertyObject = this.parentNode
@@ -47,6 +45,8 @@ define (require) ->
           timeMatch = dx
 
         d.time = timeMatch
+        # Sort the keys of the current selected item.
+        propertyData.keys = Utils.sortKeys(propertyData.keys)
         time_offset = d.time - old_time
 
         selection = self.timeline.selectionManager.getSelection()
@@ -60,7 +60,7 @@ define (require) ->
             itemLineObject = itemPropertyObject.parentNode.parentNode
             itemLineData = d3.select(itemLineObject).datum()
             itemLineData.isDirty = true
-            itemPropertyData.keys = sortKeys(itemPropertyData.keys)
+            itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys)
 
         lineData.isDirty = true
         self.onKeyUpdated.dispatch()

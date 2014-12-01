@@ -3,6 +3,7 @@ define (require) ->
   Signals = require 'Signal'
   _ = require 'lodash'
   d3 = require 'd3'
+  Utils = require 'cs!core/Utils'
   DraggableNumber = require 'draggablenumber'
 
   Mustache = require 'Mustache'
@@ -56,8 +57,8 @@ define (require) ->
       key = {time: currentTime, val: val}
 
       @instance_property.keys.push(key)
-      sortKeys = (keys) -> keys.sort((a, b) -> d3.ascending(a.time, b.time))
-      @instance_property.keys = sortKeys(@instance_property.keys)
+
+      @instance_property.keys = Utils.sortKeys(@instance_property.keys)
       # Todo: remove lineData.isDirty, make it nicer.
       @lineData.isDirty = true
       @keyAdded.dispatch()

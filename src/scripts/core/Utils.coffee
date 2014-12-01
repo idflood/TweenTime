@@ -46,6 +46,13 @@ define (require) ->
           return prevKey
       return prevKey
 
+    @sortKeys: (keys) ->
+      compare = (a, b) ->
+        if a.time < b.time then return -1
+        if a.time > b.time then return 1
+        return 0
+      return keys.sort(compare)
+
     @guid: () ->
       s4 = () -> Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
       return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4()
