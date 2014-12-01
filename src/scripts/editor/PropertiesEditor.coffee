@@ -27,6 +27,7 @@ define (require) ->
       @keyAdded.dispatch()
 
     onSelect: (domElement = false) =>
+      @selectedProps = []
       @$container.empty()
       if domElement instanceof Array
         for element in domElement
@@ -59,8 +60,6 @@ define (require) ->
         domElement = domElement.parentNode
         d3Object = d3.select(domElement)
         lineData = d3Object.datum()
-
-      @selectedProps = []
 
       # data and propertyData are defined on key select.
       property_name = false

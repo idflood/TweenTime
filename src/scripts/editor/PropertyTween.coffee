@@ -10,6 +10,7 @@ define (require) ->
     # @lineData: The line data object.
     constructor: (@instance_property, @lineData, @editor, @key_val = false, @timeline) ->
       @timer = @editor.timer
+      @$time = false
       @render()
 
     render: () =>
@@ -32,7 +33,9 @@ define (require) ->
         data.options.push(tween + ".easeInOut")
 
       @$el = $(Mustache.render(tpl_property, data))
+      @$time = @$el.find('.property__key-time strong')
       @$el.find('select').change(@onChange)
+      return
 
     onChange: () =>
       ease = @$el.find('select').val()
@@ -40,8 +43,9 @@ define (require) ->
       @editor.undoManager.addState()
       @lineData.isDirty = true
       @timeline.isDirty = true
+      return
 
     update: () =>
       # todo: use mustache instead...
-      @$el.find('.property__key-time strong').html(@key_val.time.toFixed(3))
+      @$time.html(@key_val.time.toFixed(3))
       return
