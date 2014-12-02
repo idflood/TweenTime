@@ -20,7 +20,6 @@ define (require) ->
     getJSON: () =>
       options = @editor.options
       json_replacer = (key, val) ->
-        if key == 'timeline' then return undefined
         if key == 'tween' then return undefined
         if key == 'isDirty' then return undefined
         # Disable all private properies from TweenMax/TimelineMax

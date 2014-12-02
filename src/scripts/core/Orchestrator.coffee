@@ -31,30 +31,30 @@ define (require) ->
           for key, property of item.properties
             if property.keys.length
               # Take the value of the first key as initial value.
-              # @todo: update this when the value of the first key change. (when rebuilding the timeline, simply delete item.values before item.timeline)
+              # @todo: update this when the value of the first key change. (when rebuilding the timeline, simply delete item.values before item._timeline)
               property.val = property.keys[0].val
             item.values[property.name] = property.val
 
         # Create the timeline if needed
-        if !item.timeline
-          item.timeline = new TimelineMax()
-          @mainTimeline.add(item.timeline, 0)
+        if !item._timeline
+          item._timeline = new TimelineMax()
+          @mainTimeline.add(item._timeline, 0)
           item.isDirty = true
 
         if item.isDirty then has_dirty_items = true
 
-        if item.timeline and item.isDirty and item.properties
+        if item._timeline and item.isDirty and item.properties
           item.isDirty = false
-          #item.timeline.clear()
+          #item._timeline.clear()
 
           for property in item.properties
-            if property.timeline
-              property.timeline.clear()
+            if property._timeline
+              property._timeline.clear()
             else
-              property.timeline = new TimelineMax()
-              item.timeline.add(property.timeline, 0)
+              property._timeline = new TimelineMax()
+              item._timeline.add(property._timeline, 0)
 
-            propertyTimeline = property.timeline
+            propertyTimeline = property._timeline
             propName = property.name
             # Add a inital key, even if there is no animation to set the value from time 0.
             first_key = if property.keys.length > 0 then property.keys[0] else false
