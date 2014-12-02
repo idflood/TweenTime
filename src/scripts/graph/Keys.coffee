@@ -93,7 +93,11 @@ define (require) ->
         self.onKeyUpdated.dispatch()
 
       propValue = (d,i,j) -> d.keys
-      propKey = (d, k) -> d.time
+      propKey = (d, k) ->
+        # Add a unique id for SelectionManager.removeDuplicates
+        # and use it as key.
+        if !d._id then d._id = Utils.guid()
+        return d._id
       keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey)
 
       # selectKey is triggered by dragstart event
@@ -123,12 +127,7 @@ define (require) ->
       key_grp = keys.enter()
         .append('g')
         .attr('class', 'key')
-        # Add a unique id for SelectionManager.removeDuplicates
-        .call((d) ->
-          d.each (item) ->
-            item._id =  Utils.guid()
-        )
-        # Use the unique id added above for the dom element id
+        # Use the unique id added in propKey above for the dom element id.
         .attr('id', (d) -> d._id)
         .on('mousedown', () ->
           # Don't trigger mousedown on linescontainer else
