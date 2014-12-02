@@ -6,7 +6,7 @@ define (require) ->
   Header = require 'cs!graph/Header'
   TimeIndicator = require 'cs!graph/TimeIndicator'
   Items = require 'cs!graph/Items'
-
+  KeysPreview = require 'cs!graph/KeysPreview'
   Properties = require 'cs!graph/Properties'
   Keys = require 'cs!graph/Keys'
   Errors = require 'cs!graph/Errors'
@@ -64,6 +64,7 @@ define (require) ->
 
       @items = new Items(this, @linesContainer)
       @items.onUpdate.add () => @isDirty = true
+      @keysPreview = new KeysPreview(this, @linesContainer)
 
       @properties = new Properties(this)
       @properties.onKeyAdded.add (newKey, keyContainer) =>
@@ -128,6 +129,7 @@ define (require) ->
       if @isDirty
         # No need to call this on each frames, but only on brush, key drag, ...
         bar = @items.render()
+        @keysPreview.render(bar)
         properties = @properties.render(bar)
         @errors.render(properties)
         @keys.render(properties)
