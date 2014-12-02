@@ -27,7 +27,7 @@ define (require) ->
         # create the values object to contain all properties
         if !item.values
           item.values = {}
-          #item.isDirty = true
+          #item._isDirty = true
           for key, property of item.properties
             if property.keys.length
               # Take the value of the first key as initial value.
@@ -39,12 +39,12 @@ define (require) ->
         if !item._timeline
           item._timeline = new TimelineMax()
           @mainTimeline.add(item._timeline, 0)
-          item.isDirty = true
+          item._isDirty = true
 
-        if item.isDirty then has_dirty_items = true
+        if item._isDirty then has_dirty_items = true
 
-        if item._timeline and item.isDirty and item.properties
-          item.isDirty = false
+        if item._timeline and item._isDirty and item.properties
+          item._isDirty = false
           #item._timeline.clear()
 
           for property in item.properties

@@ -41,8 +41,8 @@ define (require) ->
       ease = @$el.find('select').val()
       @key_val.ease = ease
       @editor.undoManager.addState()
-      @lineData.isDirty = true
-      @timeline.isDirty = true
+      @lineData._isDirty = true
+      @timeline._isDirty = true
       return
 
     update: () =>

@@ -49,7 +49,7 @@ define (require) ->
 
     render: (time = false, force = false) =>
       if time == false then time = @timer.time[0]
-      if force then @timeline.isDirty = true
+      if force then @timeline._isDirty = true
 
       @timeline.render(time, force)
       @controls.render(time, force)

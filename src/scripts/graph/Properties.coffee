@@ -52,7 +52,7 @@ define (require) ->
           # Sort the keys for tweens creation
           d.keys = Utils.sortKeys(d.keys)
 
-          lineValue.isDirty = true
+          lineValue._isDirty = true
           keyContainer = this.parentNode
           self.onKeyAdded.dispatch(newKey, keyContainer)
 

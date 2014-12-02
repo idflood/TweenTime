@@ -64,7 +64,7 @@ define (require) ->
           itemPropertyData = d3.select(itemPropertyObject).datum()
           itemLineObject = itemPropertyObject.parentNode.parentNode
           itemLineData = d3.select(itemLineObject).datum()
-          itemLineData.isDirty = true
+          itemLineData._isDirty = true
           itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys)
 
         key_scale = false
@@ -89,7 +89,7 @@ define (require) ->
                 data.time = selection_first_time + (data.time - selection_first_time) * key_scale
             updateKeyItem(item)
 
-        lineData.isDirty = true
+        lineData._isDirty = true
         self.onKeyUpdated.dispatch()
 
       propValue = (d,i,j) -> d.keys

@@ -75,6 +75,6 @@ define (require) ->
                   keys[key_key].ease = key.ease
               #tweenTime.data[item_key].properties[prop_key].keys = prop.keys
 
-        tweenTime.data[item_key].isDirty = true
+        tweenTime.data[item_key]._isDirty = true
 
       @editor.render(false, true)

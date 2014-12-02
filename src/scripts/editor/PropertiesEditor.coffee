@@ -106,7 +106,7 @@ define (require) ->
           if index > -1
             propertyData.keys.splice(index, 1)
             @keyRemoved.dispatch(domElement)
-            lineData.isDirty = true
+            lineData._isDirty = true
 
     render: (time, time_changed) =>
       if !time_changed then return

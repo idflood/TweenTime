@@ -22,7 +22,7 @@ define (require) ->
       @tweenTime = @editor.tweenTime
       @selectionManager = @editor.selectionManager
 
-      @isDirty = true
+      @_isDirty = true
       @timer = @tweenTime.timer
       @currentTime = @timer.time #used in timeindicator.
 
@@ -63,19 +63,19 @@ define (require) ->
       @selection = new Selection(this, @svg, margin)
 
       @items = new Items(this, @linesContainer)
-      @items.onUpdate.add () => @isDirty = true
+      @items.onUpdate.add () => @_isDirty = true
       @keysPreview = new KeysPreview(this, @linesContainer)
 
       @properties = new Properties(this)
       @properties.onKeyAdded.add (newKey, keyContainer) =>
-        @isDirty = true
+        @_isDirty = true
         # render the timeline directly so that we can directly select
         # the new key with it's domElement.
         @render(0, false)
         @keys.selectNewKey(newKey, keyContainer)
       @errors = new Errors(this)
       @keys = new Keys(this)
-      @keys.onKeyUpdated.add () => @isDirty = true
+      @keys.onKeyUpdated.add () => @_isDirty = true
 
       @xAxisGrid = d3.svg.axis()
         .scale(@x)
@@ -98,7 +98,7 @@ define (require) ->
         @x.domain(extent)
         @xGrid.call(@xAxisGrid)
         @xAxisElement.call(@xAxis)
-        @isDirty = true
+        @_isDirty = true
 
       @tweenTime.timer.durationChanged.add(@onDurationChanged)
 
@@ -113,27 +113,27 @@ define (require) ->
           .attr('width', INNER_WIDTH)
         @x.range([0, width])
 
-        @isDirty = true
+        @_isDirty = true
         @header.resize(INNER_WIDTH)
         @render()
 
     onDurationChanged: (seconds) =>
-      #@isDirty = true
+      #@_isDirty = true
       #@render()
 
     render: (time, time_changed) =>
-      if @isDirty || time_changed
+      if @_isDirty || time_changed
         @header.render()
         @timeIndicator.render()
 
-      if @isDirty
+      if @_isDirty
         # No need to call this on each frames, but only on brush, key drag, ...
         bar = @items.render()
         @keysPreview.render(bar)
         properties = @properties.render(bar)
         @errors.render(properties)
         @keys.render(properties)
-        @isDirty = false
+        @_isDirty = false
 
         # Adapt the timeline height.
         height = Math.max(@items.dy + 30, 230)

@@ -59,8 +59,8 @@ define (require) ->
       @instance_property.keys.push(key)
 
       @instance_property.keys = Utils.sortKeys(@instance_property.keys)
-      # Todo: remove lineData.isDirty, make it nicer.
-      @lineData.isDirty = true
+      # Todo: remove lineData._isDirty, make it nicer.
+      @lineData._isDirty = true
       @keyAdded.dispatch()
 
     render: () =>
@@ -108,7 +108,7 @@ define (require) ->
             @lineData.object.update(currentTime - @lineData.start)
 
         # Something changed, make the lineData dirty to rebuild things. d
-        @lineData.isDirty = true
+        @lineData._isDirty = true
 
       onChangeEnd = (new_val) =>
         @editor.undoManager.addState()

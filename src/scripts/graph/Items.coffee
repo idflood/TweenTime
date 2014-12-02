@@ -26,7 +26,7 @@ define (require) ->
             for key in prop.keys
               key.time += diff
 
-        d.isDirty = true
+        d._isDirty = true
         self.onUpdate.dispatch()
 
       dragmoveLeft = (d) ->
@@ -42,7 +42,7 @@ define (require) ->
           timeMatch = d.start + diff
 
         d.start = timeMatch
-        d.isDirty = true
+        d._isDirty = true
         self.onUpdate.dispatch()
 
       dragmoveRight = (d) ->
@@ -57,7 +57,7 @@ define (require) ->
           timeMatch = d.end + diff
 
         d.end = timeMatch
-        d.isDirty = true
+        d._isDirty = true
         self.onUpdate.dispatch()
 
       dragLeft = d3.behavior.drag()
