@@ -386,6 +386,12 @@ a.menu-item--toggle-side {
 .easeInOut .ease-inout {
   display: block; }
 
+.key--preview {
+  fill: #bbb;
+  fill-opacity: 0.3;
+  shape-rendering: geometricPrecision;
+  pointer-events: none; }
+
 .error {
   fill: #CF3938; }
 
