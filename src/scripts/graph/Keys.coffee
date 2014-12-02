@@ -141,6 +141,9 @@ define (require) ->
             ease = d.ease.split('.')
             if ease.length == 2
               cls += " " + ease[1]
+          else
+            # If no easing specified, the it's the default Quad.easeOut
+            cls += ' easeOut'
           return cls
         )
 
