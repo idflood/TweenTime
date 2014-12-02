@@ -14,8 +14,10 @@ define (require) ->
       properties = bar.selectAll('.keys-preview').data(propVal, propKey)
 
       subGrp = properties.enter()
-        .append('g')
-        .attr("class", 'keys-preview')
+        .append('svg')
+        .attr("class", 'keys-preview timeline__right-mask')
+        .attr('width', window.innerWidth - self.timeline.label_position_x)
+        .attr('height', self.timeline.lineHeight)
 
       properties.selectAll('.key--preview')
         .attr("style", (d) ->
