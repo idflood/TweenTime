@@ -188,14 +188,6 @@ define (require) ->
         .attr('cy', 0)
         .attr('r', 5)
 
-      #key_grp.append('path')
-      #  .attr('class', 'key__shape-left')
-      #  .attr('d', 'M 0 -6 L -6 0 L 0 6')
-
-      #key_grp.append('path')
-      #  .attr('class', 'key__shape-right')
-      #  .attr('d', 'M 0 -6 L 6 0 L 0 6')
-
       keys.attr 'transform', (d) ->
         dx = self.timeline.x(d.time * 1000)
         dx = parseInt(dx, 10)
