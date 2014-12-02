@@ -6,6 +6,7 @@ define (require) ->
 
   class Keys
     constructor: (@timeline) ->
+      #@selectionManager = @timeline.editor.selectionManager
       @onKeyUpdated = new Signals.Signal()
 
     selectNewKey: (data, container) ->
@@ -123,7 +124,12 @@ define (require) ->
         .append('g')
         .attr('class', 'key')
         # Add a unique id for SelectionManager.removeDuplicates
-        .attr('id', (d) -> Utils.guid())
+        .call((d) ->
+          d.each (item) ->
+            item._id =  Utils.guid()
+        )
+        # Use the unique id added above for the dom element id
+        .attr('id', (d) -> d._id)
         .on('mousedown', () ->
           # Don't trigger mousedown on linescontainer else
           # it create the selection rectangle
@@ -132,6 +138,7 @@ define (require) ->
         .call(drag)
 
       properties.selectAll('.key')
+
         .attr('class', (d) ->
           cls = 'key'
           # keep selected class
