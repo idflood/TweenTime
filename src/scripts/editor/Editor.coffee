@@ -26,6 +26,7 @@ define (require) ->
 
       @propertiesEditor = new PropertiesEditor(this, @selectionManager)
       @propertiesEditor.keyAdded.add(@onKeyAdded)
+      @propertiesEditor.keyRemoved.add(@onKeyRemoved)
 
       @controls = new EditorControls(@tweenTime, @$timeline)
 
@@ -37,6 +38,13 @@ define (require) ->
 
     onKeyAdded: () =>
       @undoManager.addState()
+      @render(false, true)
+
+    onKeyRemoved: (item) =>
+      @selectionManager.removeItem(item)
+      @undoManager.addState()
+      if @selectionManager.selection.length
+        @selectionManager.triggerSelect()
       @render(false, true)
 
     render: (time = false, force = false) =>

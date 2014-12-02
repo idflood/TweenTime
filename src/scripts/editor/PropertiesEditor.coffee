@@ -17,6 +17,7 @@ define (require) ->
       @$container = @$el.find('.properties-editor__main')
       # todo: rename keyAdded to updated
       @keyAdded = new Signals.Signal()
+      @keyRemoved = new Signals.Signal()
       @selectedProps = []
 
       $('body').append(@$el)
@@ -104,8 +105,8 @@ define (require) ->
           index = propertyData.keys.indexOf(key_val)
           if index > -1
             propertyData.keys.splice(index, 1)
+            @keyRemoved.dispatch(domElement)
             lineData.isDirty = true
-            @keyAdded.dispatch()
 
     render: (time, time_changed) =>
       if !time_changed then return

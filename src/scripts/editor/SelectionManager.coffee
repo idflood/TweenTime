@@ -20,6 +20,11 @@ define (require) ->
 
       @selection = result
 
+    removeItem: (item) =>
+      index = @selection.indexOf(item)
+      if index > -1
+        @selection.splice(index, 1)
+
     sortSelection: () =>
       compare = (a, b) ->
         if !a.__data__ || !b.__data__ then return 0
@@ -31,6 +36,9 @@ define (require) ->
     reset: () =>
       @selection = []
       @highlightItems()
+      @onSelect.dispatch(@selection, false)
+
+    triggerSelect: () =>
       @onSelect.dispatch(@selection, false)
 
     select: (item, addToSelection = false) ->
