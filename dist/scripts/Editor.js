@@ -1603,7 +1603,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
               }
             }
           }
-          d.isDirty = true;
+          d._isDirty = true;
           return self.onUpdate.dispatch();
         };
         dragmoveLeft = function(d) {
@@ -1620,7 +1620,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             timeMatch = d.start + diff;
           }
           d.start = timeMatch;
-          d.isDirty = true;
+          d._isDirty = true;
           return self.onUpdate.dispatch();
         };
         dragmoveRight = function(d) {
@@ -1637,7 +1637,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             timeMatch = d.end + diff;
           }
           d.end = timeMatch;
-          d.isDirty = true;
+          d._isDirty = true;
           return self.onUpdate.dispatch();
         };
         dragLeft = d3.behavior.drag().origin(function(d) {
@@ -1774,7 +1774,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           return d.name;
         };
         properties = bar.selectAll('.keys-preview').data(propVal, propKey);
-        subGrp = properties.enter().append('g').attr("class", 'keys-preview');
+        subGrp = properties.enter().append('svg').attr("class", 'keys-preview timeline__right-mask').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight);
         properties.selectAll('.key--preview').attr("style", function(d) {
           var bar_data, item;
           item = d3.select(this.parentNode.parentNode);
@@ -1867,7 +1867,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           };
           d.keys.push(newKey);
           d.keys = Utils.sortKeys(d.keys);
-          lineValue.isDirty = true;
+          lineValue._isDirty = true;
           keyContainer = this.parentNode;
           return self.onKeyAdded.dispatch(newKey, keyContainer);
         });
@@ -1971,7 +1971,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             itemPropertyData = d3.select(itemPropertyObject).datum();
             itemLineObject = itemPropertyObject.parentNode.parentNode;
             itemLineData = d3.select(itemLineObject).datum();
-            itemLineData.isDirty = true;
+            itemLineData._isDirty = true;
             return itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys);
           };
           key_scale = false;
@@ -2000,14 +2000,17 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
               updateKeyItem(item);
             }
           }
-          lineData.isDirty = true;
+          lineData._isDirty = true;
           return self.onKeyUpdated.dispatch();
         };
         propValue = function(d, i, j) {
           return d.keys;
         };
         propKey = function(d, k) {
-          return d.time;
+          if (!d._id) {
+            d._id = Utils.guid();
+          }
+          return d._id;
         };
         keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey);
         selectKey = function(d) {
@@ -2033,7 +2036,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           return d;
         }).on("drag", dragmove).on("dragstart", selectKey).on("dragend", dragend);
         key_grp = keys.enter().append('g').attr('class', 'key').attr('id', function(d) {
-          return Utils.guid();
+          return d._id;
         }).on('mousedown', function() {
           return d3.event.stopPropagation();
         }).call(drag);
@@ -2267,7 +2270,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.onDurationChanged = __bind(this.onDurationChanged, this);
         this.tweenTime = this.editor.tweenTime;
         this.selectionManager = this.editor.selectionManager;
-        this.isDirty = true;
+        this._isDirty = true;
         this.timer = this.tweenTime.timer;
         this.currentTime = this.timer.time;
         this.initialDomain = [0, 20 * 1000];
@@ -2295,14 +2298,14 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.items = new Items(this, this.linesContainer);
         this.items.onUpdate.add((function(_this) {
           return function() {
-            return _this.isDirty = true;
+            return _this._isDirty = true;
           };
         })(this));
         this.keysPreview = new KeysPreview(this, this.linesContainer);
         this.properties = new Properties(this);
         this.properties.onKeyAdded.add((function(_this) {
           return function(newKey, keyContainer) {
-            _this.isDirty = true;
+            _this._isDirty = true;
             _this.render(0, false);
             return _this.keys.selectNewKey(newKey, keyContainer);
           };
@@ -2311,7 +2314,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.keys = new Keys(this);
         this.keys.onKeyUpdated.add((function(_this) {
           return function() {
-            return _this.isDirty = true;
+            return _this._isDirty = true;
           };
         })(this));
         this.xAxisGrid = d3.svg.axis().scale(this.x).ticks(100).tickSize(-this.items.dy, 0).tickFormat("").orient("top");
@@ -2322,7 +2325,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             _this.x.domain(extent);
             _this.xGrid.call(_this.xAxisGrid);
             _this.xAxisElement.call(_this.xAxis);
-            return _this.isDirty = true;
+            return _this._isDirty = true;
           };
         })(this));
         this.tweenTime.timer.durationChanged.add(this.onDurationChanged);
@@ -2335,7 +2338,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             _this.svg.attr("width", width + margin.left + margin.right);
             _this.svg.selectAll('.timeline__right-mask').attr('width', INNER_WIDTH);
             _this.x.range([0, width]);
-            _this.isDirty = true;
+            _this._isDirty = true;
             _this.header.resize(INNER_WIDTH);
             return _this.render();
           };
@@ -2346,17 +2349,17 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
 
       Timeline.prototype.render = function(time, time_changed) {
         var bar, height, properties;
-        if (this.isDirty || time_changed) {
+        if (this._isDirty || time_changed) {
           this.header.render();
           this.timeIndicator.render();
         }
-        if (this.isDirty) {
+        if (this._isDirty) {
           bar = this.items.render();
           this.keysPreview.render(bar);
           properties = this.properties.render(bar);
           this.errors.render(properties);
           this.keys.render(properties);
-          this.isDirty = false;
+          this._isDirty = false;
           height = Math.max(this.items.dy + 30, 230);
           this.xAxis.tickSize(-height, 0);
           this.xAxisGrid.tickSize(-height, 0);
@@ -2464,7 +2467,7 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
         };
         this.instance_property.keys.push(key);
         this.instance_property.keys = Utils.sortKeys(this.instance_property.keys);
-        this.lineData.isDirty = true;
+        this.lineData._isDirty = true;
         return this.keyAdded.dispatch();
       };
 
@@ -2506,7 +2509,7 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
                 _this.lineData.object.update(currentTime - _this.lineData.start);
               }
             }
-            return _this.lineData.isDirty = true;
+            return _this.lineData._isDirty = true;
           };
         })(this);
         onChangeEnd = (function(_this) {
@@ -2607,8 +2610,8 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         ease = this.$el.find('select').val();
         this.key_val.ease = ease;
         this.editor.undoManager.addState();
-        this.lineData.isDirty = true;
-        this.timeline.isDirty = true;
+        this.lineData._isDirty = true;
+        this.timeline._isDirty = true;
       };
 
       PropertyTween.prototype.update = function() {
@@ -2744,7 +2747,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
               if (index > -1) {
                 propertyData.keys.splice(index, 1);
                 _this.keyRemoved.dispatch(domElement);
-                return lineData.isDirty = true;
+                return lineData._isDirty = true;
               }
             };
           })(this));
@@ -3338,15 +3341,6 @@ if (typeof module !== "undefined" && module !== null) {
         var data, json, json_replacer, options;
         options = this.editor.options;
         json_replacer = function(key, val) {
-          if (key === 'timeline') {
-            return void 0;
-          }
-          if (key === 'tween') {
-            return void 0;
-          }
-          if (key === 'isDirty') {
-            return void 0;
-          }
           if (key.indexOf('_') === 0) {
             return void 0;
           }
@@ -3464,7 +3458,7 @@ if (typeof module !== "undefined" && module !== null) {
               }
             }
           }
-          tweenTime.data[item_key].isDirty = true;
+          tweenTime.data[item_key]._isDirty = true;
         }
         return this.editor.render(false, true);
       };
@@ -3546,7 +3540,7 @@ if (typeof module !== "undefined" && module !== null) {
           time = this.timer.time[0];
         }
         if (force) {
-          this.timeline.isDirty = true;
+          this.timeline._isDirty = true;
         }
         this.timeline.render(time, force);
         this.controls.render(time, force);

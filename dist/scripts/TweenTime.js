@@ -7927,26 +7927,26 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
               item.values[property.name] = property.val;
             }
           }
-          if (!item.timeline) {
-            item.timeline = new TimelineMax();
-            this.mainTimeline.add(item.timeline, 0);
-            item.isDirty = true;
+          if (!item._timeline) {
+            item._timeline = new TimelineMax();
+            this.mainTimeline.add(item._timeline, 0);
+            item._isDirty = true;
           }
-          if (item.isDirty) {
+          if (item._isDirty) {
             has_dirty_items = true;
           }
-          if (item.timeline && item.isDirty && item.properties) {
-            item.isDirty = false;
+          if (item._timeline && item._isDirty && item.properties) {
+            item._isDirty = false;
             _ref2 = item.properties;
             for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
               property = _ref2[_j];
-              if (property.timeline) {
-                property.timeline.clear();
+              if (property._timeline) {
+                property._timeline.clear();
               } else {
-                property.timeline = new TimelineMax();
-                item.timeline.add(property.timeline, 0);
+                property._timeline = new TimelineMax();
+                item._timeline.add(property._timeline, 0);
               }
-              propertyTimeline = property.timeline;
+              propertyTimeline = property._timeline;
               propName = property.name;
               first_key = property.keys.length > 0 ? property.keys[0] : false;
               tween_time = 0;
