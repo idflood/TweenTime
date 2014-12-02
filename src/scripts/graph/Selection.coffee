@@ -73,13 +73,15 @@ define (require) ->
         self.timeline.selectionManager.reset()
         selection = []
         d3.selectAll('.key').each (state_data, i) ->
-          itemBounding = d3.select(this)[0][0].getBoundingClientRect()
-          y = itemBounding.top - containerBounding.top
-          if state_data.time >= d.timeStart && state_data.time <= d.timeEnd
-            # use or condition for top and bottom
-            if (y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)
-              d3.select(this).classed('key--selected', true)
-              selection.push(this)
+          item_data = d3.select(this.parentNode.parentNode.parentNode).datum()
+          if item_data.collapsed != true
+            itemBounding = d3.select(this)[0][0].getBoundingClientRect()
+            y = itemBounding.top - containerBounding.top
+            if state_data.time >= d.timeStart && state_data.time <= d.timeEnd
+              # use or condition for top and bottom
+              if (y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)
+                d3.select(this).classed('key--selected', true)
+                selection.push(this)
 
         self.timeline.selectionManager.select(selection)
 
