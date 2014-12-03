@@ -34,8 +34,25 @@ define (require) ->
 
       @$el = $(Mustache.render(tpl_property, data))
       @$time = @$el.find('.property__key-time strong')
+      @$time.keypress (e) =>
+        if e.charCode == 13
+          # Enter
+          e.preventDefault()
+          @$time.blur()
+          @updateKeyTime(@$time.text())
+
+      @$time.on 'click', () -> document.execCommand('selectAll', false, null)
       @$el.find('select').change(@onChange)
       return
+
+    updateKeyTime: (time) =>
+      time = parseFloat(time)
+      if isNaN(time)
+        time = @key_val.time
+
+      @$time.text(time)
+      @key_val.time = time
+      @onChange()
 
     onChange: () =>
       ease = @$el.find('select').val()
