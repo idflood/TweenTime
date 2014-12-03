@@ -1417,6 +1417,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.render = __bind(this.render, this);
         this.createBrushHandle = __bind(this.createBrushHandle, this);
         this.onDurationChanged = __bind(this.onDurationChanged, this);
+        this.adaptDomainToDuration = __bind(this.adaptDomainToDuration, this);
         this.onBrush = new Signals.Signal();
         this.margin = {
           top: 10,
@@ -1438,12 +1439,25 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.timer.durationChanged.add(this.onDurationChanged);
       }
 
+      Header.prototype.adaptDomainToDuration = function(domain, seconds) {
+        var ms, new_domain;
+        ms = seconds * 1000;
+        new_domain = [domain[0], domain[1]];
+        new_domain[0] = Math.min(new_domain[0], ms);
+        new_domain[1] = Math.min(new_domain[1], ms);
+        new_domain[0] = Math.max(new_domain[0], 0);
+        return new_domain;
+      };
+
       Header.prototype.onDurationChanged = function(seconds) {
         this.x.domain([0, this.timer.totalDuration]);
         this.xAxisElement.call(this.xAxis);
+        this.initialDomain = this.adaptDomainToDuration(this.initialDomain, seconds);
         this.brush.x(this.x).extent(this.initialDomain);
         this.svgContainer.select('.brush').call(this.brush);
-        return this.render();
+        this.onBrush.dispatch(this.initialDomain);
+        this.render();
+        return this.xDisplayed.domain(this.initialDomain);
       };
 
       Header.prototype.createBrushHandle = function() {
@@ -1451,11 +1465,15 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.xAxisElement = this.svgContainer.append("g").attr("class", "x axis").attr("transform", "translate(0," + (this.margin.top + 7) + ")").call(this.xAxis);
         onBrush = (function(_this) {
           return function() {
-            var extent0;
+            var end, extent0, start;
             extent0 = _this.brush.extent();
-            _this.onBrush.dispatch(extent0);
+            start = extent0[0].getTime();
+            end = extent0[1].getTime();
+            _this.initialDomain[0] = start;
+            _this.initialDomain[1] = end;
+            _this.onBrush.dispatch(_this.initialDomain);
             _this.render();
-            return _this.xDisplayed.domain(extent0);
+            return _this.xDisplayed.domain(_this.initialDomain);
           };
         })(this);
         this.brush = d3.svg.brush().x(this.x).extent(this.initialDomain).on("brush", onBrush);
@@ -1508,7 +1526,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         timeGrp = timeSelection.enter().append("g").attr('class', "time-indicator").attr("transform", "translate(-0.5," + 30 + ")").call(dragTime);
         timeGrp.append('rect').attr('class', 'time-indicator__line').attr('x', -0.5).attr('y', 0).attr('width', 1).attr('height', 1000);
         timeGrp.append('path').attr('class', 'time-indicator__handle').attr('d', 'M -5 -3 L -5 5 L 0 10 L 5 5 L 5 -3 L -5 -3');
-        return this.svgContainer.append("rect").attr("class", "graph-mask").attr("x", -self.margin.left).attr("y", -self.margin.top).attr("width", self.margin.left - 20).attr("height", self.height);
+        return this.svgContainer.append("rect").attr("class", "graph-mask").attr("x", -self.margin.left).attr("y", -self.margin.top).attr("width", self.margin.left - 5).attr("height", self.height);
       };
 
       Header.prototype.resize = function(width) {
@@ -2267,7 +2285,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         var height, margin, width;
         this.editor = editor;
         this.render = __bind(this.render, this);
-        this.onDurationChanged = __bind(this.onDurationChanged, this);
+        this.onUpdate = __bind(this.onUpdate, this);
         this.tweenTime = this.editor.tweenTime;
         this.selectionManager = this.editor.selectionManager;
         this._isDirty = true;
@@ -2296,11 +2314,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.timeIndicator = new TimeIndicator(this, this.svgContainerTime);
         this.selection = new Selection(this, this.svg, margin);
         this.items = new Items(this, this.linesContainer);
-        this.items.onUpdate.add((function(_this) {
-          return function() {
-            return _this._isDirty = true;
-          };
-        })(this));
+        this.items.onUpdate.add(this.onUpdate);
         this.keysPreview = new KeysPreview(this, this.linesContainer);
         this.properties = new Properties(this);
         this.properties.onKeyAdded.add((function(_this) {
@@ -2312,11 +2326,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         })(this));
         this.errors = new Errors(this);
         this.keys = new Keys(this);
-        this.keys.onKeyUpdated.add((function(_this) {
-          return function() {
-            return _this._isDirty = true;
-          };
-        })(this));
+        this.keys.onKeyUpdated.add(this.onUpdate);
         this.xAxisGrid = d3.svg.axis().scale(this.x).ticks(100).tickSize(-this.items.dy, 0).tickFormat("").orient("top");
         this.xGrid = this.svgContainer.append('g').attr('class', 'x axis grid').attr("transform", "translate(0," + margin.top + ")").call(this.xAxisGrid);
         this.xAxisElement = this.svgContainer.append("g").attr("class", "x axis").attr("transform", "translate(0," + margin.top + ")").call(this.xAxis);
@@ -2328,7 +2338,6 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             return _this._isDirty = true;
           };
         })(this));
-        this.tweenTime.timer.durationChanged.add(this.onDurationChanged);
         window.requestAnimationFrame(this.render);
         window.onresize = (function(_this) {
           return function() {
@@ -2345,7 +2354,9 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         })(this);
       }
 
-      Timeline.prototype.onDurationChanged = function(seconds) {};
+      Timeline.prototype.onUpdate = function() {
+        return this.editor.render(false, true);
+      };
 
       Timeline.prototype.render = function(time, time_changed) {
         var bar, height, properties;
@@ -2546,7 +2557,7 @@ define('text!templates/propertyNumber.tpl.html',[],function () { return '<div cl
 }).call(this);
 
 
-define('text!templates/propertyTween.tpl.html',[],function () { return '<div class="property property--tween">\n  <label for="{{id}}" class="property__label">easing</label>\n  <select id="{{id}}" class="property__select">\n    {{#options}}\n    <option value="{{.}}" {{selected}}>{{.}}</option>\n    {{/options}}\n  </select>\n</div>\n<div class="properties-editor__actions actions">\n  <span class="property__key-time">key at <strong>{{time}}</strong> seconds</span>\n  <a href="#" class="actions__item" data-action-remove>Remove key</a>\n</div>';});
+define('text!templates/propertyTween.tpl.html',[],function () { return '<div class="property property--tween">\n  <label for="{{id}}" class="property__label">easing</label>\n  <select id="{{id}}" class="property__select">\n    {{#options}}\n    <option value="{{.}}" {{selected}}>{{.}}</option>\n    {{/options}}\n  </select>\n</div>\n<div class="properties-editor__actions actions">\n  <span class="property__key-time">key at <strong class="property__key-input" contenteditable="true">{{time}}</strong> seconds</span>\n  <a href="#" class="actions__item" data-action-remove>Remove key</a>\n</div>';});
 
 
 // Generated by CoffeeScript 1.8.0
@@ -2568,6 +2579,7 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         this.timeline = timeline;
         this.update = __bind(this.update, this);
         this.onChange = __bind(this.onChange, this);
+        this.updateKeyTime = __bind(this.updateKeyTime, this);
         this.render = __bind(this.render, this);
         this.timer = this.editor.timer;
         this.$time = false;
@@ -2602,7 +2614,29 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         }
         this.$el = $(Mustache.render(tpl_property, data));
         this.$time = this.$el.find('.property__key-time strong');
+        this.$time.keypress((function(_this) {
+          return function(e) {
+            if (e.charCode === 13) {
+              e.preventDefault();
+              _this.$time.blur();
+              return _this.updateKeyTime(_this.$time.text());
+            }
+          };
+        })(this));
+        this.$time.on('click', function() {
+          return document.execCommand('selectAll', false, null);
+        });
         this.$el.find('select').change(this.onChange);
+      };
+
+      PropertyTween.prototype.updateKeyTime = function(time) {
+        time = parseFloat(time);
+        if (isNaN(time)) {
+          time = this.key_val.time;
+        }
+        this.$time.text(time);
+        this.key_val.time = time;
+        return this.onChange();
       };
 
       PropertyTween.prototype.onChange = function() {
@@ -2626,65 +2660,31 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
 }).call(this);
 
 
-define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div class="properties-editor">\n  <a href="#" class="menu-item menu-item--toggle-side" data-action="toggle"><i class="icon-toggle"></i></a>\n  <div class="properties-editor__main"></div>\n</div>\n';});
-
-
 // Generated by CoffeeScript 1.8.0
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('cs!editor/PropertiesEditor',['require','jquery','lodash','Signal','cs!editor/PropertyNumber','cs!editor/PropertyTween','text!templates/propertiesEditor.tpl.html'],function(require) {
-    var $, PropertiesEditor, PropertyNumber, PropertyTween, Signals, tpl_propertiesEditor, _;
-    $ = require('jquery');
-    _ = require('lodash');
+  define('cs!editor/Property',['require','Signal','cs!editor/PropertyNumber','cs!editor/PropertyTween'],function(require) {
+    var Property, PropertyNumber, PropertyTween, Signals;
     Signals = require('Signal');
     PropertyNumber = require('cs!editor/PropertyNumber');
     PropertyTween = require('cs!editor/PropertyTween');
-    tpl_propertiesEditor = require('text!templates/propertiesEditor.tpl.html');
-    return PropertiesEditor = (function() {
-      function PropertiesEditor(editor) {
+    return Property = (function() {
+      function Property(editor, $el, domElement) {
+        var $container, d3Object, instance_prop, key, key_val, lineData, lineObject, numberProp, propertyData, propertyObject, property_name, tweenProp, _ref;
         this.editor = editor;
-        this.render = __bind(this.render, this);
-        this.addProperty = __bind(this.addProperty, this);
-        this.onSelect = __bind(this.onSelect, this);
+        this.$el = $el;
+        this.update = __bind(this.update, this);
+        this.addTweenProperty = __bind(this.addTweenProperty, this);
+        this.addNumberProperty = __bind(this.addNumberProperty, this);
         this.onKeyAdded = __bind(this.onKeyAdded, this);
         this.timeline = this.editor.timeline;
         this.timer = this.editor.timer;
         this.selectionManager = editor.selectionManager;
-        this.$el = $(tpl_propertiesEditor);
-        this.$container = this.$el.find('.properties-editor__main');
         this.keyAdded = new Signals.Signal();
-        this.keyRemoved = new Signals.Signal();
-        this.selectedProps = [];
-        $('body').append(this.$el);
-        this.selectionManager.onSelect.add(this.onSelect);
-      }
-
-      PropertiesEditor.prototype.onKeyAdded = function() {
-        return this.keyAdded.dispatch();
-      };
-
-      PropertiesEditor.prototype.onSelect = function(domElement) {
-        var element, _i, _len, _results;
-        if (domElement == null) {
-          domElement = false;
-        }
-        this.selectedProps = [];
-        this.$container.empty();
-        if (domElement instanceof Array) {
-          _results = [];
-          for (_i = 0, _len = domElement.length; _i < _len; _i++) {
-            element = domElement[_i];
-            _results.push(this.addProperty(element));
-          }
-          return _results;
-        } else {
-          return this.addProperty(domElement);
-        }
-      };
-
-      PropertiesEditor.prototype.addProperty = function(domElement) {
-        var $el, d3Object, instance_prop, key, key_val, lineData, lineObject, prop, propertyData, propertyObject, property_name, tween, _ref;
+        this.items = [];
+        this.numberProp = false;
+        this.tweenProp = false;
         d3Object = d3.select(domElement);
         key_val = false;
         propertyObject = false;
@@ -2710,48 +2710,152 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         if (propertyData) {
           property_name = propertyData.name;
         }
-        $el = false;
-        if (lineData.id) {
-          $el = $('#property--' + lineData.id);
-          if (!$el.length) {
-            $el = $el = $('<div class="properties__wrapper" id="property--' + lineData.id + '"></div>');
-            this.$container.append($el);
-            if (lineData.label) {
-              $el.append('<h2 class="properties-editor__title">' + lineData.label + '</h2>');
-            }
-          }
-        }
-        if ($el === false) {
-          $el = $('<div class="properties__wrapper" id="no-item"></div>');
-          this.$container.append($el);
-        }
+        $container = this.getContainer(lineData);
         _ref = lineData.properties;
         for (key in _ref) {
           instance_prop = _ref[key];
           if (!property_name || instance_prop.name === property_name) {
-            prop = new PropertyNumber(instance_prop, lineData, this.editor, key_val);
-            prop.keyAdded.add(this.onKeyAdded);
-            this.selectedProps.push(prop);
-            $el.append(prop.$el);
+            numberProp = this.addNumberProperty(instance_prop, lineData, key_val, $container);
+            this.items.push(numberProp);
           }
         }
         if (property_name) {
-          tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
-          this.selectedProps.push(tween);
-          $el.append(tween.$el);
-          return tween.$el.find('[data-action-remove]').click((function(_this) {
-            return function(e) {
-              var index;
-              e.preventDefault();
-              index = propertyData.keys.indexOf(key_val);
-              if (index > -1) {
-                propertyData.keys.splice(index, 1);
-                _this.keyRemoved.dispatch(domElement);
-                return lineData._isDirty = true;
-              }
-            };
-          })(this));
+          tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $container);
+          this.items.push(tweenProp);
         }
+        return;
+      }
+
+      Property.prototype.onKeyAdded = function() {
+        return this.keyAdded.dispatch();
+      };
+
+      Property.prototype.getContainer = function(lineData) {
+        var $container;
+        $container = false;
+        if (lineData.id) {
+          $container = $('#property--' + lineData.id);
+          if (!$container.length) {
+            $container = $container = $('<div class="properties__wrapper" id="property--' + lineData.id + '"></div>');
+            this.$el.append($container);
+            if (lineData.label) {
+              $container.append('<h2 class="properties-editor__title">' + lineData.label + '</h2>');
+            }
+          }
+        }
+        if ($container === false) {
+          $container = $('<div class="properties__wrapper" id="no-item"></div>');
+          this.$el.append($container);
+        }
+        return $container;
+      };
+
+      Property.prototype.addNumberProperty = function(instance_prop, lineData, key_val, $container) {
+        var prop;
+        prop = new PropertyNumber(instance_prop, lineData, this.editor, key_val);
+        prop.keyAdded.add(this.onKeyAdded);
+        $container.append(prop.$el);
+        return prop;
+      };
+
+      Property.prototype.addTweenProperty = function(instance_prop, lineData, key_val, $container) {
+        var tween;
+        tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
+        $container.append(tween.$el);
+        tween.$el.find('[data-action-remove]').click((function(_this) {
+          return function(e) {
+            var index;
+            e.preventDefault();
+            index = propertyData.keys.indexOf(key_val);
+            if (index > -1) {
+              propertyData.keys.splice(index, 1);
+              _this.keyRemoved.dispatch(domElement);
+              return lineData._isDirty = true;
+            }
+          };
+        })(this));
+        return tween;
+      };
+
+      Property.prototype.update = function() {
+        var item, _i, _len, _ref;
+        _ref = this.items;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          item.update();
+        }
+      };
+
+      return Property;
+
+    })();
+  });
+
+}).call(this);
+
+
+define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div class="properties-editor">\n  <a href="#" class="menu-item menu-item--toggle-side" data-action="toggle"><i class="icon-toggle"></i></a>\n  <div class="properties-editor__main"></div>\n</div>\n';});
+
+
+// Generated by CoffeeScript 1.8.0
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  define('cs!editor/PropertiesEditor',['require','jquery','lodash','Signal','cs!editor/Property','text!templates/propertiesEditor.tpl.html'],function(require) {
+    var $, PropertiesEditor, Property, Signals, tpl_propertiesEditor, _;
+    $ = require('jquery');
+    _ = require('lodash');
+    Signals = require('Signal');
+    Property = require('cs!editor/Property');
+    tpl_propertiesEditor = require('text!templates/propertiesEditor.tpl.html');
+    return PropertiesEditor = (function() {
+      function PropertiesEditor(editor) {
+        this.editor = editor;
+        this.render = __bind(this.render, this);
+        this.addProperty = __bind(this.addProperty, this);
+        this.onSelect = __bind(this.onSelect, this);
+        this.onKeyAdded = __bind(this.onKeyAdded, this);
+        this.timeline = this.editor.timeline;
+        this.timer = this.editor.timer;
+        this.selectionManager = editor.selectionManager;
+        this.$el = $(tpl_propertiesEditor);
+        this.$container = this.$el.find('.properties-editor__main');
+        this.keyAdded = new Signals.Signal();
+        this.keyRemoved = new Signals.Signal();
+        this.items = [];
+        $('body').append(this.$el);
+        this.selectionManager.onSelect.add(this.onSelect);
+      }
+
+      PropertiesEditor.prototype.onKeyAdded = function() {
+        console.log("on key added");
+        return this.keyAdded.dispatch();
+      };
+
+      PropertiesEditor.prototype.onSelect = function(domElement) {
+        var element, _i, _len, _results;
+        if (domElement == null) {
+          domElement = false;
+        }
+        this.items = [];
+        this.$container.empty();
+        if (domElement instanceof Array) {
+          _results = [];
+          for (_i = 0, _len = domElement.length; _i < _len; _i++) {
+            element = domElement[_i];
+            _results.push(this.addProperty(element));
+          }
+          return _results;
+        } else {
+          return this.addProperty(domElement);
+        }
+      };
+
+      PropertiesEditor.prototype.addProperty = function(domElement) {
+        var prop;
+        prop = new Property(this.editor, this.$container, domElement);
+        prop.keyAdded.add(this.onKeyAdded);
+        return this.items.push(prop);
       };
 
       PropertiesEditor.prototype.render = function(time, time_changed) {
@@ -2759,7 +2863,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         if (!time_changed) {
           return;
         }
-        _ref = this.selectedProps;
+        _ref = this.items;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           prop = _ref[_i];
