@@ -152,7 +152,7 @@ define (require) ->
         .attr("class", "graph-mask")
         .attr("x", -self.margin.left)
         .attr("y", -self.margin.top)
-        .attr("width", self.margin.left - 20)
+        .attr("width", self.margin.left - 5)
         .attr("height", self.height)
 
     resize: (width) =>
