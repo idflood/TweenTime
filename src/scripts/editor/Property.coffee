@@ -55,7 +55,7 @@ define (require) ->
 
       if property_name
         # Add tween select if we are editing a key.
-        tweenProp = @addTweenProperty(instance_prop, lineData, key_val, $container)
+        tweenProp = @addTweenProperty(instance_prop, lineData, key_val, $container, propertyData, domElement)
         @items.push(tweenProp)
 
       return
@@ -89,7 +89,7 @@ define (require) ->
       $container.append(prop.$el)
       return prop
 
-    addTweenProperty: (instance_prop, lineData, key_val, $container) =>
+    addTweenProperty: (instance_prop, lineData, key_val, $container, propertyData, domElement) =>
       tween = new PropertyTween(instance_prop, lineData, @editor, key_val, @timeline)
       $container.append(tween.$el)
 
@@ -99,7 +99,7 @@ define (require) ->
         index = propertyData.keys.indexOf(key_val)
         if index > -1
           propertyData.keys.splice(index, 1)
-          @keyRemoved.dispatch(domElement)
+          @editor.propertiesEditor.keyRemoved.dispatch(domElement)
           lineData._isDirty = true
       return tween
 
