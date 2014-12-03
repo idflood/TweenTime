@@ -19,14 +19,15 @@ define (require) ->
         .attr('width', window.innerWidth - self.timeline.label_position_x)
         .attr('height', self.timeline.lineHeight)
 
+      setItemStyle = (d) ->
+        item = d3.select(this.parentNode.parentNode)
+        bar_data = item.datum()
+        if bar_data.collapsed == true then return ""
+        # Show only when item is collapsed
+        return "display: none;"
+
       properties.selectAll('.key--preview')
-        .attr("style", (d) ->
-          item = d3.select(this.parentNode.parentNode)
-          bar_data = item.datum()
-          if bar_data.collapsed == true then return ""
-          # Show only when item is collapsed
-          return "display: none;"
-        )
+        .attr("style", setItemStyle)
 
       keyValue = (d,i,j) -> d.keys
       keyKey = (d, k) -> d.time
@@ -35,6 +36,7 @@ define (require) ->
       key_item = keys.enter()
         .append('path')
         .attr('class', 'key--preview')
+        .attr("style", setItemStyle)
         .attr('d', 'M 0 -4 L 4 0 L 0 4 L -4 0')
 
       keys.attr('transform', (d) ->
