@@ -1778,7 +1778,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       }
 
       KeysPreview.prototype.render = function(bar) {
-        var keyKey, keyValue, key_item, keys, propKey, propVal, properties, self, subGrp, tweenTime;
+        var keyKey, keyValue, key_item, keys, propKey, propVal, properties, self, setItemStyle, subGrp, tweenTime;
         self = this;
         tweenTime = self.timeline.tweenTime;
         propVal = function(d, i) {
@@ -1793,7 +1793,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         };
         properties = bar.selectAll('.keys-preview').data(propVal, propKey);
         subGrp = properties.enter().append('svg').attr("class", 'keys-preview timeline__right-mask').attr('width', window.innerWidth - self.timeline.label_position_x).attr('height', self.timeline.lineHeight);
-        properties.selectAll('.key--preview').attr("style", function(d) {
+        setItemStyle = function(d) {
           var bar_data, item;
           item = d3.select(this.parentNode.parentNode);
           bar_data = item.datum();
@@ -1801,7 +1801,8 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             return "";
           }
           return "display: none;";
-        });
+        };
+        properties.selectAll('.key--preview').attr("style", setItemStyle);
         keyValue = function(d, i, j) {
           return d.keys;
         };
@@ -1809,7 +1810,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
           return d.time;
         };
         keys = properties.selectAll('.key--preview').data(keyValue, keyKey);
-        key_item = keys.enter().append('path').attr('class', 'key--preview').attr('d', 'M 0 -4 L 4 0 L 0 4 L -4 0');
+        key_item = keys.enter().append('path').attr('class', 'key--preview').attr("style", setItemStyle).attr('d', 'M 0 -4 L 4 0 L 0 4 L -4 0');
         keys.attr('transform', function(d) {
           var dx, dy;
           dx = self.timeline.x(d.time * 1000);
@@ -2720,7 +2721,7 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
           }
         }
         if (property_name) {
-          tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $container);
+          tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $container, propertyData, domElement);
           this.items.push(tweenProp);
         }
         return;
@@ -2758,7 +2759,7 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
         return prop;
       };
 
-      Property.prototype.addTweenProperty = function(instance_prop, lineData, key_val, $container) {
+      Property.prototype.addTweenProperty = function(instance_prop, lineData, key_val, $container, propertyData, domElement) {
         var tween;
         tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
         $container.append(tween.$el);
@@ -2769,7 +2770,7 @@ define('text!templates/propertyTween.tpl.html',[],function () { return '<div cla
             index = propertyData.keys.indexOf(key_val);
             if (index > -1) {
               propertyData.keys.splice(index, 1);
-              _this.keyRemoved.dispatch(domElement);
+              _this.editor.propertiesEditor.keyRemoved.dispatch(domElement);
               return lineData._isDirty = true;
             }
           };
