@@ -63,7 +63,7 @@ define (require) ->
       @selection = new Selection(this, @svg, margin)
 
       @items = new Items(this, @linesContainer)
-      @items.onUpdate.add () => @_isDirty = true
+      @items.onUpdate.add(@onUpdate)
       @keysPreview = new KeysPreview(this, @linesContainer)
 
       @properties = new Properties(this)
@@ -75,7 +75,7 @@ define (require) ->
         @keys.selectNewKey(newKey, keyContainer)
       @errors = new Errors(this)
       @keys = new Keys(this)
-      @keys.onKeyUpdated.add () => @_isDirty = true
+      @keys.onKeyUpdated.add(@onUpdate)
 
       @xAxisGrid = d3.svg.axis()
         .scale(@x)
@@ -116,6 +116,9 @@ define (require) ->
         @_isDirty = true
         @header.resize(INNER_WIDTH)
         @render()
+
+    onUpdate: () =>
+      @editor.render(false, true)
 
     onDurationChanged: (seconds) =>
       #@_isDirty = true
