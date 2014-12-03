@@ -35,13 +35,28 @@ define (require) ->
       @createTimeHandle()
       @timer.durationChanged.add(@onDurationChanged)
 
+    adaptDomainToDuration: (domain, seconds) =>
+      ms = seconds * 1000
+      new_domain = [domain[0], domain[1]]
+      # Make the domain smaller or equal to ms.
+      new_domain[0] = Math.min(new_domain[0], ms)
+      new_domain[1] = Math.min(new_domain[1], ms)
+      # Should not go below 0.
+      new_domain[0] = Math.max(new_domain[0], 0)
+
+      return new_domain
+
     onDurationChanged: (seconds) =>
       @x.domain([0, @timer.totalDuration])
       @xAxisElement.call(@xAxis)
+      @initialDomain = @adaptDomainToDuration(@initialDomain, seconds)
 
       @brush.x(@x).extent(@initialDomain)
       @svgContainer.select('.brush').call(@brush)
+      # Same as onBrush
+      @onBrush.dispatch(@initialDomain)
       @render()
+      @xDisplayed.domain(@initialDomain)
 
     createBrushHandle: () =>
       @xAxisElement = @svgContainer.append("g")
@@ -51,9 +66,15 @@ define (require) ->
 
       onBrush = () =>
         extent0 = @brush.extent()
-        @onBrush.dispatch(extent0)
+        # Get domain as milliseconds and not date.
+        start = extent0[0].getTime()
+        end = extent0[1].getTime()
+        # Set the initial domain.
+        @initialDomain[0] = start
+        @initialDomain[1] = end
+        @onBrush.dispatch(@initialDomain)
         @render()
-        @xDisplayed.domain(extent0)
+        @xDisplayed.domain(@initialDomain)
 
       @brush = d3.svg.brush()
         .x(@x)

@@ -100,8 +100,6 @@ define (require) ->
         @xAxisElement.call(@xAxis)
         @_isDirty = true
 
-      @tweenTime.timer.durationChanged.add(@onDurationChanged)
-
       # First render
       window.requestAnimationFrame(@render)
 
@@ -119,10 +117,6 @@ define (require) ->
 
     onUpdate: () =>
       @editor.render(false, true)
-
-    onDurationChanged: (seconds) =>
-      #@_isDirty = true
-      #@render()
 
     render: (time, time_changed) =>
       if @_isDirty || time_changed
