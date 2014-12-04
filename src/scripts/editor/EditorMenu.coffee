@@ -18,12 +18,10 @@ define (require) ->
         $('body').toggleClass('timeline-is-closed', timelineClosed)
         window.dispatchEvent(new Event('resize'))
 
-      propertiesClosed = false
       $toggleLinkSide = $('.properties-editor').find('[data-action="toggle"]')
       $toggleLinkSide.click (e) =>
         e.preventDefault()
-        propertiesClosed = !propertiesClosed
-        $toggleLinkSide.toggleClass('menu-item--toggle-left', propertiesClosed)
+        propertiesClosed = !$('body').hasClass('properties-is-closed')
         $('body').toggleClass('properties-is-closed', propertiesClosed)
 
         window.dispatchEvent(new Event('resize'))

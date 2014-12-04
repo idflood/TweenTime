@@ -39,6 +39,9 @@ define (require) ->
       else
         @addProperty(domElement)
 
+      # When selecting anything, automatically display the properties editor.
+      if @items.length then $('body').removeClass('properties-is-closed')
+
     addProperty: (domElement) =>
       prop = new Property(@editor, @$container, domElement)
       prop.keyAdded.add(@onKeyAdded)
