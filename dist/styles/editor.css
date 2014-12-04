@@ -201,6 +201,7 @@ svg * {
     padding: 10px 10px; }
   .properties-editor .property {
     overflow: hidden;
+    position: relative;
     min-height: 26px;
     line-height: 25px; }
   .properties-editor__title {
@@ -231,12 +232,14 @@ svg * {
   min-width: 50px;
   min-height: 25px;
   margin-right: 10px;
+  margin-left: 18px;
   color: #fff; }
 
 .property__key {
-  display: inline-block;
-  position: relative;
-  top: 1px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -4px;
   width: 8px;
   height: 8px;
   padding: 0;
@@ -284,24 +287,15 @@ a.menu-item--toggle-side {
     .properties-is-closed a.menu-item--toggle-side i:before {
       content: "\f053"; }
 
-.property--tween .property__label {
-  margin-left: 18px; }
-.property--tween .property__select {
-  display: inline-block;
-  padding-right: 20px;
-  border: 0;
-  border-radius: 0;
-  color: #aaa;
-  background: transparent;
-  -webkit-appearance: none; }
-  .property--tween .property__select:focus {
-    outline: 0; }
-.property--tween::after {
-  content: "\f078" !important;
-  display: inline !important;
-  font-family: 'icomoon';
-  position: relative;
-  left: -20px; }
+.property--tween {
+  overflow: hidden; }
+  .property--tween .property__label {
+    display: inline;
+    float: left;
+    margin-left: 18px; }
+  .property--tween .property__select {
+    display: inline;
+    float: left; }
 
 .actions {
   position: relative;
@@ -432,6 +426,57 @@ a.menu-item--toggle-side {
     right: 0; }
   .timeline-is-closed .content-wrapper {
     bottom: 97px; }
+
+.custom-select {
+  display: block;
+  position: relative; }
+  .custom-select select {
+    width: 100%;
+    margin: 0;
+    padding: 0.3em 1.9em 0.2em 0em;
+    background: none;
+    border: 1px solid transparent;
+    outline: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none; }
+    .custom-select select, .custom-select select:focus {
+      color: #aaa !important; }
+  .custom-select::after {
+    content: "\f078" !important;
+    display: block !important;
+    font-family: 'icomoon';
+    position: absolute;
+    top: 50%;
+    right: 1em;
+    margin-top: -6px;
+    line-height: 1em;
+    pointer-events: none; }
+
+x:-o-prefocus, .custom-select::after {
+  display: none; }
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .custom-select select::-ms-expand {
+    display: none; }
+  .custom-select select:focus::-ms-value {
+    background: transparent;
+    color: #aaa; } }
+
+@-moz-document url-prefix() {
+  .custom-select {
+    overflow: hidden; }
+
+  .custom-select select {
+    width: 120%;
+    width: -moz-calc(100% + 3em);
+    width: calc(100% + em); } }
+
+.custom-select select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000; }
 
 html, body {
   margin: 0;
