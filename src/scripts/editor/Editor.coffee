@@ -21,12 +21,13 @@ define (require) ->
       @exporter = new Exporter(this)
 
       @timeline = new Timeline(this)
-      @menu = new EditorMenu(@tweenTime, @$timeline, this)
-      if @options.onMenuCreated? then @options.onMenuCreated(@$timeline.find('.timeline__menu'))
 
       @propertiesEditor = new PropertiesEditor(this, @selectionManager)
       @propertiesEditor.keyAdded.add(@onKeyAdded)
       @propertiesEditor.keyRemoved.add(@onKeyRemoved)
+
+      @menu = new EditorMenu(@tweenTime, @$timeline, this)
+      if @options.onMenuCreated? then @options.onMenuCreated(@$timeline.find('.timeline__menu'))
 
       @controls = new EditorControls(@tweenTime, @$timeline)
 
