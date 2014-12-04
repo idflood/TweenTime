@@ -2824,6 +2824,7 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
         this.keyAdded = new Signals.Signal();
         this.keyRemoved = new Signals.Signal();
         this.items = [];
+        $('body').addClass('properties-is-closed');
         $('body').append(this.$el);
         this.selectionManager.onSelect.add(this.onSelect);
       }
@@ -2834,21 +2835,22 @@ define('text!templates/propertiesEditor.tpl.html',[],function () { return '<div 
       };
 
       PropertiesEditor.prototype.onSelect = function(domElement) {
-        var element, _i, _len, _results;
+        var element, _i, _len;
         if (domElement == null) {
           domElement = false;
         }
         this.items = [];
         this.$container.empty();
         if (domElement instanceof Array) {
-          _results = [];
           for (_i = 0, _len = domElement.length; _i < _len; _i++) {
             element = domElement[_i];
-            _results.push(this.addProperty(element));
+            this.addProperty(element);
           }
-          return _results;
         } else {
-          return this.addProperty(domElement);
+          this.addProperty(domElement);
+        }
+        if (this.items.length) {
+          return $('body').removeClass('properties-is-closed');
         }
       };
 
@@ -3141,7 +3143,7 @@ if (typeof module !== "undefined" && module !== null) {
       }
 
       EditorMenu.prototype.initToggle = function() {
-        var $toggleLink, $toggleLinkSide, propertiesClosed, timelineClosed;
+        var $toggleLink, $toggleLinkSide, timelineClosed;
         timelineClosed = false;
         $toggleLink = this.$timeline.find('[data-action="toggle"]');
         $toggleLink.click((function(_this) {
@@ -3153,13 +3155,12 @@ if (typeof module !== "undefined" && module !== null) {
             return window.dispatchEvent(new Event('resize'));
           };
         })(this));
-        propertiesClosed = false;
         $toggleLinkSide = $('.properties-editor').find('[data-action="toggle"]');
         return $toggleLinkSide.click((function(_this) {
           return function(e) {
+            var propertiesClosed;
             e.preventDefault();
-            propertiesClosed = !propertiesClosed;
-            $toggleLinkSide.toggleClass('menu-item--toggle-left', propertiesClosed);
+            propertiesClosed = !$('body').hasClass('properties-is-closed');
             $('body').toggleClass('properties-is-closed', propertiesClosed);
             return window.dispatchEvent(new Event('resize'));
           };
@@ -3606,13 +3607,13 @@ if (typeof module !== "undefined" && module !== null) {
         this.selectionManager = new SelectionManager(this.tweenTime);
         this.exporter = new Exporter(this);
         this.timeline = new Timeline(this);
+        this.propertiesEditor = new PropertiesEditor(this, this.selectionManager);
+        this.propertiesEditor.keyAdded.add(this.onKeyAdded);
+        this.propertiesEditor.keyRemoved.add(this.onKeyRemoved);
         this.menu = new EditorMenu(this.tweenTime, this.$timeline, this);
         if (this.options.onMenuCreated != null) {
           this.options.onMenuCreated(this.$timeline.find('.timeline__menu'));
         }
-        this.propertiesEditor = new PropertiesEditor(this, this.selectionManager);
-        this.propertiesEditor.keyAdded.add(this.onKeyAdded);
-        this.propertiesEditor.keyRemoved.add(this.onKeyRemoved);
         this.controls = new EditorControls(this.tweenTime, this.$timeline);
         this.undoManager = new UndoManager(this);
         window.editorEnabled = true;
