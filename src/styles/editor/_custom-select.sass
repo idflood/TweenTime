@@ -1,0 +1,55 @@
+.custom-select
+  display: block
+  position: relative
+
+  select
+    width: 100%
+    margin: 0
+    padding: .3em 1.9em .2em 0em
+    background: none
+    border: 1px solid transparent
+    outline: none
+    -webkit-box-sizing: border-box
+    -moz-box-sizing: border-box
+    box-sizing: border-box
+    appearance: none
+    -webkit-appearance: none
+
+    &, &:focus
+      color: #aaa !important
+
+  &::after
+    content: "\f078" !important
+    display: block !important
+    font-family: 'icomoon'
+    position: absolute
+    top: 50%
+    right: 1em
+    margin-top: -6px
+    line-height: 1em
+    pointer-events:none
+
+// ugly browser specific hacks
+x:-o-prefocus, .custom-select::after
+  display: none
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none)
+  .custom-select select::-ms-expand
+    display: none
+  .custom-select select:focus::-ms-value
+    background: transparent
+    color: #aaa
+
+// Firefox.
+@-moz-document url-prefix()
+  .custom-select
+    overflow: hidden
+  .custom-select select
+    width: 120%
+    width: -moz-calc(100% + 3em)
+    width: calc(100% + em)
+
+// Firefox focus has odd artifacts around the text, this kills that. See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-focusring
+.custom-select select:-moz-focusring
+  color: transparent
+  text-shadow: 0 0 0 #000

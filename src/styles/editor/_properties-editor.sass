@@ -104,27 +104,15 @@ a.menu-item--toggle-side
         content: "\f053"
 
 .property--tween
+  overflow: hidden
   .property__label
+    display: inline
+    float: left
     margin-left: 18px
 
   .property__select
-    display: inline-block
-    padding-right: 20px
-    border: 0
-    border-radius: 0
-    color: #aaa
-    background: transparent
-    -webkit-appearance: none
-
-    &:focus
-      outline: 0
-
-  &::after
-    content: "\f078" !important
-    display: inline !important
-    font-family: 'icomoon'
-    position: relative
-    left: -20px
+    display: inline
+    float: left
 
 .actions
   +vertical-separator(bottom)
