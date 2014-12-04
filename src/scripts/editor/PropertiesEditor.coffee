@@ -19,6 +19,9 @@ define (require) ->
       @keyRemoved = new Signals.Signal()
       @items = []
 
+      # Close properties by default.
+      $('body').addClass('properties-is-closed')
+      # Add the properties editor to the document.
       $('body').append(@$el)
 
       @selectionManager.onSelect.add(@onSelect)
