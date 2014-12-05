@@ -7854,6 +7854,10 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
         if (this.is_playing) {
           this.time[0] += elapsed;
         }
+        if (this.time[0] >= this.totalDuration) {
+          this.time[0] = this.totalDuration;
+          this.stop();
+        }
         this.updated.dispatch(this.time[0]);
         this.last_timeStamp = timestamp;
         this.last_time = this.time[0];

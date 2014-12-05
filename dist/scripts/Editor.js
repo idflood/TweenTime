@@ -1417,6 +1417,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.render = __bind(this.render, this);
         this.createBrushHandle = __bind(this.createBrushHandle, this);
         this.onDurationChanged = __bind(this.onDurationChanged, this);
+        this.setDomain = __bind(this.setDomain, this);
         this.adaptDomainToDuration = __bind(this.adaptDomainToDuration, this);
         this.onBrush = new Signals.Signal();
         this.margin = {
@@ -1449,15 +1450,19 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         return new_domain;
       };
 
-      Header.prototype.onDurationChanged = function(seconds) {
-        this.x.domain([0, this.timer.totalDuration]);
-        this.xAxisElement.call(this.xAxis);
-        this.initialDomain = this.adaptDomainToDuration(this.initialDomain, seconds);
+      Header.prototype.setDomain = function(domain) {
         this.brush.x(this.x).extent(this.initialDomain);
         this.svgContainer.select('.brush').call(this.brush);
         this.onBrush.dispatch(this.initialDomain);
         this.render();
         return this.xDisplayed.domain(this.initialDomain);
+      };
+
+      Header.prototype.onDurationChanged = function(seconds) {
+        this.x.domain([0, this.timer.totalDuration]);
+        this.xAxisElement.call(this.xAxis);
+        this.initialDomain = this.adaptDomainToDuration(this.initialDomain, seconds);
+        return this.setDomain(this.initialDomain);
       };
 
       Header.prototype.createBrushHandle = function() {
@@ -1471,9 +1476,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
             end = extent0[1].getTime();
             _this.initialDomain[0] = start;
             _this.initialDomain[1] = end;
-            _this.onBrush.dispatch(_this.initialDomain);
-            _this.render();
-            return _this.xDisplayed.domain(_this.initialDomain);
+            return _this.setDomain(_this.initialDomain);
           };
         })(this);
         this.brush = d3.svg.brush().x(this.x).extent(this.initialDomain).on("brush", onBrush);
@@ -2288,6 +2291,7 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
         this.render = __bind(this.render, this);
         this.onUpdate = __bind(this.onUpdate, this);
         this.tweenTime = this.editor.tweenTime;
+        this.timer = this.tweenTime.timer;
         this.selectionManager = this.editor.selectionManager;
         this._isDirty = true;
         this.timer = this.tweenTime.timer;
@@ -2360,7 +2364,22 @@ define('text!templates/timeline.tpl.html',[],function () { return '<div class="t
       };
 
       Timeline.prototype.render = function(time, time_changed) {
-        var bar, height, properties;
+        var bar, domainLength, height, margin_ms, properties;
+        if (time_changed) {
+          margin_ms = 16;
+          if (this.timer.getCurrentTime() > this.initialDomain[1]) {
+            domainLength = this.initialDomain[1] - this.initialDomain[0];
+            this.initialDomain[0] += domainLength - margin_ms;
+            this.initialDomain[1] += domainLength - margin_ms;
+            this.header.setDomain(this.initialDomain);
+          }
+          if (this.timer.getCurrentTime() < this.initialDomain[0]) {
+            domainLength = this.initialDomain[1] - this.initialDomain[0];
+            this.initialDomain[0] = this.timer.getCurrentTime();
+            this.initialDomain[1] = this.initialDomain[0] + domainLength;
+            this.header.setDomain(this.initialDomain);
+          }
+        }
         if (this._isDirty || time_changed) {
           this.header.render();
           this.timeIndicator.render();
