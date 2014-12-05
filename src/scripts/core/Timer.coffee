@@ -49,6 +49,11 @@ define (require) ->
       if @is_playing
         @time[0] += elapsed
 
+      if @time[0] >= @totalDuration
+        # Stop timer when reaching the end.
+        @time[0] = @totalDuration
+        @stop()
+
       #if @last_time != @time[0]
       @updated.dispatch(@time[0])
 
