@@ -26,6 +26,9 @@ define (require) ->
 
       @selectionManager.onSelect.add(@onSelect)
 
+      # Stop event propagation to no play by accident.
+      @$el.keypress (e) -> e.stopPropagation()
+
     onKeyAdded: () =>
       console.log "on key added"
       @keyAdded.dispatch()
