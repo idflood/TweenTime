@@ -8,6 +8,8 @@
 
 [Basic example](https://idflood.github.io/TweenTime/examples/basic.html)
 
+[Grouping](https://idflood.github.io/TweenTime/examples/grouping.html)
+
 [Advanced](https://idflood.github.io/TweenTime/examples/advanced.html)
 
 ## Usage
