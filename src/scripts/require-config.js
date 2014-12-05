@@ -13,7 +13,8 @@ require.config({
     TweenLite: "bower_components/gsap/src/uncompressed/TweenLite",
     TimelineLite: "bower_components/gsap/src/uncompressed/TimelineLite",
     TimelineMax: "bower_components/gsap/src/uncompressed/TimelineMax",
-    FileSaver: "bower_components/FileSaver/FileSaver"
+    FileSaver: "bower_components/FileSaver/FileSaver",
+    spectrum: "bower_components/spectrum/spectrum"
   },
   shim: {
     TimelineMax: {

@@ -27,6 +27,8 @@ define (require) ->
         # create the values object to contain all properties
         if !item.values
           item.values = {}
+          # Add a dom element for color tweening and other css properties.
+          item._domHelper = document.createElement('div')
           #item._isDirty = true
           for key, property of item.properties
             if property.keys.length
@@ -34,6 +36,14 @@ define (require) ->
               # @todo: update this when the value of the first key change. (when rebuilding the timeline, simply delete item.values before item._timeline)
               property.val = property.keys[0].val
             item.values[property.name] = property.val
+
+            if property.type && property.type == "color"
+              # If the property is a color mark it as css
+              property.css = true
+
+            if property.css
+              # If property is a css or a color value apply it to the domHelper element.
+              item._domHelper.style[property.name] = property.val
 
         # Create the timeline if needed
         if !item._timeline
@@ -64,10 +74,17 @@ define (require) ->
 
             tween_duration = 0
             val = {}
-            val[propName] = if first_key then first_key.val else property.val
             easing = @getEasing()
             val.ease = easing
-            tween = TweenMax.to(item.values, tween_duration, val)
+            data_target = item.values
+            if property.css
+              val.css = {}
+              val.css[propName] = if first_key then first_key.val else property.val
+              data_target = item._domHelper
+            else
+              val[propName] = if first_key then first_key.val else property.val
+
+            tween = TweenMax.to(data_target, tween_duration, val)
             propertyTimeline.add(tween, tween_time)
 
             for key, key_index in property.keys
@@ -76,10 +93,15 @@ define (require) ->
                 tween_duration = next_key.time - key.time
 
                 val = {}
-                val[propName] = next_key.val
                 easing = @getEasing(next_key)
                 val.ease = easing
-                tween = TweenMax.to(item.values, tween_duration, val)
+                if property.css
+                  val.css = {}
+                  val.css[propName] = next_key.val
+                else
+                  val[propName] = next_key.val
+
+                tween = TweenMax.to(data_target, tween_duration, val)
                 propertyTimeline.add(tween, key.time)
 
             # Directly seek the property timeline to update the value.
@@ -93,5 +115,14 @@ define (require) ->
 
       # Finally update the main timeline.
       @mainTimeline.seek(seconds)
+
+      # update the css properties.
+      for item in @data
+        if item._domHelper
+          # Only if item has a domHelper.
+          for property in item.properties
+            if property.css
+              # Only css values.
+              item.values[property.name] = item._domHelper.style[property.name]
 
       if has_dirty_items then @onUpdate.dispatch()

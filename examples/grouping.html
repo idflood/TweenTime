@@ -102,6 +102,13 @@
               "val": 100
             },
             {
+              "name": "backgroundColor",
+              "type": "color",
+              "group": "colors",
+              "keys": [],
+              "val": '#33b5e5'
+            },
+            {
               "name": "opacity",
               "group": "effects",
               "keys": [
@@ -129,6 +136,7 @@
       function animate() {
         $('.box').css({
           'opacity': box_values.opacity,
+          'background-color': box_values.backgroundColor,
           'width': box_values.width + "px",
           'height': box_values.height + "px",
           'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'

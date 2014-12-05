@@ -1,6 +1,7 @@
 define (require) ->
   Signals = require 'Signal'
   PropertyNumber = require 'cs!editor/PropertyNumber'
+  PropertyColor = require 'cs!editor/PropertyColor'
   PropertyTween = require 'cs!editor/PropertyTween'
 
   class Property
@@ -114,7 +115,11 @@ define (require) ->
       return $container
 
     addNumberProperty: (instance_prop, lineData, key_val, $container) =>
-      prop = new PropertyNumber(instance_prop, lineData, @editor, key_val)
+      propClass = PropertyNumber
+      if instance_prop.type && instance_prop.type == 'color'
+        propClass = PropertyColor
+
+      prop = new propClass(instance_prop, lineData, @editor, key_val)
       prop.keyAdded.add(@onKeyAdded)
       $container.append(prop.$el)
       return prop

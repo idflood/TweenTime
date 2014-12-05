@@ -14,6 +14,7 @@
     "jquery": "~2.1.1",
     "draggable-number.js": "~0.4.2",
     "gsap": "~1.14.2",
-    "FileSaver": "*"
+    "FileSaver": "*",
+    "spectrum": "~1.5.2"
   }
 }
