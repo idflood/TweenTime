@@ -7913,23 +7913,52 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
         return Quad.easeOut;
       };
 
+      Orchestrator.prototype.initSpecialProperties = function(item) {
+        var key, property, _ref, _results;
+        item._domHelper = document.createElement('div');
+        _ref = item.properties;
+        _results = [];
+        for (key in _ref) {
+          property = _ref[key];
+          if (property.type && property.type === "color") {
+            property.css = true;
+          }
+          if (property.css) {
+            _results.push(item._domHelper.style[property.name] = property.val);
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+
+      Orchestrator.prototype.initItemValues = function(item) {
+        var key, property, _ref, _results;
+        item.values = {};
+        _ref = item.properties;
+        _results = [];
+        for (key in _ref) {
+          property = _ref[key];
+          if (property.keys.length) {
+            property.val = property.keys[0].val;
+          }
+          _results.push(item.values[property.name] = property.val);
+        }
+        return _results;
+      };
+
       Orchestrator.prototype.update = function(timestamp) {
-        var easing, first_key, has_dirty_items, item, key, key_index, next_key, propName, property, propertyTimeline, seconds, tween, tween_duration, tween_time, val, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
+        var data_target, easing, first_key, has_dirty_items, item, key, key_index, next_key, propName, property, propertyTimeline, seconds, tween, tween_duration, tween_time, val, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4;
         seconds = timestamp / 1000;
         has_dirty_items = false;
         _ref = this.data;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           item = _ref[_i];
+          if (!item._domHelper) {
+            this.initSpecialProperties(item);
+          }
           if (!item.values) {
-            item.values = {};
-            _ref1 = item.properties;
-            for (key in _ref1) {
-              property = _ref1[key];
-              if (property.keys.length) {
-                property.val = property.keys[0].val;
-              }
-              item.values[property.name] = property.val;
-            }
+            this.initItemValues(item);
           }
           if (!item._timeline) {
             item._timeline = new TimelineMax();
@@ -7941,9 +7970,9 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
           }
           if (item._timeline && item._isDirty && item.properties) {
             item._isDirty = false;
-            _ref2 = item.properties;
-            for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-              property = _ref2[_j];
+            _ref1 = item.properties;
+            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+              property = _ref1[_j];
               if (property._timeline) {
                 property._timeline.clear();
               } else {
@@ -7959,22 +7988,34 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
               }
               tween_duration = 0;
               val = {};
-              val[propName] = first_key ? first_key.val : property.val;
               easing = this.getEasing();
               val.ease = easing;
-              tween = TweenMax.to(item.values, tween_duration, val);
+              data_target = item.values;
+              if (property.css) {
+                val.css = {};
+                val.css[propName] = first_key ? first_key.val : property.val;
+                data_target = item._domHelper;
+              } else {
+                val[propName] = first_key ? first_key.val : property.val;
+              }
+              tween = TweenMax.to(data_target, tween_duration, val);
               propertyTimeline.add(tween, tween_time);
-              _ref3 = property.keys;
-              for (key_index = _k = 0, _len2 = _ref3.length; _k < _len2; key_index = ++_k) {
-                key = _ref3[key_index];
+              _ref2 = property.keys;
+              for (key_index = _k = 0, _len2 = _ref2.length; _k < _len2; key_index = ++_k) {
+                key = _ref2[key_index];
                 if (key_index < property.keys.length - 1) {
                   next_key = property.keys[key_index + 1];
                   tween_duration = next_key.time - key.time;
                   val = {};
-                  val[propName] = next_key.val;
                   easing = this.getEasing(next_key);
                   val.ease = easing;
-                  tween = TweenMax.to(item.values, tween_duration, val);
+                  if (property.css) {
+                    val.css = {};
+                    val.css[propName] = next_key.val;
+                  } else {
+                    val[propName] = next_key.val;
+                  }
+                  tween = TweenMax.to(data_target, tween_duration, val);
                   propertyTimeline.add(tween, key.time);
                 }
               }
@@ -7988,6 +8029,17 @@ define('cs',{load: function(id){throw new Error("Dynamic load not allowed: " + i
           }
         }
         this.mainTimeline.seek(seconds);
+        _ref3 = this.data;
+        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+          item = _ref3[_l];
+          _ref4 = item.properties;
+          for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
+            property = _ref4[_m];
+            if (property.css) {
+              item.values[property.name] = item._domHelper.style[property.name];
+            }
+          }
+        }
         if (has_dirty_items) {
           return this.onUpdate.dispatch();
         }
