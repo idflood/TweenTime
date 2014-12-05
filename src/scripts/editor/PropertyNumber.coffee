@@ -4,68 +4,24 @@ define (require) ->
   _ = require 'lodash'
   d3 = require 'd3'
   Utils = require 'cs!core/Utils'
+  PropertyBase = require 'cs!editor/PropertyBase'
   DraggableNumber = require 'draggablenumber'
 
   Mustache = require 'Mustache'
   tpl_property = require 'text!templates/propertyNumber.tpl.html'
 
-  class PropertyNumber
+  class PropertyNumber extends PropertyBase
     # @instance_property: The current property on the data object.
     # @lineData: The line data object.
     constructor: (@instance_property, @lineData, @editor, @key_val = false) ->
-      @timer = @editor.timer
-      # key_val is defined if we selected a key
-      @$el = false
-      @keyAdded = new Signals.Signal()
-      @render()
-
+      super
       @$input = @$el.find('input')
-      @$key = @$el.find('.property__key')
-
-    onKeyClick: (e) =>
-      e.preventDefault()
-      currentValue = @getCurrentVal()
-      @addKey(currentValue)
 
     getInputVal: () =>
-      parseFloat(@$el.find('input').val(), 10)
-
-    getCurrentVal: () =>
-      val = @instance_property.val
-      prop_name = @instance_property.name
-
-      # if we selected a key simply return it's value
-      if @key_val
-        return @key_val.val
-
-      if @lineData.values? && @lineData.values[prop_name]
-        return @lineData.values[prop_name]
-
-      return val
-
-    getCurrentKey: () =>
-      time = @timer.getCurrentTime() / 1000
-
-      if !@instance_property || !@instance_property.keys then return false
-      if @instance_property.keys.length == 0 then return false
-      for key in @instance_property.keys
-        if key.time == time then return key
-      return false
-
-    addKey: (val) =>
-      currentTime = @timer.getCurrentTime() / 1000
-      key = {time: currentTime, val: val}
-
-      @instance_property.keys.push(key)
-
-      @instance_property.keys = Utils.sortKeys(@instance_property.keys)
-      # Todo: remove lineData._isDirty, make it nicer.
-      @lineData._isDirty = true
-      @keyAdded.dispatch()
+      parseFloat(@$el.find('input').val())
 
     render: () =>
-      # current values are defined in @lineData.values
-      @values = if @lineData.values? then @lineData.values else {}
+      super
       # By default assign the property default value
       val = @getCurrentVal()
 
@@ -121,10 +77,8 @@ define (require) ->
       $input.change(onInputChange)
 
     update: () =>
+      super
       val = @getCurrentVal()
-      key = @getCurrentKey()
-
-      @$key.toggleClass('property__key--active', key)
       draggable = @$input.data('draggable')
 
       if draggable
