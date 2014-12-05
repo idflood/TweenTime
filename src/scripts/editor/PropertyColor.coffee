@@ -31,9 +31,26 @@ define (require) ->
 
       $input = @$el.find('input')
 
+      $input.spectrum({
+        allowEmpty: false,
+        showAlpha: true,
+        clickoutFiresChange: false,
+        preferredFormat: "rgb",
+        change: (color) =>
+          @editor.undoManager.addState()
+        ,
+        move: (color) =>
+          if color._a == 1
+            @$input.val(color.toHexString())
+          else
+            @$input.val(color.toRgbString())
+          @onInputChange()
+      })
+
       $input.change(@onInputChange)
 
     update: () =>
       super
       val = @getCurrentVal()
       @$input.val(val)
+      @$input.spectrum('set', val)
