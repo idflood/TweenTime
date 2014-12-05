@@ -20,6 +20,7 @@ define (require) ->
   class Timeline
     constructor: (@editor) ->
       @tweenTime = @editor.tweenTime
+      @timer = @tweenTime.timer
       @selectionManager = @editor.selectionManager
 
       @_isDirty = true
@@ -119,7 +120,22 @@ define (require) ->
       @editor.render(false, true)
 
     render: (time, time_changed) =>
+      if time_changed
+        # Update current domain when playing to keep time indicator in view.
+        margin_ms = 16
+        if @timer.getCurrentTime() > @initialDomain[1]
+          domainLength = @initialDomain[1] - @initialDomain[0]
+          @initialDomain[0] += domainLength - margin_ms
+          @initialDomain[1] += domainLength - margin_ms
+          @header.setDomain(@initialDomain)
+        if @timer.getCurrentTime() < @initialDomain[0]
+          domainLength = @initialDomain[1] - @initialDomain[0]
+          @initialDomain[0] = @timer.getCurrentTime()
+          @initialDomain[1] = @initialDomain[0] + domainLength
+          @header.setDomain(@initialDomain)
+
       if @_isDirty || time_changed
+        # Render header and time indicator everytime the time changed.
         @header.render()
         @timeIndicator.render()
 

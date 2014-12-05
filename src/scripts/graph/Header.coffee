@@ -46,17 +46,19 @@ define (require) ->
 
       return new_domain
 
-    onDurationChanged: (seconds) =>
-      @x.domain([0, @timer.totalDuration])
-      @xAxisElement.call(@xAxis)
-      @initialDomain = @adaptDomainToDuration(@initialDomain, seconds)
-
+    setDomain: (domain) =>
       @brush.x(@x).extent(@initialDomain)
       @svgContainer.select('.brush').call(@brush)
       # Same as onBrush
       @onBrush.dispatch(@initialDomain)
       @render()
       @xDisplayed.domain(@initialDomain)
+
+    onDurationChanged: (seconds) =>
+      @x.domain([0, @timer.totalDuration])
+      @xAxisElement.call(@xAxis)
+      @initialDomain = @adaptDomainToDuration(@initialDomain, seconds)
+      @setDomain(@initialDomain)
 
     createBrushHandle: () =>
       @xAxisElement = @svgContainer.append("g")
@@ -72,9 +74,7 @@ define (require) ->
         # Set the initial domain.
         @initialDomain[0] = start
         @initialDomain[1] = end
-        @onBrush.dispatch(@initialDomain)
-        @render()
-        @xDisplayed.domain(@initialDomain)
+        @setDomain(@initialDomain)
 
       @brush = d3.svg.brush()
         .x(@x)
