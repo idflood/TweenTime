@@ -47,6 +47,8 @@ define (require) ->
       # Get the property container.
       $container = @getContainer(lineData)
 
+      $tween_container = $container
+
       # Basic data, loop through properties.
       for key, instance_prop of lineData.properties
         # show all properties or only 1 if we selected a key.
@@ -55,9 +57,13 @@ define (require) ->
           numberProp = @addNumberProperty(instance_prop, lineData, key_val, $grp_container)
           @items.push(numberProp)
 
+          if instance_prop.name == property_name
+            $tween_container = $grp_container
+
       if property_name
         # Add tween select if we are editing a key.
-        tweenProp = @addTweenProperty(instance_prop, lineData, key_val, $container, propertyData, domElement)
+        #$grp_container = @getGroupContainer(instance_prop, $container)
+        tweenProp = @addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData, domElement)
         @items.push(tweenProp)
 
       return
