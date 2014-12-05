@@ -50,7 +50,8 @@ define (require) ->
       for key, instance_prop of lineData.properties
         # show all properties or only 1 if we selected a key.
         if !property_name || instance_prop.name == property_name
-          numberProp = @addNumberProperty(instance_prop, lineData, key_val, $container)
+          $grp_container = @getGroupContainer(instance_prop, $container)
+          numberProp = @addNumberProperty(instance_prop, lineData, key_val, $grp_container)
           @items.push(numberProp)
 
       if property_name
@@ -63,6 +64,35 @@ define (require) ->
     onKeyAdded: () =>
       # propagate the event.
       @keyAdded.dispatch()
+
+    getGroupContainer: (instance_prop, $container) ->
+      if !instance_prop.group
+        # If there is no group add a general group first
+        grp_class = 'property-grp--general'
+        $existing = $container.find('.' + grp_class)
+        if $existing.length
+          return $existing
+        else
+          $grp = @createGroupContainer(grp_class)
+          $container.append($grp)
+          return $grp
+      else
+        # We have a group
+        grp_class = 'property-grp--' + instance_prop.group
+        $existing = $container.find('.' + grp_class)
+        if $existing.length
+          return $existing
+        else
+          $grp = @createGroupContainer(grp_class, instance_prop.group)
+          $container.append($grp)
+          return $grp
+
+    createGroupContainer: (grp_class, label = false) =>
+      $grp = $('<div class="property-grp ' + grp_class + '"></div>')
+      if label
+        $grp.append('<h3 class="property-grp__title">' + label + '</h3>')
+
+      return $grp
 
     getContainer: (lineData) ->
       $container = false
