@@ -19,31 +19,38 @@ define (require) ->
           return window[ease_index[0]][ease_index[1]]
       return Quad.easeOut
 
+    initSpecialProperties: (item) ->
+      # Add a dom element for color tweening and other css properties.
+      item._domHelper = document.createElement('div')
+      for key, property of item.properties
+        # Setup special properties
+        if property.type && property.type == "color"
+          # If the property is a color mark it as css
+          property.css = true
+
+        if property.css
+          # If property is a css or a color value apply it to the domHelper element.
+          item._domHelper.style[property.name] = property.val
+
+    initItemValues: (item) ->
+      item.values = {}
+      #item._isDirty = true
+      for key, property of item.properties
+        if property.keys.length
+          # Take the value of the first key as initial value.
+          # @todo: update this when the value of the first key change. (when rebuilding the timeline, simply delete item.values before item._timeline)
+          property.val = property.keys[0].val
+        item.values[property.name] = property.val
+
     update: (timestamp) =>
       seconds = timestamp / 1000
       has_dirty_items = false
 
       for item in @data
+        if !item._domHelper then @initSpecialProperties(item)
+
         # create the values object to contain all properties
-        if !item.values
-          item.values = {}
-          # Add a dom element for color tweening and other css properties.
-          item._domHelper = document.createElement('div')
-          #item._isDirty = true
-          for key, property of item.properties
-            if property.keys.length
-              # Take the value of the first key as initial value.
-              # @todo: update this when the value of the first key change. (when rebuilding the timeline, simply delete item.values before item._timeline)
-              property.val = property.keys[0].val
-            item.values[property.name] = property.val
-
-            if property.type && property.type == "color"
-              # If the property is a color mark it as css
-              property.css = true
-
-            if property.css
-              # If property is a css or a color value apply it to the domHelper element.
-              item._domHelper.style[property.name] = property.val
+        if !item.values then @initItemValues(item)
 
         # Create the timeline if needed
         if !item._timeline
@@ -118,11 +125,9 @@ define (require) ->
 
       # update the css properties.
       for item in @data
-        if item._domHelper
-          # Only if item has a domHelper.
-          for property in item.properties
-            if property.css
-              # Only css values.
-              item.values[property.name] = item._domHelper.style[property.name]
+        for property in item.properties
+          if property.css
+            # Only css values.
+            item.values[property.name] = item._domHelper.style[property.name]
 
       if has_dirty_items then @onUpdate.dispatch()

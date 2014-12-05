@@ -65,7 +65,7 @@
                   "ease": "Quart.easeInOut"
                 }
               ],
-              "val": 42
+              "val": 0
             },
             {
               "name": "y",
@@ -105,8 +105,18 @@
               "name": "backgroundColor",
               "type": "color",
               "group": "colors",
-              "keys": [],
-              "val": '#33b5e5'
+              "keys": [
+                {
+                  "time": 0,
+                  "val": "rgb(51, 181, 229)"
+                },
+                {
+                  "time": 4,
+                  "val": "rgb(255, 70, 0)",
+                  "ease": "Quad.easeIn"
+                }
+              ],
+              "val": "#33b5e5"
             },
             {
               "name": "opacity",
@@ -114,17 +124,26 @@
               "keys": [
                 {
                   "time": 1.214,
-                  "val": 1
+                  "val": 1,
+                  "ease": "Quad.easeOut"
                 },
                 {
-                  "time": 3.98,
+                  "time": 4,
                   "val": 0,
                   "ease": "Quad.easeOut"
                 }
               ],
               "val": 1
             }
-          ]
+          ],
+          "values": {
+            "x": 100,
+            "y": 0,
+            "width": 100,
+            "height": 100,
+            "backgroundColor": "rgb(235, 81, 22)",
+            "opacity": 0.005198327185895191
+          }
         }
       ];
 
