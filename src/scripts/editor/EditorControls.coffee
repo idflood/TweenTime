@@ -1,51 +1,52 @@
-define (require) ->
-  class EditorControls
-    constructor: (@tweenTime, @$timeline) ->
-      @timer = @tweenTime.timer
-      @$time = @$timeline.find('.control--time')
-      @$time_end = @$timeline.find('.control--time-end')
-      @initControls()
+class EditorControls
+  constructor: (@tweenTime, @$timeline) ->
+    @timer = @tweenTime.timer
+    @$time = @$timeline.find('.control--time')
+    @$time_end = @$timeline.find('.control--time-end')
+    @initControls()
 
-      @$time_end.val(@tweenTime.timer.getDuration())
+    @$time_end.val(@tweenTime.timer.getDuration())
 
-      $(document).keypress (e) =>
-        console.log e
-        if e.charCode == 32
-          # Space
-          @playPause()
-
-    playPause: () =>
-      @timer.toggle()
-      $play_pause = @$timeline.find('.control--play-pause')
-      $play_pause.toggleClass('icon-pause', @timer.is_playing)
-      $play_pause.toggleClass('icon-play', !@timer.is_playing)
-
-    initControls: () ->
-      $play_pause = @$timeline.find('.control--play-pause')
-      $play_pause.click (e) =>
-        e.preventDefault()
+    $(document).keypress (e) =>
+      console.log e
+      if e.charCode == 32
+        # Space
         @playPause()
 
-      $bt_first = @$timeline.find('.control--first')
-      $bt_first.click (e) =>
-        e.preventDefault()
-        @timer.seek([0])
+  playPause: () =>
+    @timer.toggle()
+    $play_pause = @$timeline.find('.control--play-pause')
+    $play_pause.toggleClass('icon-pause', @timer.is_playing)
+    $play_pause.toggleClass('icon-play', !@timer.is_playing)
 
-      $bt_last = @$timeline.find('.control--last')
-      $bt_last.click (e) =>
-        e.preventDefault()
-        total = @tweenTime.getTotalDuration()
-        @timer.seek([total * 1000])
+  initControls: () ->
+    $play_pause = @$timeline.find('.control--play-pause')
+    $play_pause.click (e) =>
+      e.preventDefault()
+      @playPause()
 
-      @$time.change (e) =>
-        seconds = parseFloat(@$time.val(), 10) * 1000
-        @timer.seek([seconds])
+    $bt_first = @$timeline.find('.control--first')
+    $bt_first.click (e) =>
+      e.preventDefault()
+      @timer.seek([0])
 
-      @$time_end.change (e) =>
-        seconds = parseFloat(@$time_end.val(), 10)
-        @timer.setDuration(seconds)
+    $bt_last = @$timeline.find('.control--last')
+    $bt_last.click (e) =>
+      e.preventDefault()
+      total = @tweenTime.getTotalDuration()
+      @timer.seek([total * 1000])
 
-    render: (time, time_changed) =>
-      if time_changed
-        seconds = time / 1000
-        @$time.val(seconds.toFixed(3))
+    @$time.change (e) =>
+      seconds = parseFloat(@$time.val(), 10) * 1000
+      @timer.seek([seconds])
+
+    @$time_end.change (e) =>
+      seconds = parseFloat(@$time_end.val(), 10)
+      @timer.setDuration(seconds)
+
+  render: (time, time_changed) =>
+    if time_changed
+      seconds = time / 1000
+      @$time.val(seconds.toFixed(3))
+
+module.exports = EditorControls

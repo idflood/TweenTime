@@ -1,66 +1,113 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var path = require("path");
 var requirejs = require('requirejs');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
+var webpack = require("webpack");
 
-gulp.task('scripts:tweentime', [], function(cb) {
-  requirejs.optimize({
-    baseUrl: 'src/scripts',
-    mainConfigFile: 'src/scripts/require-config.js',
-    name: 'bower_components/almond/almond',
-    out: 'dist/scripts/TweenTime.js',
-    optimize: 'none',
-    inlineText: true,
-    generateSourceMaps: true,
-    preserveLicenseComments: true,
-    include: 'TweenTime',
-    paths: {
-      requireLib: "bower_components/requirejs/require"
-    },
-    exclude: ['coffee-script', 'TweenMax', 'TimelineMax'],
-    stubModules: ['cs'],
-    wrap: {
-      "startFile": "src/misc/wrap.start.js",
-      "endFile": "src/misc/wrap.end.js"
-    },
-  }, function (buildResponse) {
-    cb();
-  }, function (err){
-    gutil.log(gutil.colors.white.bgRed.bold('### Scripts error ###'));
-    gutil.log(err);
-    cb();
-  })
-});
+gulp.task('scripts', function(cb) {
+  webpack({
+    context: __dirname + "/src/scripts",
+    entry: {
+      //vendor: ['gsap', 'd3', 'jquery', 'mustache.js', 'lodash', 'draggable-number.js'],
+      Core: "./Core.coffee",
+      Editor: "./Editor.coffee",
 
-gulp.task('scripts', ['scripts:tweentime'], function(cb) {
-  requirejs.optimize({
-    baseUrl: 'src/scripts',
-    mainConfigFile: 'src/scripts/require-config.js',
-    name: 'bower_components/almond/almond',
-    out: 'dist/scripts/Editor.js',
-    optimize: 'none',
-    inlineText: true,
-    generateSourceMaps: true,
-    preserveLicenseComments: true,
-    include: 'Editor',
-    paths: {
-      requireLib: "bower_components/requirejs/require"
     },
-    exclude: ['coffee-script', 'TweenMax', 'TimelineMax', 'd3', 'jquery', 'Mustache', 'lodash', 'draggablenumber'],
-    stubModules: ['cs'],
-    wrap: {
-      "startFile": "src/misc/wrap.start--editor.js",
-      "endFile": "src/misc/wrap.end--editor.js"
+    devtool: "source-map",
+    externals: [
+      'd3',
+      'spectrum',
+      {
+        'js-signals': {
+          root: 'signals',
+          commonjs: './signals',
+          amd: 'signals'
+        },
+        'draggable-number.js': {
+          root: 'DraggableNumber',
+          commonjs: 'DraggableNumber',
+          commonjs2: 'DraggableNumber',
+          amd: 'DraggableNumber'
+        },
+        'gsap': {
+          root: 'TweenMax',
+          commonjs: 'TweenMax',
+          commonjs2: 'TweenMax',
+          amd: 'TweenMax'
+        },
+        'jquery': {
+          root: '$',
+          commonjs: 'jquery',
+          commonjs2: 'jquery',
+          amd: 'jquery'
+        },
+        'lodash': {
+          root: '_',
+          commonjs: "lodash",
+          commonjs2: "lodash",
+          amd: "lodash"
+        },
+        'mustache.js': {
+          root: 'Mustache',
+          commonjs: "mustache",
+          commonjs2: "mustache",
+          amd: "mustache"
+        }
+      }
+    ],
+    output: {
+        path: path.join(__dirname, "dist/scripts"),
+        filename: "TweenTime.[name].js",
+        libraryTarget: "umd",
+        library: ["TweenTime", "[name]"]
     },
-  }, function (buildResponse) {
+    module: {
+      loaders: [
+        { test: /\.js$/, loader: '6to5-loader'},
+        { test: /\.coffee$/, loader: "coffee-loader" },
+      ],
+    },
+    resolve: {
+      root: [path.join(__dirname, "src/scripts/bower_components")],
+      // Add alias when the library doesn't automagically load with bower resolver.
+      alias: {
+        //spectrum: 'bower_components/spectrum/spectrum.js'
+        //'js-signals': 'bower_components/js-signals/dist/signals.js'
+      }
+    },
+    plugins: [
+      new webpack.ResolverPlugin(
+          new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
+      ),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.UglifyJsPlugin({
+        mangle: true,
+        output: {
+          comments: false
+        },
+        compress: {
+          drop_debugger: true,
+          sequences: true,
+          //dead_code: true,
+          conditionals: true,
+          booleans: true,
+          unused: true,
+          if_return: true,
+          join_vars: true,
+          //drop_console: true
+        }
+      }),
+    ],
+  }, function(err, stats) {
+    if(err) throw new gutil.PluginError("webpack", err);
+    gutil.log("[webpack]", stats.toString({
+        // output options
+    }));
     cb();
-  }, function (err){
-    gutil.log(gutil.colors.white.bgRed.bold('### Scripts error ###'));
-    gutil.log(err);
-    cb();
-  })
+  });
 });
 
 gulp.task('styles', function() {
