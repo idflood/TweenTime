@@ -73,5 +73,3 @@ export default class Timer {
     window.requestAnimationFrame((timestamp) => this.update(timestamp));
   }
 }
-
-module.exports = Timer;
