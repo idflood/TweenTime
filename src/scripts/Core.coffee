@@ -1,6 +1,6 @@
 _ = require 'lodash'
 Utils = require './core/Utils'
-Timer = require './core/Timer.coffee'
+Timer = require './core/Timer'
 Orchestrator = require './core/Orchestrator.coffee'
 
 class Core
