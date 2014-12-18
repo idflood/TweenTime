@@ -1,5 +1,5 @@
 _ = require 'lodash'
-Utils = require './core/Utils.coffee'
+Utils = require './core/Utils'
 Timer = require './core/Timer.coffee'
 Orchestrator = require './core/Orchestrator.coffee'
 

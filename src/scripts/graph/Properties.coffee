@@ -1,6 +1,6 @@
 d3 = require 'd3'
 Signals = require 'js-signals'
-Utils = require '../core/Utils.coffee'
+Utils = require '../core/Utils'
 
 class Properties
   constructor: (@timeline) ->

@@ -1,7 +1,7 @@
 $ = require 'jquery'
 Signals = require 'js-signals'
 _ = require 'lodash'
-Utils = require '../core/Utils.coffee'
+Utils = require '../core/Utils'
 
 Mustache = require 'mustache.js'
 tpl_property = require 'html!../templates/propertyNumber.tpl.html'

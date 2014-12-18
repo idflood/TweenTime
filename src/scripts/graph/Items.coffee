@@ -1,7 +1,7 @@
 d3 = require 'd3'
 Signals = require 'js-signals'
 _ = require 'lodash'
-Utils = require '../core/Utils.coffee'
+Utils = require '../core/Utils'
 
 class Items
   constructor: (@timeline, @container) ->

@@ -2,7 +2,7 @@ $ = require 'jquery'
 Signals = require 'js-signals'
 _ = require 'lodash'
 d3 = require 'd3'
-Utils = require '../core/Utils.coffee'
+Utils = require '../core/Utils'
 PropertyBase = require './PropertyBase.coffee'
 DraggableNumber = require 'draggable-number.js'
 
