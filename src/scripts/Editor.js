@@ -2,7 +2,7 @@ var tpl_timeline = require('html!./templates/timeline.tpl.html');
 var Timeline = require('./graph/Timeline.coffee');
 var PropertiesEditor = require('./editor/PropertiesEditor.coffee');
 var EditorMenu = require('./editor/EditorMenu.coffee');
-var EditorControls = require('./editor/EditorControls.coffee');
+import EditorControls from './editor/EditorControls';
 var SelectionManager = require('./editor/SelectionManager.coffee');
 var Exporter = require('./editor/Exporter.coffee');
 var UndoManager = require('./editor/UndoManager.coffee');
