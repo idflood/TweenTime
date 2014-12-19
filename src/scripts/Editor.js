@@ -4,7 +4,7 @@ var PropertiesEditor = require('./editor/PropertiesEditor.coffee');
 import EditorMenu from './editor/EditorMenu';
 import EditorControls from './editor/EditorControls';
 var SelectionManager = require('./editor/SelectionManager.coffee');
-var Exporter = require('./editor/Exporter.coffee');
+import Exporter from './editor/Exporter';
 var UndoManager = require('./editor/UndoManager.coffee');
 
 class Editor {
