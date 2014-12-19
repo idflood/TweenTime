@@ -12,8 +12,8 @@ gulp.task('scripts', function(cb) {
     context: __dirname + "/src/scripts",
     entry: {
       //vendor: ['gsap', 'd3', 'jquery', 'mustache.js', 'lodash', 'draggable-number.js'],
-      Core: "./Core.coffee",
-      Editor: "./Editor.coffee",
+      Core: "./Core",
+      Editor: "./Editor",
 
     },
     devtool: "source-map",
@@ -83,7 +83,7 @@ gulp.task('scripts', function(cb) {
           new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
       ),
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin({
+      /*new webpack.optimize.UglifyJsPlugin({
         mangle: true,
         output: {
           comments: false
@@ -99,7 +99,7 @@ gulp.task('scripts', function(cb) {
           join_vars: true,
           //drop_console: true
         }
-      }),
+      }),*/
     ],
   }, function(err, stats) {
     if(err) throw new gutil.PluginError("webpack", err);
