@@ -1,6 +1,6 @@
 var tpl_timeline = require('html!./templates/timeline.tpl.html');
 var Timeline = require('./graph/Timeline.coffee');
-var PropertiesEditor = require('./editor/PropertiesEditor.coffee');
+import PropertiesEditor from './editor/PropertiesEditor';
 import EditorMenu from './editor/EditorMenu';
 import EditorControls from './editor/EditorControls';
 var SelectionManager = require('./editor/SelectionManager.coffee');
