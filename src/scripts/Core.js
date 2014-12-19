@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 import Utils from './core/Utils';
 import Timer from './core/Timer';
-var Orchestrator = require('./core/Orchestrator.coffee');
+import Orchestrator from './core/Orchestrator';
 
 export default class Core {
   constructor (data) {
