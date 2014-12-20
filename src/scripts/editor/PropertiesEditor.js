@@ -1,7 +1,7 @@
 let $ = require('jquery');
 let _ = require('lodash');
 let Signals = require('js-signals');
-let Property = require('../editor/Property.coffee');
+import Property from '../editor/Property';
 
 let tpl_propertiesEditor = require('html!./../templates/propertiesEditor.tpl.html');
 
