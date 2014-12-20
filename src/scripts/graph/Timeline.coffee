@@ -2,7 +2,7 @@ $ = require 'jquery'
 d3 = require 'd3'
 
 Utils = require '../core/Utils'
-Header = require './Header.coffee'
+Header = require './Header'
 TimeIndicator = require './TimeIndicator.coffee'
 Items = require './Items.coffee'
 KeysPreview = require './KeysPreview.coffee'
