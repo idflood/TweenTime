@@ -7,7 +7,7 @@ TimeIndicator = require './TimeIndicator.coffee'
 Items = require './Items'
 KeysPreview = require './KeysPreview.coffee'
 Properties = require './Properties.coffee'
-Keys = require './Keys.coffee'
+Keys = require './Keys'
 Errors = require './Errors'
 Selection = require './Selection.coffee'
 
