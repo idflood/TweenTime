@@ -3,7 +3,7 @@ d3 = require 'd3'
 
 Utils = require '../core/Utils'
 Header = require './Header'
-TimeIndicator = require './TimeIndicator.coffee'
+TimeIndicator = require './TimeIndicator'
 Items = require './Items'
 KeysPreview = require './KeysPreview'
 Properties = require './Properties'
