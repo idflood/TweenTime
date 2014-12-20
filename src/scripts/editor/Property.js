@@ -1,6 +1,6 @@
 let Signals = require('js-signals');
 let PropertyNumber = require('./PropertyNumber.coffee');
-let PropertyColor = require('./PropertyColor.coffee');
+let PropertyColor = require('./PropertyColor');
 let PropertyTween = require('./PropertyTween.coffee');
 
 export default class Property {
