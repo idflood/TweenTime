@@ -4,7 +4,7 @@ Signals = require 'js-signals'
 _ = require 'lodash'
 d3 = require 'd3'
 Utils = require '../core/Utils'
-PropertyBase = require './PropertyBase.coffee'
+PropertyBase = require './PropertyBase'
 
 Mustache = require 'mustache.js'
 tpl_property = require 'html!../templates/propertyColor.tpl.html'

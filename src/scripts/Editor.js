@@ -14,6 +14,9 @@ class Editor {
     this.timer = this.tweenTime.timer;
     this.lastTime = -1;
 
+    this.onKeyAdded = this.onKeyAdded.bind(this);
+    this.onKeyRemoved = this.onKeyRemoved.bind(this);
+
     this.$timeline = $(tpl_timeline);
     $('body').append(this.$timeline);
     $('body').addClass('has-editor');
