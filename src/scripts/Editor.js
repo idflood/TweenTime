@@ -3,7 +3,7 @@ var Timeline = require('./graph/Timeline.coffee');
 import PropertiesEditor from './editor/PropertiesEditor';
 import EditorMenu from './editor/EditorMenu';
 import EditorControls from './editor/EditorControls';
-var SelectionManager = require('./editor/SelectionManager.coffee');
+import SelectionManager from './editor/SelectionManager';
 import Exporter from './editor/Exporter';
 var UndoManager = require('./editor/UndoManager.coffee');
 

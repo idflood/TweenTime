@@ -158,7 +158,7 @@ export default class Property {
         return lineData._isDirty = true;
       }
     })
-    return tween
+    return tween;
   }
 
   update() {
