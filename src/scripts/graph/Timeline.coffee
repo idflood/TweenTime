@@ -9,7 +9,7 @@ KeysPreview = require './KeysPreview'
 Properties = require './Properties'
 Keys = require './Keys'
 Errors = require './Errors'
-Selection = require './Selection.coffee'
+Selection = require './Selection'
 
 extend = (object, properties) ->
   for key, val of properties
