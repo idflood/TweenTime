@@ -5,7 +5,7 @@ import EditorMenu from './editor/EditorMenu';
 import EditorControls from './editor/EditorControls';
 import SelectionManager from './editor/SelectionManager';
 import Exporter from './editor/Exporter';
-var UndoManager = require('./editor/UndoManager.coffee');
+import UndoManager from './editor/UndoManager';
 
 class Editor {
   constructor(tweenTime, options = {}) {
