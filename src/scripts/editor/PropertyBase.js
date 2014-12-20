@@ -6,7 +6,7 @@ let Utils = require('../core/Utils');
 let Mustache = require('mustache.js');
 let tpl_property = require('html!../templates/propertyNumber.tpl.html');
 
-class PropertyBase {
+export default class PropertyBase {
   // @instance_property: The current property on the data object.
   // @lineData: The line data object.
   constructor(instance_property, lineData, editor, key_val = false) {
@@ -127,5 +127,3 @@ class PropertyBase {
     this.$key.toggleClass('property__key--active', key);
   }
 }
-
-module.exports = PropertyBase;

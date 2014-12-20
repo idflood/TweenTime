@@ -4,7 +4,7 @@ let Signals = require('js-signals');
 let Mustache = require('mustache.js');
 let tpl_property = require('html!../templates/propertyTween.tpl.html');
 
-class PropertyTween {
+export default class PropertyTween {
   // instance_property: The current property on the data object.
   // lineData: The line data object.
   constructor(instance_property, lineData, editor, key_val = false, timeline) {
@@ -86,5 +86,3 @@ class PropertyTween {
     this.$time.html(this.key_val.time.toFixed(3));
   }
 }
-
-module.exports = PropertyTween

@@ -3,13 +3,13 @@ let Signals = require('js-signals');
 let _ = require('lodash');
 let d3 = require('d3');
 let Utils = require('../core/Utils');
-let PropertyBase = require('./PropertyBase');
+import PropertyBase from './PropertyBase';
 let DraggableNumber = require('draggable-number.js');
 
 let Mustache = require('mustache.js');
 let tpl_property = require('html!../templates/propertyNumber.tpl.html');
 
-class PropertyNumber extends PropertyBase {
+export default class PropertyNumber extends PropertyBase {
   // instance_property: The current property on the data object.
   // lineData: The line data object.
   constructor(instance_property, lineData, editor, key_val = false) {
@@ -64,5 +64,3 @@ class PropertyNumber extends PropertyBase {
     }
   }
 }
-
-module.exports = PropertyNumber

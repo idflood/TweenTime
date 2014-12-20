@@ -1,7 +1,7 @@
 let Signals = require('js-signals');
-let PropertyNumber = require('./PropertyNumber');
-let PropertyColor = require('./PropertyColor');
-let PropertyTween = require('./PropertyTween');
+import PropertyNumber from './PropertyNumber';
+import PropertyColor from './PropertyColor';
+import PropertyTween from './PropertyTween';
 
 export default class Property {
   constructor(editor, $el, domElement) {

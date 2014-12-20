@@ -4,12 +4,12 @@ let Signals = require('js-signals');
 let _ = require('lodash');
 let d3 = require('d3');
 let Utils = require('../core/Utils');
-let PropertyBase = require('./PropertyBase');
+import PropertyBase from './PropertyBase';
 
 let Mustache = require('mustache.js');
 let tpl_property = require('html!../templates/propertyColor.tpl.html');
 
-class PropertyColor extends PropertyBase {
+export default class PropertyColor extends PropertyBase {
   constructor(instance_property, lineData, editor, key_val = false) {
     super(instance_property, lineData, editor, key_val);
     this.onInputChange = this.onInputChange.bind(this);
@@ -62,5 +62,3 @@ class PropertyColor extends PropertyBase {
     this.$input.spectrum('set', val);
   }
 }
-
-module.exports = PropertyColor;
