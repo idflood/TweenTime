@@ -1,5 +1,5 @@
 let Signals = require('js-signals');
-let PropertyNumber = require('./PropertyNumber.coffee');
+let PropertyNumber = require('./PropertyNumber');
 let PropertyColor = require('./PropertyColor');
 let PropertyTween = require('./PropertyTween.coffee');
 
