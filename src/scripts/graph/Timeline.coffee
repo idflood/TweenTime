@@ -8,7 +8,7 @@ Items = require './Items.coffee'
 KeysPreview = require './KeysPreview.coffee'
 Properties = require './Properties.coffee'
 Keys = require './Keys.coffee'
-Errors = require './Errors.coffee'
+Errors = require './Errors'
 Selection = require './Selection.coffee'
 
 extend = (object, properties) ->
