@@ -37,7 +37,7 @@ Some timeline libraries already exist and they may be a more appropriate choice 
 - Heavy use of [d3.js](http://d3js.org/) to display the timeline.
 - Use TimelineMax to update the values.
 - Not meant to be lightweight, this explains the dependencies.
-- coffeescript... But it still doesn't have a mountain of code so a conversion to js may happen.
+- Written in es6 and transpiled to es5 with 6to5.
 
 ## License
 
