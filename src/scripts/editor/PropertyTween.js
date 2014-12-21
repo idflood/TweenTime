@@ -1,5 +1,4 @@
 let $ = require('jquery');
-let Signals = require('js-signals');
 
 let Mustache = require('mustache.js');
 let tpl_property = require('html!../templates/propertyTween.tpl.html');

@@ -1,6 +1,5 @@
 let $ = require('jquery');
 let d3 = require('d3');
-let Signals = require('js-signals');
 
 export default class TimeIndicator {
   constructor(timeline, container) {

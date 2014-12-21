@@ -1,7 +1,4 @@
 let $ = require('jquery');
-let Signals = require('js-signals');
-let _ = require('lodash');
-let d3 = require('d3');
 import Utils from '../core/Utils';
 import PropertyBase from './PropertyBase';
 let DraggableNumber = require('draggable-number.js');
