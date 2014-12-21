@@ -13,7 +13,6 @@ gulp.task('scripts', function(cb) {
       //vendor: ['gsap', 'd3', 'jquery', 'mustache.js', 'lodash', 'draggable-number.js'],
       Core: "./Core",
       Editor: "./Editor",
-
     },
     devtool: "source-map",
     externals: [
@@ -66,6 +65,7 @@ gulp.task('scripts', function(cb) {
     module: {
       loaders: [
         { test: /\.js$/, loader: '6to5-loader'},
+        { test: /\.tpl.html$/, loader: 'mustache'},
       ],
     },
     resolve: {
@@ -81,13 +81,13 @@ gulp.task('scripts', function(cb) {
           new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
       ),
       new webpack.optimize.DedupePlugin(),
-      /*new webpack.optimize.UglifyJsPlugin({
+      new webpack.optimize.UglifyJsPlugin({
         mangle: true,
         output: {
           comments: false
         },
         compress: {
-          drop_debugger: true,
+          //drop_debugger: true,
           sequences: true,
           //dead_code: true,
           conditionals: true,
@@ -97,7 +97,7 @@ gulp.task('scripts', function(cb) {
           join_vars: true,
           //drop_console: true
         }
-      }),*/
+      }),
     ],
   }, function(err, stats) {
     if(err) throw new gutil.PluginError("webpack", err);

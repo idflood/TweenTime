@@ -1,4 +1,4 @@
-var tpl_timeline = require('html!./templates/timeline.tpl.html');
+var tpl_timeline = require('./templates/timeline.tpl.html');
 import Timeline from './graph/Timeline';
 import PropertiesEditor from './editor/PropertiesEditor';
 import EditorMenu from './editor/EditorMenu';
@@ -17,7 +17,7 @@ class Editor {
     this.onKeyAdded = this.onKeyAdded.bind(this);
     this.onKeyRemoved = this.onKeyRemoved.bind(this);
 
-    this.$timeline = $(tpl_timeline);
+    this.$timeline = $(tpl_timeline());
     $('body').append(this.$timeline);
     $('body').addClass('has-editor');
 

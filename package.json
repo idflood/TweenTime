@@ -11,6 +11,8 @@
     "webpack": "^1.4.13",
     "6to5": "^1.15.0",
     "6to5-loader": "^0.2.4",
-    "html-loader": "^0.2.3"
+    "hogan.js": "^3.0.2",
+    "loader-utils": "^0.2.5",
+    "mustache-loader": "^0.2.0"
   }
 }

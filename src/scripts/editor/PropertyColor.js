@@ -2,8 +2,7 @@ let $ = require('jquery');
 require('spectrum');
 import PropertyBase from './PropertyBase';
 
-let Mustache = require('mustache.js');
-let tpl_property = require('html!../templates/propertyColor.tpl.html');
+let tpl_property = require('../templates/propertyColor.tpl.html');
 
 export default class PropertyColor extends PropertyBase {
   constructor(instance_property, lineData, editor, key_val = false) {
@@ -23,7 +22,7 @@ export default class PropertyColor extends PropertyBase {
       val: val
     }
 
-    var view = Mustache.render(tpl_property, data);
+    var view = tpl_property(data);
     this.$el = $(view);
     this.$el.find('.property__key').click(this.onKeyClick);
 

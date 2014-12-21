@@ -2,7 +2,7 @@ let $ = require('jquery');
 let Signals = require('js-signals');
 import Property from '../editor/Property';
 
-let tpl_propertiesEditor = require('html!./../templates/propertiesEditor.tpl.html');
+let tpl_propertiesEditor = require('./../templates/propertiesEditor.tpl.html');
 
 export default class PropertiesEditor {
   constructor(editor) {
@@ -17,7 +17,7 @@ export default class PropertiesEditor {
     this.timer = this.editor.timer;
     this.selectionManager = editor.selectionManager;
 
-    this.$el = $(tpl_propertiesEditor);
+    this.$el = $(tpl_propertiesEditor());
     this.$container = this.$el.find('.properties-editor__main');
     // todo: rename keyAdded to updated
     this.keyAdded = new Signals.Signal();

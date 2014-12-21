@@ -1,7 +1,6 @@
 let $ = require('jquery');
 
-let Mustache = require('mustache.js');
-let tpl_property = require('html!../templates/propertyTween.tpl.html');
+let tpl_property = require('../templates/propertyTween.tpl.html');
 
 export default class PropertyTween {
   // instance_property: The current property on the data object.
@@ -47,7 +46,7 @@ export default class PropertyTween {
       data.options.push(tween + ".easeInOut");
     }
 
-    this.$el = $(Mustache.render(tpl_property, data));
+    this.$el = $(tpl_property(data));
     this.$time = this.$el.find('.property__key-time strong');
     this.$time.keypress((e) => {
       if (e.charCode == 13) {
