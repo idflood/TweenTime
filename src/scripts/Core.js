@@ -66,7 +66,7 @@ export default class Core {
   }
 
   setValue(property, new_val, time_in_seconds = false) {
-    if (time_in_seconds == false) {
+    if (time_in_seconds === false) {
       time_in_seconds = this.timer.getCurrentTime() / 1000;
     }
     var key = this.getKeyAt(property, time_in_seconds);

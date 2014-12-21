@@ -31,7 +31,6 @@ export default class EditorMenu {
   }
 
   initExport() {
-    var self = this;
     var exporter = this.editor.exporter;
     this.$timeline.find('[data-action="export"]').click(function(e) {
       e.preventDefault();

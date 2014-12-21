@@ -1,7 +1,3 @@
-let d3 = require('d3');
-let Signals = require('js-signals');
-import Utils from '../core/Utils';
-
 export default class Errors {
   constructor(timeline) {
     this.timeline = timeline;
@@ -14,15 +10,15 @@ export default class Errors {
       return d.errors != null;
     };
     // use insert with :first-child to prepend.
-    var errorsGrp = subGrp.insert('svg', ':first-child')
+    subGrp.insert('svg', ':first-child')
       .attr('class','line-item__errors')
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight);
 
-    var errorsValue = function(d, i, j) {
+    var errorsValue = function(d) {
       return d.errors;
     };
-    var errorTime = function(d, k) {
+    var errorTime = function(d) {
       return d.time;
     };
 

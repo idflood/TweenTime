@@ -1,10 +1,6 @@
-let $ = require('jquery');
 let Signals = require('js-signals');
 let _ = require('lodash');
 import Utils from '../core/Utils';
-
-let Mustache = require('mustache.js');
-let tpl_property = require('html!../templates/propertyNumber.tpl.html');
 
 export default class PropertyBase {
   // @instance_property: The current property on the data object.
@@ -49,7 +45,7 @@ export default class PropertyBase {
     return val;
   }
 
-  onInputChange(e) {
+  onInputChange() {
     var current_value = this.getInputVal();
     var currentTime = this.timer.getCurrentTime() / 1000;
     // if we selected a key simply get the time from it.

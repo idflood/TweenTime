@@ -48,7 +48,7 @@ export default class Keys {
         selection_first_time = d3.select(selection[0]).datum().time;
         selection_last_time = d3.select(selection[selection.length - 1]).datum().time;
       }
-      selection = _.filter(selection, (item) => {return item.isEqualNode(this) == false;})
+      selection = _.filter(selection, (item) => {return item.isEqualNode(this) === false;})
 
       var timeMatch = false
       if (sourceEvent.shiftKey) {
@@ -104,10 +104,10 @@ export default class Keys {
       self.onKeyUpdated.dispatch();
     }
 
-    var propValue = function(d, i, j) {
+    var propValue = function(d) {
       return d.keys;
     };
-    var propKey = function(d, k) {
+    var propKey = function(d) {
       if (!d._id) {
         d._id = Utils.guid();
       }
@@ -116,7 +116,7 @@ export default class Keys {
     var keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey);
 
     // selectKey is triggered by dragstart event
-    var selectKey = function(d) {
+    var selectKey = function() {
       var event = d3.event;
       // with dragstart event the mousevent is is inside the event.sourcEvent
       if (event.sourceEvent) {
@@ -134,7 +134,7 @@ export default class Keys {
       self.timeline.selectionManager.select(this, addToSelection);
     }
 
-    var dragend = function(d) {
+    var dragend = function() {
       self.timeline.editor.undoManager.addState();
     }
 

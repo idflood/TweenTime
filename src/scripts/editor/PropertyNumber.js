@@ -1,5 +1,4 @@
 let $ = require('jquery');
-import Utils from '../core/Utils';
 import PropertyBase from './PropertyBase';
 let DraggableNumber = require('draggable-number.js');
 
@@ -36,7 +35,7 @@ export default class PropertyNumber extends PropertyBase {
 
     var $input = this.$el.find('input');
 
-    var onChangeEnd = (new_val) => {
+    var onChangeEnd = () => {
       this.editor.undoManager.addState();
     }
 

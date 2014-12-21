@@ -1,5 +1,4 @@
 let $ = require('jquery');
-let _ = require('lodash');
 let Signals = require('js-signals');
 import Property from '../editor/Property';
 

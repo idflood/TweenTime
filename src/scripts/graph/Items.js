@@ -15,7 +15,7 @@ export default class Items {
     var self = this
     var tweenTime = self.timeline.tweenTime
 
-    var selectBar = function(d) {
+    var selectBar = function() {
       self.timeline.selectionManager.select(this);
     }
 
@@ -72,21 +72,21 @@ export default class Items {
     }
 
     var dragLeft = d3.behavior.drag()
-      .origin(function(d) {
+      .origin(function() {
         var t = d3.select(this)
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on("drag", dragmoveLeft);
 
     var dragRight = d3.behavior.drag()
-      .origin(function(d) {
+      .origin(function() {
         var t = d3.select(this)
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on("drag", dragmoveRight);
 
     var drag = d3.behavior.drag()
-      .origin(function(d) {
+      .origin(function() {
         var t = d3.select(this)
         return {x: t.attr('x'), y: t.attr('y')};
       })
@@ -107,7 +107,7 @@ export default class Items {
     barContainerRight.append("rect")
       .attr("class", "bar")
       // Add a unique id for SelectionManager.removeDuplicates
-      .attr('id', (d) => {return Utils.guid();})
+      .attr('id', () => {return Utils.guid();})
       .attr("y", 3)
       .attr("height", 14);
 
@@ -126,7 +126,7 @@ export default class Items {
       .call(dragRight);
 
     self.dy = 10 + this.timeline.margin.top;
-    bar.attr("transform", function(d, i) {
+    bar.attr("transform", function(d) {
       var y = self.dy
       self.dy += self.timeline.lineHeight;
       if (!d.collapsed) {

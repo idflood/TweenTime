@@ -12,7 +12,7 @@ export default class Properties {
   render(bar) {
     var self = this;
 
-    var propVal = function(d, i) {
+    var propVal = function(d) {
       if (d.properties) {
         return d.properties;
       } else {
@@ -28,7 +28,6 @@ export default class Properties {
 
     var properties = bar.selectAll('.line-item').data(propVal, propKey);
 
-    var dy = 0;
     var subGrp = properties.enter()
       .append('g')
       .filter(visibleProperties)
@@ -96,7 +95,7 @@ export default class Properties {
       .attr("y1", self.timeline.lineHeight)
       .attr("y2", self.timeline.lineHeight);
 
-    bar.selectAll('.line-item').attr('display', function(d) {
+    bar.selectAll('.line-item').attr('display', function() {
         var lineObject = this.parentNode;
         var lineValue = d3.select(lineObject).datum();
         if (!lineValue.collapsed) {

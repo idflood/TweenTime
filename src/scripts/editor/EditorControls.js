@@ -41,11 +41,11 @@ export default class EditorControls {
       var total = this.tweenTime.getTotalDuration();
       this.timer.seek([total * 1000]);
     });
-    this.$time.change((e) => {
+    this.$time.change(() => {
       var seconds = parseFloat(this.$time.val(), 10) * 1000;
       this.timer.seek([seconds]);
     });
-    this.$time_end.change((e) => {
+    this.$time_end.change(() => {
       var seconds = parseFloat(this.$time_end.val(), 10);
       this.timer.setDuration(seconds);
     });

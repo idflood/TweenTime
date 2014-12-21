@@ -1,6 +1,3 @@
-let $ = require('jquery');
-let d3 = require('d3');
-
 export default class TimeIndicator {
   constructor(timeline, container) {
     this.timeline = timeline;

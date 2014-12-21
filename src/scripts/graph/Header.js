@@ -1,4 +1,3 @@
-let $ = require('jquery');
 let d3 = require('d3');
 
 let Signals = require('js-signals');
@@ -52,7 +51,7 @@ export default class Header {
     return new_domain;
   }
 
-  setDomain(domain) {
+  setDomain() {
     this.brush.x(this.x).extent(this.initialDomain);
     this.svgContainer.select('.brush').call(this.brush);
     // Same as onBrush
@@ -105,7 +104,7 @@ export default class Header {
   createTimeHandle() {
     var self = this;
 
-    var dragTimeMove = function(d) {
+    var dragTimeMove = function() {
       var event = d3.event.sourceEvent;
       event.stopPropagation();
       var tweenTime = self.tweenTime;
@@ -136,13 +135,13 @@ export default class Header {
 
     var timeSelection = this.svgContainer.selectAll('.time-indicator').data(this.currentTime);
 
-    var timeClicker = timeSelection.enter().append('rect')
+    timeSelection.enter().append('rect')
       .attr('x', 0)
       .attr('y', 20)
       .attr('width', self.xDisplayed(self.timer.totalDuration))
       .attr('height', 50)
       .attr('fill-opacity', 0)
-      .on('click', function(d) {
+      .on('click', function() {
         var mouse = d3.mouse(this)
         var dx = self.xDisplayed.invert(mouse[0])
         dx = dx.getTime()

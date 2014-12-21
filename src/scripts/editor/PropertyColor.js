@@ -1,6 +1,5 @@
 let $ = require('jquery');
 require('spectrum');
-import Utils from '../core/Utils';
 import PropertyBase from './PropertyBase';
 
 let Mustache = require('mustache.js');
@@ -35,7 +34,7 @@ export default class PropertyColor extends PropertyBase {
       showAlpha: true,
       clickoutFiresChange: false,
       preferredFormat: "rgb",
-      change: (color) => {
+      change: () => {
         this.editor.undoManager.addState();
       },
       move: (color) => {

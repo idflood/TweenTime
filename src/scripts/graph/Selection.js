@@ -8,7 +8,7 @@ export default class Selection {
     this.init();
   }
 
-  onMouseUp(e) {
+  onMouseUp() {
     this.svg.selectAll('.selection').remove();
     // Enable again the default browser text selection.
     $('body').css({
@@ -40,7 +40,6 @@ export default class Selection {
         return;
       }
       var p = d3.mouse(this);
-      var margin = self.margin;
       var d = {
         x: parseInt(s.attr('x'), 10),
         y: parseInt(s.attr('y'), 10),
@@ -82,9 +81,9 @@ export default class Selection {
       d3.selectAll('.key--selected').classed('key--selected', false);
       self.timeline.selectionManager.reset();
       var selection = [];
-      d3.selectAll('.key').each( function(state_data, i) {
+      d3.selectAll('.key').each( function(state_data) {
         var item_data = d3.select(this.parentNode.parentNode.parentNode).datum()
-        if (item_data.collapsed != true) {
+        if (item_data.collapsed !== true) {
           var itemBounding = d3.select(this)[0][0].getBoundingClientRect();
           var y = itemBounding.top - containerBounding.top;
           if (state_data.time >= d.timeStart && state_data.time <= d.timeEnd) {

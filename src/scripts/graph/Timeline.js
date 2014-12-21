@@ -1,4 +1,3 @@
-let $ = require('jquery');
 let d3 = require('d3');
 
 import Utils from '../core/Utils';
@@ -10,15 +9,6 @@ import Properties from './Properties';
 import Keys from './Keys';
 import Errors from './Errors';
 import Selection from './Selection';
-
-var extend = function(object, properties) {
-  var key, val;
-  for (key in properties) {
-    val = properties[key];
-    object[key] = val;
-  }
-  return object;
-};
 
 export default class Timeline {
   constructor(editor) {
