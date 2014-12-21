@@ -1,0 +1,43 @@
+.controls
+  position: absolute
+  top: 10px
+  left: 20px
+  color: #aaa
+
+.control
+  display: inline-block
+  margin-right: 5px
+  font-size: 18px
+  text-decoration: none
+
+  &, &:active, &:visited
+    color: #ddd
+  &:hover, &:focus
+    color: #fff
+
+.control--input
+  position: relative
+  top: -2px
+  padding: 3px 10px
+  margin-right: -1px
+  width: 50px
+  border: 0
+  background: none
+  font-size: 12px
+  font-weight: bold
+  letter-spacing: 0.5px
+  text-align: right
+  transition: background 0.2s
+
+  &:focus
+    outline: 0
+    background: lighten($editor_bg, 11%)
+
+
+.control--time-end
+  text-align: left
+
+.control__time-separator
+  position: relative
+  top: -3px
+  font-size: 11px

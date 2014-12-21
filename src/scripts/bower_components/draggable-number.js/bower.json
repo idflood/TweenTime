@@ -1,6 +1,6 @@
 {
   "name": "draggable-number.js",
-  "version": "0.3.4",
+  "version": "0.4.2",
   "main": ["./dist/draggable-number.js"],
   "keywords": [
     "microjs",

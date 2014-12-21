@@ -1,0 +1,64 @@
+$menu_height: 25px
+
+.graph-mask
+  fill: $editor_bg
+
+.timeline__menu
+  +vertical-separator()
+  position: absolute
+  top: -$menu_height - 2px
+  left: 0
+  right: 0
+  height: $menu_height
+  padding: 0 20px
+  background: $editor_bg
+
+.menu-item,
+a.menu-item
+  position: relative
+  display: inline-block
+  height: $menu_height
+  margin-right: 20px
+  color: #eee
+  font-size: 11px
+  line-height: 25px
+  vertical-align: middle
+  text-decoration: none
+  cursor: pointer
+  &:hover
+    color: #fff
+
+.menu-item--disabled
+  color: #666 !important
+  cursor: default !important
+
+.submenu
+  display: none
+  position: absolute
+  left: -10px
+  min-width: 120px
+  bottom: $menu_height
+  padding-bottom: 5px
+  background: #111
+  border: 1px solid #333
+
+  a
+    display: block
+    padding: 0 10px
+    text-decoration: none
+    color: #eee !important
+
+.menu-item:hover > .submenu
+  display: block
+
+a.menu-item--toggle
+  float: right
+  margin-right: 0
+  i
+    &:before
+      content: "\f078"
+
+  &.menu-item--toggle-up
+    i
+      &:before
+        content: "\f077"

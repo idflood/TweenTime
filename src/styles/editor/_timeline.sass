@@ -1,0 +1,78 @@
+.timeline__main
+  height: 220px
+  position: absolute
+  left: 0
+  right: 0
+  bottom: 0
+  overflow-y: scroll
+  background: $editor_bg
+
+.brush .extent
+  fill: #fff
+  fill-opacity: .05
+
+.line__toggle
+  fill: #fff
+  font-size: 14px
+  cursor: pointer
+
+.timeline
+  +vertical-separator()
+  position: fixed
+  bottom: 0
+  left: 0
+  right: 0
+  height: 270px
+  background: $editor_bg
+  z-index: 9000
+
+  .timeline-is-closed &
+    bottom: -200px
+
+  rect, path, line
+    shape-rendering: crispEdges
+
+  .axis
+    pointer-events: none
+    path, line
+      fill: none
+      stroke: #fff
+
+  .x.axis
+    path
+      display: none
+    line
+      stroke: lighten($editor_bg, 15%)
+    text
+      font-size: 10px
+      fill: #919191
+      font-weight: bold
+      -webkit-font-smoothing: antialiased
+
+  .x.grid
+    text
+      display: none
+    line
+      stroke: lighten($editor_bg, 7%)
+
+  .line
+    fill: none
+    stroke: steelblue
+    stroke-width: 1.5px
+
+  .bar-anchor
+    fill-opacity: 0
+    cursor: ew-resize
+
+  .click-handler
+    fill-opacity: 0
+
+// Disable text selection
+svg *
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+
+  &::selection, &::-moz-selection, &::-webkit-selection
+    background: transparent

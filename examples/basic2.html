@@ -36,17 +36,18 @@
     <!-- TweenTime dependencies -->
     <script src="../src/scripts/bower_components/gsap/src/uncompressed/TweenMax.js"></script>
     <script src="../src/scripts/bower_components/gsap/src/uncompressed/TimelineMax.js"></script>
+    <script src="../src/scripts/bower_components/js-signals/dist/signals.js"></script>
 
     <!-- Editor dependencies -->
     <script src="../src/scripts/bower_components/jquery/dist/jquery.js"></script>
+    <script src="../src/scripts/bower_components/spectrum/spectrum.js"></script>
     <script src="../src/scripts/bower_components/d3/d3.js"></script>
     <script src="../src/scripts/bower_components/lodash/dist/lodash.js"></script>
-    <script src="../src/scripts/bower_components/mustache.js/mustache.js"></script>
     <script src="../src/scripts/bower_components/draggable-number.js/dist/draggable-number.js"></script>
 
     <!-- TweenTime & Editor -->
-    <script src="../dist/scripts/TweenTime.js"></script>
-    <script src="../dist/scripts/Editor.js"></script>
+    <script src="../dist/scripts/TweenTime.Core.js"></script>
+    <script src="../dist/scripts/TweenTime.Editor.js"></script>
 
     <!-- Example script -->
     <script>
@@ -174,8 +175,8 @@
         }
       ];
 
-      var tweenTime = new window.TweenTime(data);
-      var editor = new Editor(tweenTime);
+      var tweenTime = new TweenTime.Core(data);
+      var editor = new TweenTime.Editor(tweenTime);
 
       var box_values = tweenTime.getValues('box');
       var box2_values = tweenTime.getValues('box2');

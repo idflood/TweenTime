@@ -1,0 +1,16 @@
+<div class="property property--tween">
+  <label for="{{id}}" class="property__label">easing</label>
+  <div class="property__select">
+    <div class="custom-select">
+      <select id="{{id}}">
+        {{#options}}
+        <option value="{{.}}" {{selected}}>{{.}}</option>
+        {{/options}}
+      </select>
+    </div>
+  </div>
+</div>
+<div class="properties-editor__actions actions">
+  <span class="property__key-time">key at <strong class="property__key-input" contenteditable="true">{{time}}</strong> seconds</span>
+  <a href="#" class="actions__item" data-action-remove>Remove key</a>
+</div>

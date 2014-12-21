@@ -1,0 +1,20 @@
+.selection
+  stroke: #fff
+  stroke-dasharray: 3px
+  stroke-opacity: 0.5
+  fill: rgba(#fff, 0.05)
+  pointer-events: none
+  animation: dash 0.5s linear infinite
+  -webkit-animation: dash 0.5s linear infinite
+
+@keyframes dash
+  from
+    stroke-dashoffset: 0
+  to
+    stroke-dashoffset: -6
+
+@-webkit-keyframes dash
+  from
+    stroke-dashoffset: 0
+  to
+    stroke-dashoffset: -6

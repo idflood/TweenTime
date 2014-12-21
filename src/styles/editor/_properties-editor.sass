@@ -1,0 +1,155 @@
+.properties-editor
+  position: fixed
+  top: 0
+  right: 0
+  width: 280px
+  bottom: 297px
+  border-left: 1px solid $editor_border
+  background: $editor_bg
+  font-size: 11px
+  color: #aaa
+  overflow: auto
+  //-webkit-font-smoothing: antialiased
+
+  .properties-is-closed &
+    right: -281px
+    overflow: visible
+
+  .timeline-is-closed &
+    bottom: 97px
+
+  &__main
+    padding: 10px 10px
+
+  .property
+    overflow: hidden
+    position: relative
+    min-height: 26px
+    line-height: 25px
+
+  &__title
+    +vertical-separator(bottom)
+    position: relative
+    margin-top: 0
+    margin-bottom: 10px
+    margin-left: -10px
+    margin-right: -10px
+    padding-left: 10px
+    padding-right: 10px
+    padding-bottom: 5px
+    color: #fff
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8)
+
+.property-grp
+  padding-bottom: 10px
+
+.property-grp__title
+  margin: 0 -10px 7px -10px
+  padding: 2px 10px
+  //border-top: 1px solid #1F2021
+  border-bottom: 1px solid #3C3E3F
+  //background: #242627
+  color: #fff
+  font-size: 11px
+  text-transform: uppercase
+
+.property__label
+  position: relative
+  display: inline-block
+  min-width: 50px
+  min-height: 25px
+  margin-right: 10px
+  margin-left: 18px
+  color: #fff
+
+.property__key
+  display: block
+  position: absolute
+  top: 50%
+  margin-top: -4px
+  width: 8px
+  height: 8px
+  padding: 0
+  margin-right: 7px
+  background: #666
+  border: 0
+  border-radius: 4px
+  cursor: pointer
+  z-index: 500
+  &:focus
+    outline: 0
+
+  &--active
+    background: #39C2C8
+
+.property__key-time
+  margin-right: 10px
+  color: #777
+
+.property__key-input
+  color: #ddd
+
+.property__input
+  background: #57595a
+  border: 1px solid #2f3132
+  color: #fff
+  padding: 2px 5px
+  &:focus
+    outline: 0
+
+.property--number span
+  display: inline-block
+  min-width: 100px
+
+a.menu-item--toggle-side
+  position: absolute
+  top: 8px
+  right: -3px
+  z-index: 99999
+
+  i
+    &:before
+      content: "\f054"
+
+  .properties-is-closed &
+    left: -27px
+    color: #fff
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.6)
+    i
+      &:before
+        content: "\f053"
+
+.property--tween
+  overflow: hidden
+  .property__label
+    display: inline
+    float: left
+    margin-left: 18px
+
+  .property__select
+    display: inline
+    float: left
+
+.actions
+  +vertical-separator(bottom)
+  margin-left: -10px
+  margin-right: -10px
+  padding-left: 10px
+  padding-right: 10px
+  margin-bottom: 10px
+  padding-bottom: 20px
+  padding-top: 10px
+  text-align: right
+
+
+.actions__item
+  transition: background 0.3s
+  display: inline-block
+  padding: 4px 10px
+  background: #CF3938
+  text-decoration: none
+  &, &:hover, &:focus, &:active, &:link
+    color: #fff
+
+  &:hover
+    background: darken(#CF3938, 8%)
