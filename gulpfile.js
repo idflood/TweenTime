@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var path = require("path");
-var requirejs = require('requirejs');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
@@ -67,7 +66,6 @@ gulp.task('scripts', function(cb) {
     module: {
       loaders: [
         { test: /\.js$/, loader: '6to5-loader'},
-        { test: /\.coffee$/, loader: "coffee-loader" },
       ],
     },
     resolve: {
