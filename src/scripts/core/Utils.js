@@ -90,5 +90,3 @@ export default class Utils {
     return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
   }
 }
-
-module.exports = Utils;

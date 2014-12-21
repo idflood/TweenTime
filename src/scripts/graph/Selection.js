@@ -1,4 +1,4 @@
-class Selection {
+export default class Selection {
   constructor(timeline, svg, margin) {
     this.timeline = timeline;
     this.svg = svg;
@@ -103,5 +103,3 @@ class Selection {
     $(window).on("mouseup", this.onMouseUp);
   }
 }
-
-module.exports = Selection;

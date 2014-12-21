@@ -2,7 +2,7 @@ let $ = require('jquery');
 let d3 = require('d3');
 let Signals = require('js-signals');
 
-class TimeIndicator {
+export default class TimeIndicator {
   constructor(timeline, container) {
     this.timeline = timeline;
     this.container = container;
@@ -25,5 +25,3 @@ class TimeIndicator {
     this.timeSelection.attr('x', this.timeline.x(this.timeline.currentTime[0]) - 0.5);
   }
 }
-
-module.exports = TimeIndicator;

@@ -1,9 +1,9 @@
 let d3 = require('d3');
 let Signals = require('js-signals');
 let _ = require('lodash');
-let Utils = require('../core/Utils');
+import Utils from '../core/Utils';
 
-class Items {
+export default class Items {
   constructor(timeline, container) {
     this.timeline = timeline;
     this.container = container;
@@ -223,5 +223,3 @@ class Items {
     return bar;
   }
 }
-
-module.exports = Items;

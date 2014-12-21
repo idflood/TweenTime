@@ -1,7 +1,7 @@
 let $ = require('jquery');
 let Signals = require('js-signals');
 let _ = require('lodash');
-let Utils = require('../core/Utils');
+import Utils from '../core/Utils';
 
 let Mustache = require('mustache.js');
 let tpl_property = require('html!../templates/propertyNumber.tpl.html');

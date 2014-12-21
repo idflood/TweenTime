@@ -1,9 +1,9 @@
 let d3 = require('d3');
 let Signals = require('js-signals');
-let Utils = require('../core/Utils');
+import Utils from '../core/Utils';
 let _ = require('lodash');
 
-class Keys {
+export default class Keys {
   constructor(timeline) {
     this.timeline = timeline;
     this.onKeyUpdated = new Signals.Signal();
@@ -219,5 +219,3 @@ class Keys {
     keys.exit().remove();
   }
 }
-
-module.exports = Keys;

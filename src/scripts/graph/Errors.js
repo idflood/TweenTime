@@ -1,8 +1,8 @@
 let d3 = require('d3');
 let Signals = require('js-signals');
-let Utils = require('../core/Utils');
+import Utils from '../core/Utils';
 
-class Errors {
+export default class Errors {
   constructor(timeline) {
     this.timeline = timeline;
   }
@@ -45,4 +45,3 @@ class Errors {
     errors.exit().remove();
   }
 }
-module.exports = Errors;

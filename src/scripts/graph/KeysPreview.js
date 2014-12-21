@@ -1,6 +1,6 @@
 let d3 = require('d3');
 
-class KeysPreview {
+export default class KeysPreview {
   constructor(timeline, container) {
     this.timeline = timeline;
     this.container = container;
@@ -66,5 +66,3 @@ class KeysPreview {
     keys.exit().remove();
   }
 }
-
-module.exports = KeysPreview;

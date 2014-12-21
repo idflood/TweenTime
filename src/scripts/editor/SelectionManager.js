@@ -1,6 +1,6 @@
 let d3 = require('d3');
 let Signals = require('js-signals');
-let Utils = require('../core/Utils');
+import Utils from '../core/Utils';
 
 export default class SelectionManager {
   constructor(tweenTime) {

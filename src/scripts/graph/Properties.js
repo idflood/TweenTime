@@ -1,8 +1,8 @@
 let d3 = require('d3');
 let Signals = require('js-signals');
-let Utils = require('../core/Utils');
+import Utils from '../core/Utils';
 
-class Properties {
+export default class Properties {
   constructor(timeline) {
     this.timeline = timeline;
     this.onKeyAdded = new Signals.Signal()
@@ -109,5 +109,3 @@ class Properties {
     return properties;
   }
 }
-
-module.exports = Properties;

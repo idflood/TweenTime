@@ -2,9 +2,9 @@ let $ = require('jquery');
 let d3 = require('d3');
 
 let Signals = require('js-signals');
-let Utils = require('../core/Utils');
+import Utils from '../core/Utils';
 
-class Header {
+export default class Header {
   constructor(timer, initialDomain, tweenTime, width, margin) {
     this.timer = timer;
     this.initialDomain = initialDomain;
@@ -185,5 +185,3 @@ class Header {
     this.xAxisElement.call(this.xAxis);
   }
 }
-
-module.exports = Header;
