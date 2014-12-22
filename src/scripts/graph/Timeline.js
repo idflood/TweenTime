@@ -17,6 +17,8 @@ export default class Timeline {
     this.timer = this.tweenTime.timer;
     this.selectionManager = this.editor.selectionManager;
 
+    this.onUpdate = this.onUpdate.bind(this);
+
     this._isDirty = true;
     this.timer = this.tweenTime.timer;
     this.currentTime = this.timer.time; // used in timeindicator.
