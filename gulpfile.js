@@ -6,8 +6,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
 var webpack = require("webpack");
 
-gulp.task('scripts', function(cb) {
-  webpack({
+var getWebpackConfig = function() {
+  return {
     context: __dirname + "/src/scripts",
     entry: {
       //vendor: ['gsap', 'd3', 'jquery', 'mustache.js', 'lodash', 'draggable-number.js'],
@@ -80,26 +80,45 @@ gulp.task('scripts', function(cb) {
       new webpack.ResolverPlugin(
           new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
       ),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        mangle: true,
-        output: {
-          comments: false
-        },
-        compress: {
-          //drop_debugger: true,
-          sequences: true,
-          //dead_code: true,
-          conditionals: true,
-          booleans: true,
-          unused: true,
-          if_return: true,
-          join_vars: true,
-          //drop_console: true
-        }
-      }),
+      new webpack.optimize.DedupePlugin()
     ],
-  }, function(err, stats) {
+  };
+};
+
+gulp.task('scripts', function(cb) {
+  var conf = getWebpackConfig();
+  webpack(conf, function(err, stats) {
+    if(err) throw new gutil.PluginError("webpack", err);
+    gutil.log("[webpack]", stats.toString({
+        chunks: false
+    }));
+    cb();
+  });
+});
+
+gulp.task('scripts:dist', function(cb) {
+  var conf = getWebpackConfig();
+  // Add .min.js to output filename.
+  conf.output.filename = "TweenTime.[name].min.js";
+  // Add minification with UglifyJs.
+  conf.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    mangle: true,
+    output: {
+      comments: false
+    },
+    compress: {
+      //drop_debugger: true,
+      sequences: true,
+      //dead_code: true,
+      conditionals: true,
+      booleans: true,
+      unused: true,
+      if_return: true,
+      join_vars: true,
+      //drop_console: true
+    }
+  }));
+  webpack(conf, function(err, stats) {
     if(err) throw new gutil.PluginError("webpack", err);
     gutil.log("[webpack]", stats.toString({
         chunks: false
@@ -131,3 +150,4 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', ['watch', 'livereload', 'styles', 'scripts']);
+gulp.task('build', ['styles', 'scripts', 'scripts:dist']);
