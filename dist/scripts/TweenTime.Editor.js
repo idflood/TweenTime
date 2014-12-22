@@ -1881,6 +1881,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.editor = editor;
 	    this.$el = $el;
 	
+	    this.onKeyAdded = this.onKeyAdded.bind(this);
+	
 	    this.timeline = editor.timeline;
 	    this.timer = editor.timer;
 	    this.selectionManager = editor.selectionManager;
