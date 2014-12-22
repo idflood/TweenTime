@@ -71,8 +71,7 @@ export default class PropertyBase {
       // There is no keys, simply update the property value (for data saving)
       this.instance_property.val = current_value;
       // Also directly set the lineData value.
-      this.lineData.values[@instance_property.name] = current_value;
-
+      this.lineData.values[this.instance_property.name] = current_value;
       // Simply update the custom object with new values.
       if (this.lineData.object) {
         currentTime = @timer.getCurrentTime() / 1000;
@@ -82,7 +81,7 @@ export default class PropertyBase {
     }
 
     // Something changed, make the lineData dirty to rebuild things. d
-    return this.lineData._isDirty = true;
+    this.lineData._isDirty = true;
   }
 
   getCurrentKey() {
