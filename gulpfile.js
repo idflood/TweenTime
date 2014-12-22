@@ -146,8 +146,8 @@ gulp.task('watch', function() {
   gulp.watch(['examples/*.html'], livereload.changed);
   gulp.watch(['dist/styles/*.css', 'dist/scripts/*.js'], livereload.changed);
   gulp.watch('src/styles/**', ['styles']);
-  gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts']);
+  gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts:dist']);
 });
 
-gulp.task('default', ['watch', 'livereload', 'styles', 'scripts']);
+gulp.task('default', ['watch', 'livereload', 'styles', 'scripts:dist']);
 gulp.task('build', ['styles', 'scripts', 'scripts:dist']);
