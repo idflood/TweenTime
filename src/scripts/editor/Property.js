@@ -94,7 +94,9 @@ export default class Property {
         return $grp;
       }
     } else {
-      grp_class = 'property-grp--' + instance_prop.group;
+      // Replace all spaces to dash and make class lowercase
+      var group_name = instance_prop.group.replace(/\s+/g, '-').toLowerCase();
+      grp_class = 'property-grp--' + group_name;
       $existing = $container.find('.' + grp_class);
       if ($existing.length) {
         return $existing;

@@ -62,9 +62,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Timer = __webpack_require__(3)["default"];
 	var Orchestrator = __webpack_require__(4)["default"];
 	var Core = (function () {
-	  var Core = function Core(data) {
+	  var Core = function Core(data, options) {
+	    if (options === undefined) options = {};
 	    this.data = data;
-	    this.timer = new Timer();
+	    this.timer = new Timer(options);
 	    this.orchestrator = new Orchestrator(this.timer, this.data);
 	  };
 	
@@ -281,10 +282,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Signals = __webpack_require__(12);
 	
 	var Timer = (function () {
-	  var Timer = function Timer() {
+	  var Timer = function Timer(options) {
 	    var _this = this;
+	    if (options === undefined) options = {};
 	    // in millisecond
-	    this.totalDuration = 240 * 1000;
+	    this.totalDuration = options.totalDuration || 240 * 1000;
 	    // Use an array for the time for easier d3.js integration (used as data for timeseeker).
 	    this.time = [0];
 	    this.is_playing = false;

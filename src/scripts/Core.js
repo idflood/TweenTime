@@ -5,9 +5,9 @@ import Timer from './core/Timer';
 import Orchestrator from './core/Orchestrator';
 
 export default class Core {
-  constructor(data) {
+  constructor(data, options = {}) {
     this.data = data;
-    this.timer = new Timer();
+    this.timer = new Timer(options);
     this.orchestrator = new Orchestrator(this.timer, this.data);
   }
 

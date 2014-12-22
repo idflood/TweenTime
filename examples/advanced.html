@@ -159,7 +159,9 @@
                   "ease": "Linear.easeNone"
                 }
               ],
-              "val": 0
+              "val": 0,
+              "min": 0,
+              "max": 1
             }
           ],
           "values": {
@@ -183,7 +185,9 @@
                   "ease": "Linear.easeNone"
                 }
               ],
-              "val": 0
+              "val": 0,
+              "min": 0,
+              "max": 1
             },
             {
               "name": "y",
@@ -252,7 +256,9 @@
                   "ease": "Quad.easeOut"
                 }
               ],
-              "val": 0
+              "val": 0,
+              "min": 0,
+              "max": 1
             }
           ],
           "values": {
@@ -281,7 +287,9 @@
                   "val": 1
                 }
               ],
-              "val": 0
+              "val": 0,
+              "min": 0,
+              "max": 1
             }
           ],
           "values": {
@@ -290,8 +298,13 @@
           }
         }
       ];
-      var tweenTime = new TweenTime.Core(data);
-      var editor = new TweenTime.Editor(tweenTime);
+      var tweenTime = new TweenTime.Core(data, {
+        totalDuration: 10000 // in milliseconds
+      });
+      var editor = new TweenTime.Editor(tweenTime, {
+        domainStart: 0,
+        domainEnd: 4000
+      });
 
       $img = $('.thumb__image img');
       $overlay = $('.thumb__overlay');

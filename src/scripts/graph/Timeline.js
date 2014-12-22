@@ -11,7 +11,7 @@ import Errors from './Errors';
 import Selection from './Selection';
 
 export default class Timeline {
-  constructor(editor) {
+  constructor(editor, options) {
     this.editor = editor;
     this.tweenTime = this.editor.tweenTime;
     this.timer = this.tweenTime.timer;
@@ -21,7 +21,16 @@ export default class Timeline {
     this.timer = this.tweenTime.timer;
     this.currentTime = this.timer.time; // used in timeindicator.
 
-    this.initialDomain = [0, 20 * 1000]; // show from 0 to 20 seconds
+    // Make the domain cover 20% of the totalDuation by default.
+    this.initialDomain = [];
+    this.initialDomain[0] = options.domainStart || 0;
+    this.initialDomain[1] = options.domainEnd || this.timer.totalDuration * 0.2;
+
+    // Adapt time to be greater or equal to domainStart.
+    if (this.initialDomain[0] > this.timer.getCurrentTime()) {
+      this.timer.time[0] = this.initialDomain[0];
+    }
+
     var margin = {top: 6, right: 20, bottom: 0, left: 265};
     this.margin = margin;
 
@@ -30,8 +39,9 @@ export default class Timeline {
     this.lineHeight = 20;
     this.label_position_x = -margin.left + 20;
 
-    this.x = d3.time.scale().range([0, width]);
-    this.x.domain(this.initialDomain);
+    this.x = d3.time.scale()
+      .domain(this.initialDomain)
+      .range([0, width]);
 
     this.xAxis = d3.svg.axis()
       .scale(this.x)

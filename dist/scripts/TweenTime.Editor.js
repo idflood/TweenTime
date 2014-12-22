@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.selectionManager = new SelectionManager(this.tweenTime);
 	    this.exporter = new Exporter(this);
-	    this.timeline = new Timeline(this);
+	    this.timeline = new Timeline(this, options);
 	
 	    this.propertiesEditor = new PropertiesEditor(this, this.selectionManager);
 	    this.propertiesEditor.keyAdded.add(this.onKeyAdded);
@@ -283,7 +283,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Errors = __webpack_require__(23)["default"];
 	var Selection = __webpack_require__(24)["default"];
 	var Timeline = (function () {
-	  var Timeline = function Timeline(editor) {
+	  var Timeline = function Timeline(editor, options) {
 	    var _this = this;
 	    this.editor = editor;
 	    this.tweenTime = this.editor.tweenTime;
@@ -294,7 +294,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.timer = this.tweenTime.timer;
 	    this.currentTime = this.timer.time; // used in timeindicator.
 	
-	    this.initialDomain = [0, 20 * 1000]; // show from 0 to 20 seconds
+	    // Make the domain cover 20% of the totalDuation by default.
+	    this.initialDomain = [];
+	    this.initialDomain[0] = options.domainStart || 0;
+	    this.initialDomain[1] = options.domainEnd || this.timer.totalDuration * 0.2;
+	
+	    // Adapt time to be greater or equal to domainStart.
+	    if (this.initialDomain[0] > this.timer.getCurrentTime()) {
+	      this.timer.time[0] = this.initialDomain[0];
+	    }
+	
 	    var margin = { top: 6, right: 20, bottom: 0, left: 265 };
 	    this.margin = margin;
 	
@@ -303,8 +312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.lineHeight = 20;
 	    this.label_position_x = -margin.left + 20;
 	
-	    this.x = d3.time.scale().range([0, width]);
-	    this.x.domain(this.initialDomain);
+	    this.x = d3.time.scale().domain(this.initialDomain).range([0, width]);
 	
 	    this.xAxis = d3.svg.axis().scale(this.x).orient("top").tickSize(-height, 0).tickFormat(Utils.formatMinutes);
 	
@@ -1959,7 +1967,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return $grp;
 	      }
 	    } else {
-	      grp_class = "property-grp--" + instance_prop.group;
+	      // Replace all spaces to dash and make class lowercase
+	      var group_name = instance_prop.group.replace(/\s+/g, "-").toLowerCase();
+	      grp_class = "property-grp--" + group_name;
 	      $existing = $container.find("." + grp_class);
 	      if ($existing.length) {
 	        return $existing;
@@ -2322,14 +2332,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _this.editor.undoManager.addState();
 	    };
 	
-	    var draggable = new DraggableNumber($input.get(0), {
+	    var draggableOptions = {
 	      changeCallback: function () {
 	        return _this.onInputChange();
 	      },
 	      endCallback: function () {
 	        return onChangeEnd();
 	      }
-	    });
+	    };
+	    // Set min & max if they are defined.
+	    if ("min" in this.instance_property) {
+	      draggableOptions.min = this.instance_property.min;
+	    }
+	    if ("max" in this.instance_property) {
+	      draggableOptions.max = this.instance_property.max;
+	    }
+	
+	    var draggable = new DraggableNumber($input.get(0), draggableOptions);
 	    $input.data("draggable", draggable);
 	    $input.change(this.onInputChange);
 	  };
