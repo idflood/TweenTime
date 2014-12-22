@@ -301,7 +301,10 @@
       var tweenTime = new TweenTime.Core(data, {
         totalDuration: 10000 // in milliseconds
       });
-      var editor = new TweenTime.Editor(tweenTime);
+      var editor = new TweenTime.Editor(tweenTime, {
+        domainStart: 0,
+        domainEnd: 4000
+      });
 
       $img = $('.thumb__image img');
       $overlay = $('.thumb__overlay');

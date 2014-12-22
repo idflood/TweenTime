@@ -22,7 +22,14 @@ export default class Timeline {
     this.currentTime = this.timer.time; // used in timeindicator.
 
     // Make the domain cover 20% of the totalDuation by default.
-    this.initialDomain = [0, this.timer.totalDuration * 0.2];
+    this.initialDomain = [];
+    this.initialDomain[0] = options.domainStart || 0;
+    this.initialDomain[1] = options.domainEnd || this.timer.totalDuration * 0.2;
+
+    // Adapt time to be greater or equal to domainStart.
+    if (this.initialDomain[0] > this.timer.getCurrentTime()) {
+      this.timer.time[0] = this.initialDomain[0];
+    }
 
     var margin = {top: 6, right: 20, bottom: 0, left: 265};
     this.margin = margin;
