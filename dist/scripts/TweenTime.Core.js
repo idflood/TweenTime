@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("lodash"), require("./signals"), require("TweenMax"));
 	else
 		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["_"], root["signals"], root["TweenMax"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_14__, __WEBPACK_EXTERNAL_MODULE_24__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -50,17 +50,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	var _ = __webpack_require__(1);
 	
-	var Utils = __webpack_require__(2)["default"];
-	var Timer = __webpack_require__(3)["default"];
-	var Orchestrator = __webpack_require__(4)["default"];
+	var Utils = __webpack_require__(9)["default"];
+	var Timer = __webpack_require__(10)["default"];
+	var Orchestrator = __webpack_require__(11)["default"];
 	var Core = (function () {
 	  var Core = function Core(data, options) {
 	    if (options === undefined) options = {};
@@ -160,13 +161,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Core;
 
 /***/ },
-/* 1 */
+
+/***/ 1:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 /***/ },
-/* 2 */
+
+/***/ 9:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -274,12 +277,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Utils;
 
 /***/ },
-/* 3 */
+
+/***/ 10:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(12);
+	var Signals = __webpack_require__(14);
 	
 	var Timer = (function () {
 	  var Timer = function Timer(options) {
@@ -367,13 +371,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Timer;
 
 /***/ },
-/* 4 */
+
+/***/ 11:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(12);
-	var TweenMax = __webpack_require__(13);
+	var Signals = __webpack_require__(14);
+	var TweenMax = __webpack_require__(24);
 	
 	var Orchestrator = (function () {
 	  var Orchestrator = function Orchestrator(timer, data) {
@@ -559,26 +564,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Orchestrator;
 
 /***/ },
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */
+
+/***/ 14:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
 
 /***/ },
-/* 13 */
+
+/***/ 24:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_24__;
 
 /***/ }
-/******/ ])
+
+/******/ })
 });
 
 //# sourceMappingURL=TweenTime.Core.js.map
