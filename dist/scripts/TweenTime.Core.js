@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("lodash"), require("./signals"), require("TweenMax"));
 	else
 		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["_"], root["signals"], root["TweenMax"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_14__, __WEBPACK_EXTERNAL_MODULE_15__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -58,9 +58,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _ = __webpack_require__(1);
 	
-	var Utils = __webpack_require__(9)["default"];
-	var Timer = __webpack_require__(10)["default"];
-	var Orchestrator = __webpack_require__(11)["default"];
+	var Utils = __webpack_require__(2)["default"];
+	var Timer = __webpack_require__(3)["default"];
+	var Orchestrator = __webpack_require__(4)["default"];
 	var Core = (function () {
 	  var Core = function Core(data, options) {
 	    if (options === undefined) options = {};
@@ -166,14 +166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 /***/ },
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -281,12 +274,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Utils;
 
 /***/ },
-/* 10 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	
 	var Timer = (function () {
 	  var Timer = function Timer(options) {
@@ -374,13 +367,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Timer;
 
 /***/ },
-/* 11 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(14);
-	var TweenMax = __webpack_require__(15);
+	var Signals = __webpack_require__(12);
+	var TweenMax = __webpack_require__(13);
 	
 	var Orchestrator = (function () {
 	  var Orchestrator = function Orchestrator(timer, data) {
@@ -482,18 +475,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var propertyTimeline = property._timeline;
 	          var propName = property.name;
 	
-	          // Set the data values target object.
-	          var data_target = item.values;
-	          if (property.css) {
-	            data_target = item._domHelper;
-	          }
-	
 	          // If there is no key stop there and set value to default.
 	          if (!property.keys.length) {
-	            data_target[propName] = property.val;
+	            item.values[property.name] = property.val;
 	            continue;
 	          }
 	
+	          // Set the data values target object.
+	          var data_target = item.values;
 	          // Add a inital key, even if there is no animation to set the value from time 0.
 	          var first_key = property.keys[0];
 	
@@ -508,6 +497,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          val.ease = easing;
 	
 	          if (property.css) {
+	            data_target = item._domHelper;
 	            val.css = {};
 	            val.css[propName] = first_key ? first_key.val : property.val;
 	          } else {
@@ -560,7 +550,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var item = this.data[i];
 	      for (var property_key = 0; property_key < item.properties.length; property_key++) {
 	        var property = item.properties[property_key];
-	        if (property.css) {
+	        if (property.css && property.keys.length) {
 	          // Only css values.
 	          item.values[property.name] = item._domHelper.style[property.name];
 	        }
@@ -578,18 +568,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Orchestrator;
 
 /***/ },
-/* 12 */,
-/* 13 */,
-/* 14 */
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
 
 /***/ },
-/* 15 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_15__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
 
 /***/ }
 /******/ ])
