@@ -2592,6 +2592,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    //this.update = this.update.bind(this);
 	    this.onInputChange = this.onInputChange.bind(this);
+	    this.onKeyClick = this.onKeyClick.bind(this);
 	
 	    this.timer = editor.timer;
 	    this.keyAdded = new Signals.Signal();

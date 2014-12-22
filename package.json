@@ -1,6 +1,6 @@
 {
   "name": "TweenTime",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "author": "stimul.ch / David Mignot",
   "devDependencies": {
     "gulp": "^3.8.10",
