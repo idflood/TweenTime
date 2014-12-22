@@ -38,10 +38,19 @@ export default class PropertyNumber extends PropertyBase {
       this.editor.undoManager.addState();
     }
 
-    var draggable = new DraggableNumber($input.get(0), {
+    var draggableOptions = {
       changeCallback: () => this.onInputChange(),
       endCallback: () => onChangeEnd()
-    })
+    };
+    // Set min & max if they are defined.
+    if ('min' in this.instance_property) {
+      draggableOptions.min = this.instance_property.min;
+    }
+    if ('max' in this.instance_property) {
+      draggableOptions.max = this.instance_property.max;
+    }
+
+    var draggable = new DraggableNumber($input.get(0), draggableOptions);
     $input.data('draggable', draggable);
     $input.change(this.onInputChange);
   }
