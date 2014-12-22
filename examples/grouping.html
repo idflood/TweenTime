@@ -20,12 +20,18 @@
         margin-left: 50px;
         margin-top: 50px;
         background: #33b5e5;
+        color: #fff;
+        font-size: 30px;
+        font-weight: bold;
+        font-family: Helvetica, sans-serif;
+        line-height: 100px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <div class="content-wrapper">
-      <div class="box"></div>
+      <div class="box">1</div>
     </div>
 
     <!-- TweenTime dependencies -->
@@ -122,6 +128,13 @@
               "val": "#33b5e5"
             },
             {
+              "name": "color",
+              "type": "color",
+              "group": "colors",
+              "keys": [],
+              "val": undefined
+            },
+            {
               "name": "opacity",
               "group": "effects",
               "keys": [
@@ -158,13 +171,17 @@
       var box_values = tweenTime.getValues('box');
 
       function animate() {
-        $('.box').css({
+        var css = {
           'opacity': box_values.opacity,
           'background-color': box_values.backgroundColor,
           'width': box_values.width + "px",
           'height': box_values.height + "px",
           'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
-        });
+        };
+        if (box_values.color != undefined) {
+          css.color = box_values.color;
+        }
+        $('.box').css(css);
         window.requestAnimationFrame(animate);
       }
 
