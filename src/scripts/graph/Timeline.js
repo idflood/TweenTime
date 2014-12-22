@@ -21,6 +21,8 @@ export default class Timeline {
     this.timer = this.tweenTime.timer;
     this.currentTime = this.timer.time; // used in timeindicator.
 
+    this.onUpdate = this.onUpdate.bind(this);
+
     // Make the domain cover 20% of the totalDuation by default.
     this.initialDomain = [];
     this.initialDomain[0] = options.domainStart || 0;
