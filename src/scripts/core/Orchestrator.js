@@ -100,8 +100,21 @@ export default class Orchestrator {
 
           var propertyTimeline = property._timeline;
           var propName = property.name;
+
+          // Set the data values target object.
+          var data_target = item.values;
+          if (property.css) {
+            data_target = item._domHelper;
+          }
+
+          // If there is no key stop there and set value to default.
+          if (!property.keys.length) {
+            data_target[propName] = property.val;
+            continue;
+          }
+
           // Add a inital key, even if there is no animation to set the value from time 0.
-          var first_key = property.keys.length ? property.keys[0] : false;
+          var first_key = property.keys[0];
 
           var tween_time = 0;
           if (first_key) {
@@ -112,11 +125,10 @@ export default class Orchestrator {
           var val = {};
           var easing = this.getEasing();
           val.ease = easing;
-          var data_target = item.values;
+
           if (property.css) {
             val.css = {};
             val.css[propName] = first_key ? first_key.val : property.val;
-            data_target = item._domHelper;
           }
           else {
             val[propName] = first_key ? first_key.val : property.val;
