@@ -1,9 +1,9 @@
 let Signals = require('js-signals');
 
 export default class Timer {
-  constructor () {
+  constructor (options = {}) {
     // in millisecond
-    this.totalDuration = 240 * 1000;
+    this.totalDuration = options.totalDuration || 240 * 1000;
     // Use an array for the time for easier d3.js integration (used as data for timeseeker).
     this.time = [0];
     this.is_playing = false;

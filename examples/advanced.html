@@ -298,7 +298,9 @@
           }
         }
       ];
-      var tweenTime = new TweenTime.Core(data);
+      var tweenTime = new TweenTime.Core(data, {
+        totalDuration: 10000 // in milliseconds
+      });
       var editor = new TweenTime.Editor(tweenTime);
 
       $img = $('.thumb__image img');

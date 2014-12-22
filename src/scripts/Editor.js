@@ -23,7 +23,7 @@ class Editor {
 
     this.selectionManager = new SelectionManager(this.tweenTime);
     this.exporter = new Exporter(this);
-    this.timeline = new Timeline(this);
+    this.timeline = new Timeline(this, options);
 
     this.propertiesEditor = new PropertiesEditor(this, this.selectionManager);
     this.propertiesEditor.keyAdded.add(this.onKeyAdded);
