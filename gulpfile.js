@@ -107,7 +107,7 @@ gulp.task('scripts:dist', function(cb) {
       comments: false
     },
     compress: {
-      //drop_debugger: true,
+      drop_debugger: false,
       sequences: true,
       //dead_code: true,
       conditionals: true,
@@ -115,7 +115,7 @@ gulp.task('scripts:dist', function(cb) {
       unused: true,
       if_return: true,
       join_vars: true,
-      //drop_console: true
+      drop_console: false
     }
   }));
   webpack(conf, function(err, stats) {
