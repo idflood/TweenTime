@@ -14,6 +14,8 @@ export default class TimeIndicator {
       .attr('y', -this.timeline.margin.top - 5)
       .attr('width', 1)
       .attr('height', 1000);
+
+    this.timeSelection = this.container.selectAll('.time-indicator rect');
   }
 
   updateHeight(height) {
@@ -22,7 +24,6 @@ export default class TimeIndicator {
   }
 
   render() {
-    this.timeSelection = this.container.selectAll('.time-indicator rect');
     this.timeSelection.attr('transform', "translate(" + (this.timeline.x(this.timeline.currentTime[0]) - 0.5) + ",0)");
   }
 }
