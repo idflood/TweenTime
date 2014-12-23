@@ -1,0 +1,90 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TweenTime: Basic example</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../dist/styles/editor.css">
+    <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../src/fonts/icomoon/style.css">
+    <style>
+      body {
+        background: #efefef;
+      }
+      .box {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin-left: 50px;
+        margin-top: 50px;
+        background: #33b5e5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content-wrapper"></div>
+
+    <!-- TweenTime dependencies -->
+    <script src="../src/scripts/bower_components/gsap/src/uncompressed/TweenMax.js"></script>
+    <script src="../src/scripts/bower_components/gsap/src/uncompressed/TimelineMax.js"></script>
+    <script src="../src/scripts/bower_components/js-signals/dist/signals.js"></script>
+
+    <!-- Editor dependencies -->
+    <script src="../src/scripts/bower_components/jquery/dist/jquery.js"></script>
+    <script src="../src/scripts/bower_components/spectrum/spectrum.js"></script>
+    <script src="../src/scripts/bower_components/d3/d3.js"></script>
+    <script src="../src/scripts/bower_components/lodash/dist/lodash.js"></script>
+    <script src="../src/scripts/bower_components/draggable-number.js/dist/draggable-number.js"></script>
+
+    <!-- TweenTime & Editor -->
+    <script src="../dist/scripts/TweenTime.Core.min.js"></script>
+    <script src="../dist/scripts/TweenTime.Editor.min.js"></script>
+
+    <!-- Example script -->
+    <script>
+      var num_items = 100;
+      var data = [];
+      var $wrapper = $('.content-wrapper');
+      // Add 100 div with data.
+      for (var i = 0; i < num_items; i++) {
+        var $el = $("<div class='box box--" + i + "'>test " + i + "</div>");
+        $wrapper.append($el);
+        data.push({
+          "id": "box--" + i,
+          "type": "box",
+          "label": "Box " + i,
+          "properties": [
+            {
+              "name": "x",
+              "keys": [],
+              "val": 42
+            },
+            {
+              "name": "y",
+              "keys": [],
+              "val": 0
+            }
+          ],
+          "_$el": $el // cache a reference to the element.
+        });
+      }
+
+      var tweenTime = new TweenTime.Core(data);
+      var editor = new TweenTime.Editor(tweenTime);
+
+      function animate() {
+        for (var i = 0; i < tweenTime.data.length; i++) {
+          var box_values = tweenTime.data[i].values;
+          tweenTime.data[i]._$el.css({
+            'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
+          });
+        }
+        window.requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>

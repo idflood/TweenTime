@@ -137,6 +137,24 @@ export default class Property {
     return $container;
   }
 
+  remove() {
+    this.items.forEach((item) => {item.remove()});
+    if (this.keyAdded) {
+      this.keyAdded.dispose();
+    }
+
+    delete this.editor;
+    delete this.$el;
+
+    delete this.timeline;
+    delete this.timer;
+    delete this.selectionManager;
+    delete this.keyAdded;
+    delete this.items;
+    delete this.numberProp;
+    delete this.tweenProp;
+  }
+
   addNumberProperty(instance_prop, lineData, key_val, $container) {
     var propClass = PropertyNumber;
     if (instance_prop.type && instance_prop.type === 'color') {

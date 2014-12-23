@@ -55,6 +55,16 @@ export default class PropertyNumber extends PropertyBase {
     $input.change(this.onInputChange);
   }
 
+  remove() {
+    super();
+    if (this.$input.data('draggable')) {
+      this.$input.data('draggable').destroy();
+    }
+
+    delete this.$input;
+    delete this.$el;
+  }
+
   update() {
     super();
     var val = this.getCurrentVal();

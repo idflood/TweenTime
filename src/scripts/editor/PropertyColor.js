@@ -51,6 +51,13 @@ export default class PropertyColor extends PropertyBase {
     $input.change(this.onInputChange);
   }
 
+  remove() {
+    super();
+    this.$el.find('input').spectrum('destroy');
+    delete this.$el;
+    delete this.$input;
+  }
+
   update() {
     super();
     var val = this.getCurrentVal();

@@ -42,6 +42,7 @@ export default class PropertiesEditor {
   }
 
   onSelect(domElement = false) {
+    this.items.forEach((item) => {item.remove()});
     this.items = [];
     this.$container.empty();
     if (domElement instanceof Array) {

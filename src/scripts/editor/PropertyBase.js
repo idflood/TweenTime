@@ -122,4 +122,18 @@ export default class PropertyBase {
     var key = this.getCurrentKey();
     this.$key.toggleClass('property__key--active', key);
   }
+
+  remove() {
+    if (this.keyAdded) {
+      this.keyAdded.dispose();
+    }
+    delete this.instance_property;
+    delete this.lineData;
+    delete this.editor;
+    delete this.key_val;
+
+    delete this.timer;
+    delete this.keyAdded;
+    delete this.$key;
+  }
 }
