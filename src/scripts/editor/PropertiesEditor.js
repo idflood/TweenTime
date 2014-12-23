@@ -70,9 +70,6 @@ export default class PropertiesEditor {
     if (!time_changed) {
       return;
     }
-    for (var i = 0; i < this.items.length; i++) {
-      var prop = this.items[i];
-      prop.update();
-    }
+    this.items.forEach((prop) => {prop.update()});
   }
 }
