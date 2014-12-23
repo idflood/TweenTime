@@ -83,7 +83,9 @@ export default class Timeline {
     });
     this.errors = new Errors(this);
     this.keys = new Keys(this);
-    this.keys.onKeyUpdated.add(() => {this.onUpdate();});
+    this.keys.onKeyUpdated.add(() => {
+      this.onUpdate();
+    });
 
     this.xAxisGrid = d3.svg.axis()
       .scale(this.x)
@@ -127,7 +129,7 @@ export default class Timeline {
   }
 
   onUpdate() {
-    this.editor.render(false, true);
+    this.editor.render(false, false, true);
   }
 
   render(time, time_changed) {

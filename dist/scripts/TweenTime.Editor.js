@@ -382,7 +382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Timeline.prototype.onUpdate = function () {
-	    this.editor.render(false, true);
+	    this.editor.render(false, false, true);
 	  };
 	
 	  Timeline.prototype.render = function (time, time_changed) {
@@ -410,6 +410,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    if (this._isDirty) {
+	      console.log("...");
 	      // No need to call this on each frames, but only on brush, key drag, ...
 	      var bar = this.items.render();
 	      this.keysPreview.render(bar);
@@ -1126,7 +1127,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.timeSelection = this.container.selectAll(".time-indicator").data(this.timeline.currentTime);
 	    this.timeGrp = this.timeSelection.enter().append("svg").attr("class", "time-indicator timeline__right-mask").attr("width", window.innerWidth - this.timeline.label_position_x).attr("height", 442);
 	
-	    this.timeSelection = this.timeGrp.append("rect").attr("class", "time-indicator__line").attr("x", -1).attr("y", -this.timeline.margin.top - 5).attr("width", 1).attr("height", 1000);
+	    this.timeSelection = this.timeGrp.append("rect").attr("class", "time-indicator__line").attr("x", 0).attr("y", -this.timeline.margin.top - 5).attr("width", 1).attr("height", 1000);
+	
+	    this.timeSelection = this.container.selectAll(".time-indicator rect");
 	  };
 	
 	  TimeIndicator.prototype.updateHeight = function (height) {
@@ -1135,8 +1138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  TimeIndicator.prototype.render = function () {
-	    this.timeSelection = this.container.selectAll(".time-indicator rect");
-	    this.timeSelection.attr("x", this.timeline.x(this.timeline.currentTime[0]) - 0.5);
+	    this.timeSelection.attr("transform", "translate(" + (this.timeline.x(this.timeline.currentTime[0]) - 0.5) + ",0)");
 	  };
 	
 	  return TimeIndicator;

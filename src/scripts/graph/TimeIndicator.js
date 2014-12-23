@@ -10,10 +10,12 @@ export default class TimeIndicator {
 
     this.timeSelection = this.timeGrp.append('rect')
       .attr('class', 'time-indicator__line')
-      .attr('x', -1)
+      .attr('x', 0)
       .attr('y', -this.timeline.margin.top - 5)
       .attr('width', 1)
       .attr('height', 1000);
+
+    this.timeSelection = this.container.selectAll('.time-indicator rect');
   }
 
   updateHeight(height) {
@@ -22,7 +24,6 @@ export default class TimeIndicator {
   }
 
   render() {
-    this.timeSelection = this.container.selectAll('.time-indicator rect');
-    this.timeSelection.attr('x', this.timeline.x(this.timeline.currentTime[0]) - 0.5);
+    this.timeSelection.attr('transform', "translate(" + (this.timeline.x(this.timeline.currentTime[0]) - 0.5) + ",0)");
   }
 }
