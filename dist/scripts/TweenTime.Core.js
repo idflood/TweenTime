@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("lodash"), require("./signals"), require("TweenMax"));
 	else
 		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["_"], root["signals"], root["TweenMax"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_15__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -279,7 +279,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(12);
+	var Signals = __webpack_require__(13);
 	
 	var Timer = (function () {
 	  var Timer = function Timer(options) {
@@ -372,8 +372,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(12);
-	var TweenMax = __webpack_require__(13);
+	var Signals = __webpack_require__(13);
+	var TweenMax = __webpack_require__(15);
 	
 	var Orchestrator = (function () {
 	  var Orchestrator = function Orchestrator(timer, data) {
@@ -575,16 +575,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */,
 /* 10 */,
 /* 11 */,
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
-
-/***/ },
+/* 12 */,
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+
+/***/ },
+/* 14 */,
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_15__;
 
 /***/ }
 /******/ ])

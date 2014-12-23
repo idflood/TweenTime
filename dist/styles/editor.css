@@ -508,13 +508,15 @@
   min-width: 120px;
   bottom: 25px;
   padding-bottom: 5px;
-  background: #111;
-  border: 1px solid #333; }
+  background: #2c2e2f;
+  border: 1px solid #484a4b; }
   .submenu a {
     display: block;
     padding: 0 10px;
     text-decoration: none;
-    color: #eee !important; }
+    color: #ddd !important; }
+    .submenu a:hover, .submenu a:focus {
+      color: #fff !important; }
 
 .menu-item:hover > .submenu {
   display: block; }
