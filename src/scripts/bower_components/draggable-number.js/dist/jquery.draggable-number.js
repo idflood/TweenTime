@@ -4,7 +4,7 @@
  *
  * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
  * @author David Mignot - http://idflood.com
- * @version 0.4.2
+ * @version 0.4.3
  **/
 (function(root, factory) {
     if(typeof exports === 'object') {
@@ -123,9 +123,11 @@ DraggableNumber.prototype = {
    */
   set: function (new_value) {
     new_value = this._constraintValue(new_value);
-    this._value = new_value;
-    this._input.value = this._value;
-    this._span.innerHTML = this._value;
+    if (this._value !== new_value) {
+      this._value = new_value;
+      this._input.value = this._value;
+      this._span.innerHTML = this._value;
+    }
   },
 
   /**

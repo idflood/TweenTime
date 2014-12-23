@@ -1,6 +1,6 @@
 {
   "name": "draggable-number.js",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "main": [
     "./dist/draggable-number.js"
   ],
@@ -28,13 +28,13 @@
     "tests.html"
   ],
   "homepage": "https://github.com/idflood/draggable-number.js",
-  "_release": "0.4.2",
+  "_release": "0.4.3",
   "_resolution": {
     "type": "version",
-    "tag": "0.4.2",
-    "commit": "4a6c29a78a3c37efcf1664c272030a1e79974553"
+    "tag": "0.4.3",
+    "commit": "2a493df9de6531f4730c348c362d35f844c6920d"
   },
   "_source": "git://github.com/idflood/draggable-number.js.git",
-  "_target": "~0.4.2",
+  "_target": "~0.4.3",
   "_originalSource": "draggable-number.js"
 }
