@@ -39,14 +39,16 @@ a.menu-item
   min-width: 120px
   bottom: $menu_height
   padding-bottom: 5px
-  background: #111
-  border: 1px solid #333
+  background: $editor_bg
+  border: 1px solid $editor_border2_light
 
   a
     display: block
     padding: 0 10px
     text-decoration: none
-    color: #eee !important
+    color: #ddd !important
+    &:hover, &:focus
+      color: #fff !important
 
 .menu-item:hover > .submenu
   display: block
