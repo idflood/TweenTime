@@ -106,7 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Editor.prototype.onKeyAdded = function () {
 	    this.undoManager.addState();
-	    this.render(false, true);
+	    this.render(false, false, true);
 	  };
 	
 	  Editor.prototype.onKeyRemoved = function (item) {
@@ -115,11 +115,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.selectionManager.selection.length) {
 	      this.selectionManager.triggerSelect();
 	    }
-	    this.render(false, true);
+	    this.render(false, false, true);
 	  };
 	
-	  Editor.prototype.render = function (time, force) {
+	  Editor.prototype.render = function (time, time_changed, force) {
 	    if (time === undefined) time = false;
+	    if (time_changed === undefined) time_changed = false;
 	    if (force === undefined) force = false;
 	    if (time === false) {
 	      time = this.timer.time[0];
@@ -127,9 +128,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (force) {
 	      this.timeline._isDirty = true;
 	    }
-	    this.timeline.render(time, force);
-	    this.controls.render(time, force);
-	    this.propertiesEditor.render(time, force);
+	    this.timeline.render(time, time_changed);
+	    this.controls.render(time, time_changed);
+	    this.propertiesEditor.render(time, time_changed);
 	  };
 	
 	  Editor.prototype.update = function () {
@@ -424,6 +425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.xGrid.call(this.xAxisGrid);
 	      this.xAxisElement.call(this.xAxis);
 	      this.svg.attr("height", height);
+	      this.timeIndicator.updateHeight(height);
 	    }
 	  };
 	
@@ -484,6 +486,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  PropertiesEditor.prototype.onSelect = function (domElement) {
 	    if (domElement === undefined) domElement = false;
+	    this.items.forEach(function (item) {
+	      item.remove();
+	    });
 	    this.items = [];
 	    this.$container.empty();
 	    if (domElement instanceof Array) {
@@ -511,10 +516,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!time_changed) {
 	      return;
 	    }
-	    for (var i = 0; i < this.items.length; i++) {
-	      var prop = this.items[i];
+	    this.items.forEach(function (prop) {
 	      prop.update();
-	    }
+	    });
 	  };
 	
 	  return PropertiesEditor;
@@ -1120,9 +1124,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.timeline = timeline;
 	    this.container = container;
 	    this.timeSelection = this.container.selectAll(".time-indicator").data(this.timeline.currentTime);
-	    var timeGrp = this.timeSelection.enter().append("svg").attr("class", "time-indicator timeline__right-mask").attr("width", window.innerWidth - this.timeline.label_position_x).attr("height", 442);
+	    this.timeGrp = this.timeSelection.enter().append("svg").attr("class", "time-indicator timeline__right-mask").attr("width", window.innerWidth - this.timeline.label_position_x).attr("height", 442);
 	
-	    this.timeSelection = timeGrp.append("rect").attr("class", "time-indicator__line").attr("x", -1).attr("y", -this.timeline.margin.top - 5).attr("width", 1).attr("height", 1000);
+	    this.timeSelection = this.timeGrp.append("rect").attr("class", "time-indicator__line").attr("x", -1).attr("y", -this.timeline.margin.top - 5).attr("width", 1).attr("height", 1000);
+	  };
+	
+	  TimeIndicator.prototype.updateHeight = function (height) {
+	    this.timeGrp.attr("height", height);
+	    this.timeSelection.attr("height", height + this.timeline.margin.top + 5);
 	  };
 	
 	  TimeIndicator.prototype.render = function () {
@@ -1422,7 +1431,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    var propVal = function (d) {
 	      if (d.properties) {
-	        return d.properties;
+	        return d.properties.filter(function (prop) {
+	          return prop.keys.length;
+	        });
 	      } else {
 	        return [];
 	      }
@@ -1430,18 +1441,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var propKey = function (d) {
 	      return d.name;
 	    };
-	    var visibleProperties = function (d) {
-	      return d.keys.length;
-	    };
 	
 	    var properties = bar.selectAll(".line-item").data(propVal, propKey);
-	
-	    var subGrp = properties.enter().append("g").filter(visibleProperties).attr("class", "line-item");
+	    var subGrp = properties.enter().append("g").attr("class", "line-item");
 	
 	    // Save subGrp in a variable for use in Errors.coffee
 	    self.subGrp = subGrp;
 	
-	    properties.filter(visibleProperties).attr("transform", function (d, i) {
+	    properties.attr("transform", function (d, i) {
 	      var sub_height = (i + 1) * self.timeline.lineHeight;
 	      return "translate(0," + sub_height + ")";
 	    });
@@ -1489,6 +1496,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return "none";
 	      }
 	    });
+	
+	    properties.exit().remove();
 	
 	    return properties;
 	  };
@@ -1782,6 +1791,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var self = this;
 	    this.svg.on("mousedown", function () {
 	      var p = d3.mouse(this);
+	      // Only init selection if we click on the timeline and not on the labels.
+	      if (p[0] < self.timeline.margin.left) {
+	        return;
+	      }
 	      self.svg.append("rect").attr({
 	        "class": "selection",
 	        x: p[0],
@@ -2011,6 +2024,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.$el.append($container);
 	    }
 	    return $container;
+	  };
+	
+	  Property.prototype.remove = function () {
+	    this.items.forEach(function (item) {
+	      item.remove();
+	    });
+	    if (this.keyAdded) {
+	      this.keyAdded.dispose();
+	    }
+	
+	    delete this.editor;
+	    delete this.$el;
+	
+	    delete this.timeline;
+	    delete this.timer;
+	    delete this.selectionManager;
+	    delete this.keyAdded;
+	    delete this.items;
+	    delete this.numberProp;
+	    delete this.tweenProp;
 	  };
 	
 	  Property.prototype.addNumberProperty = function (instance_prop, lineData, key_val, $container) {
@@ -2357,6 +2390,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    $input.change(this.onInputChange);
 	  };
 	
+	  PropertyNumber.prototype.remove = function () {
+	    PropertyBase.prototype.remove.call(this);
+	    if (this.$input.data("draggable")) {
+	      this.$input.data("draggable").destroy();
+	    }
+	
+	    delete this.$input;
+	    delete this.$el;
+	  };
+	
 	  PropertyNumber.prototype.update = function () {
 	    PropertyBase.prototype.update.call(this);
 	    var val = this.getCurrentVal();
@@ -2449,6 +2492,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    $input.change(this.onInputChange);
 	  };
 	
+	  PropertyColor.prototype.remove = function () {
+	    PropertyBase.prototype.remove.call(this);
+	    this.$el.find("input").spectrum("destroy");
+	    delete this.$el;
+	    delete this.$input;
+	  };
+	
 	  PropertyColor.prototype.update = function () {
 	    PropertyBase.prototype.update.call(this);
 	    var val = this.getCurrentVal();
@@ -2487,7 +2537,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.timer = this.editor.timer;
 	    this.$time = false;
+	    this.$el = false;
 	    this.render();
+	  };
+	
+	  PropertyTween.prototype.remove = function () {
+	    delete this.$el;
+	    delete this.instance_property;
+	    delete this.lineData;
+	    delete this.editor;
+	    delete this.key_val;
+	    delete this.timeline;
+	
+	    delete this.timer;
+	    delete this.$time;
 	  };
 	
 	  PropertyTween.prototype.render = function () {
@@ -2707,6 +2770,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  PropertyBase.prototype.update = function () {
 	    var key = this.getCurrentKey();
 	    this.$key.toggleClass("property__key--active", key);
+	  };
+	
+	  PropertyBase.prototype.remove = function () {
+	    if (this.keyAdded) {
+	      this.keyAdded.dispose();
+	    }
+	    delete this.instance_property;
+	    delete this.lineData;
+	    delete this.editor;
+	    delete this.key_val;
+	
+	    delete this.timer;
+	    delete this.keyAdded;
+	    delete this.$key;
 	  };
 	
 	  return PropertyBase;
