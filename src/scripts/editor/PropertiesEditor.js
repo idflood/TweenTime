@@ -42,6 +42,7 @@ export default class PropertiesEditor {
   }
 
   onSelect(domElement = false) {
+    this.items.forEach((item) => {item.remove()});
     this.items = [];
     this.$container.empty();
     if (domElement instanceof Array) {
@@ -69,9 +70,6 @@ export default class PropertiesEditor {
     if (!time_changed) {
       return;
     }
-    for (var i = 0; i < this.items.length; i++) {
-      var prop = this.items[i];
-      prop.update();
-    }
+    this.items.forEach((prop) => {prop.update()});
   }
 }

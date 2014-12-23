@@ -38,16 +38,24 @@ export default class PropertyColor extends PropertyBase {
       },
       move: (color) => {
         if (color._a == 1) {
-          this.$input.val(color.toHexString());
+          $input.val(color.toHexString());
         }
         else {
-          this.$input.val(color.toRgbString());
+          $input.val(color.toRgbString());
         }
-        this.onInputChange()
+
+        this.onInputChange();
       }
     })
 
     $input.change(this.onInputChange);
+  }
+
+  remove() {
+    super();
+    this.$el.find('input').spectrum('destroy');
+    delete this.$el;
+    delete this.$input;
   }
 
   update() {

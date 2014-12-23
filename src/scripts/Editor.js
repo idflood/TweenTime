@@ -45,7 +45,7 @@ class Editor {
 
   onKeyAdded() {
     this.undoManager.addState();
-    this.render(false, true);
+    this.render(false, false, true);
   }
 
   onKeyRemoved(item) {
@@ -54,19 +54,19 @@ class Editor {
     if (this.selectionManager.selection.length) {
       this.selectionManager.triggerSelect();
     }
-    this.render(false, true);
+    this.render(false, false, true);
   }
 
-  render(time = false, force = false) {
+  render(time = false, time_changed = false, force = false) {
     if (time === false) {
       time = this.timer.time[0];
     }
     if (force) {
       this.timeline._isDirty = true;
     }
-    this.timeline.render(time, force);
-    this.controls.render(time, force);
-    this.propertiesEditor.render(time, force);
+    this.timeline.render(time, time_changed);
+    this.controls.render(time, time_changed);
+    this.propertiesEditor.render(time, time_changed);
   }
 
   update() {

@@ -16,7 +16,20 @@ export default class PropertyTween {
 
     this.timer = this.editor.timer;
     this.$time = false;
+    this.$el = false;
     this.render();
+  }
+
+  remove() {
+    delete this.$el;
+    delete this.instance_property;
+    delete this.lineData;
+    delete this.editor;
+    delete this.key_val;
+    delete this.timeline;
+
+    delete this.timer;
+    delete this.$time;
   }
 
   render() {

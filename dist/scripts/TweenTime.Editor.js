@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("lodash"), require("d3"), require("jquery"), require(undefined), require("DraggableNumber"), require("spectrum"));
+		module.exports = factory(require("lodash"), require(undefined), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
 	else if(typeof define === 'function' && define.amd)
-		define(["lodash", "d3", "jquery", "signals", "DraggableNumber", "spectrum"], factory);
+		define(["lodash", "signals", "d3", "jquery", "DraggableNumber", "spectrum"], factory);
 	else if(typeof exports === 'object')
-		exports["Editor"] = factory(require("lodash"), require("d3"), require("jquery"), require("./signals"), require("DraggableNumber"), require("spectrum"));
+		exports["Editor"] = factory(require("lodash"), require("./signals"), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["d3"], root["$"], root["signals"], root["DraggableNumber"], root["spectrum"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_14__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__) {
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["signals"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_14__, __WEBPACK_EXTERNAL_MODULE_15__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,14 +56,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var tpl_timeline = __webpack_require__(15);
-	var Timeline = __webpack_require__(2)["default"];
-	var PropertiesEditor = __webpack_require__(3)["default"];
-	var EditorMenu = __webpack_require__(4)["default"];
-	var EditorControls = __webpack_require__(5)["default"];
-	var SelectionManager = __webpack_require__(6)["default"];
-	var Exporter = __webpack_require__(7)["default"];
-	var UndoManager = __webpack_require__(8)["default"];
+	var tpl_timeline = __webpack_require__(16);
+	var Timeline = __webpack_require__(5)["default"];
+	var PropertiesEditor = __webpack_require__(6)["default"];
+	var EditorMenu = __webpack_require__(7)["default"];
+	var EditorControls = __webpack_require__(8)["default"];
+	var SelectionManager = __webpack_require__(9)["default"];
+	var Exporter = __webpack_require__(10)["default"];
+	var UndoManager = __webpack_require__(11)["default"];
 	var Editor = (function () {
 	  var Editor = function Editor(tweenTime, options) {
 	    var _this = this;
@@ -106,7 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Editor.prototype.onKeyAdded = function () {
 	    this.undoManager.addState();
-	    this.render(false, true);
+	    this.render(false, false, true);
 	  };
 	
 	  Editor.prototype.onKeyRemoved = function (item) {
@@ -115,11 +115,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.selectionManager.selection.length) {
 	      this.selectionManager.triggerSelect();
 	    }
-	    this.render(false, true);
+	    this.render(false, false, true);
 	  };
 	
-	  Editor.prototype.render = function (time, force) {
+	  Editor.prototype.render = function (time, time_changed, force) {
 	    if (time === undefined) time = false;
+	    if (time_changed === undefined) time_changed = false;
 	    if (force === undefined) force = false;
 	    if (time === false) {
 	      time = this.timer.time[0];
@@ -127,9 +128,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (force) {
 	      this.timeline._isDirty = true;
 	    }
-	    this.timeline.render(time, force);
-	    this.controls.render(time, force);
-	    this.propertiesEditor.render(time, force);
+	    this.timeline.render(time, time_changed);
+	    this.controls.render(time, time_changed);
+	    this.propertiesEditor.render(time, time_changed);
 	  };
 	
 	  Editor.prototype.update = function () {
@@ -161,17 +162,127 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
+	var Utils = (function () {
+	  var Utils = function Utils() {};
 	
-	var Utils = __webpack_require__(9)["default"];
-	var Header = __webpack_require__(16)["default"];
-	var TimeIndicator = __webpack_require__(17)["default"];
-	var Items = __webpack_require__(18)["default"];
-	var KeysPreview = __webpack_require__(19)["default"];
-	var Properties = __webpack_require__(20)["default"];
-	var Keys = __webpack_require__(21)["default"];
-	var Errors = __webpack_require__(22)["default"];
-	var Selection = __webpack_require__(23)["default"];
+	  Utils.formatMinutes = function (d) {
+	    // convert milliseconds to seconds
+	    d = d / 1000;
+	    var hours = Math.floor(d / 3600);
+	    var minutes = Math.floor((d - (hours * 3600)) / 60);
+	    var seconds = d - (minutes * 60);
+	    var output = seconds + "s";
+	    if (minutes) {
+	      output = minutes + "m " + output;
+	    }
+	    if (hours) {
+	      output = hours + "h " + output;
+	    }
+	    return output;
+	  };
+	
+	  Utils.getClosestTime = function (data, time, objectId, property_name, timer, tolerance) {
+	    if (objectId === undefined) objectId = false;
+	    if (property_name === undefined) property_name = false;
+	    if (timer === undefined) timer = false;
+	    if (tolerance === undefined) tolerance = 0.1;
+	    if (timer) {
+	      var timer_time = timer.getCurrentTime() / 1000;
+	      if (Math.abs(timer_time - time) <= tolerance) {
+	        return timer_time;
+	      }
+	    }
+	
+	    if (objectId || property_name) {
+	      for (var i = 0; i < data.length; i++) {
+	        var item = data[i];
+	        // Don't match item with itself, but allow property to match item start/end.
+	        if (item.id != objectId || property_name) {
+	          // First check start & end.
+	          if (Math.abs(item.start - time) <= tolerance) {
+	            return item.start;
+	          }
+	
+	          if (Math.abs(item.end - time) <= tolerance) {
+	            return item.end;
+	          }
+	        }
+	
+	        // Test properties keys
+	        for (var j = 0; j < item.properties.length; j++) {
+	          var prop = item.properties[j];
+	          // Don't match property with itself.
+	          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
+	            for (var k = 0; k < prop.keys; k++) {
+	              var key = prop.keys[k];
+	              if (Math.abs(key.time - time) <= tolerance) {
+	                return key.time;
+	              }
+	            }
+	          }
+	        }
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Utils.getPreviousKey = function (keys, time) {
+	    var prevKey = false;
+	    for (var i = 0; i < keys.length; i++) {
+	      var key = keys[i];
+	      if (key.time < time) {
+	        prevKey = key;
+	      } else {
+	        return prevKey;
+	      }
+	    }
+	    return prevKey;
+	  };
+	
+	  Utils.sortKeys = function (keys) {
+	    var compare = function (a, b) {
+	      if (a.time < b.time) {
+	        return -1;
+	      }
+	      if (a.time > b.time) {
+	        return 1;
+	      }
+	      return 0;
+	    };
+	    return keys.sort(compare);
+	  };
+	
+	  Utils.guid = function () {
+	    var s4 = function () {
+	      return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
+	    };
+	    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+	  };
+	
+	  return Utils;
+	})();
+	
+	exports["default"] = Utils;
+
+/***/ },
+/* 3 */,
+/* 4 */,
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var d3 = __webpack_require__(14);
+	
+	var Utils = __webpack_require__(2)["default"];
+	var Header = __webpack_require__(17)["default"];
+	var TimeIndicator = __webpack_require__(18)["default"];
+	var Items = __webpack_require__(19)["default"];
+	var KeysPreview = __webpack_require__(20)["default"];
+	var Properties = __webpack_require__(21)["default"];
+	var Keys = __webpack_require__(22)["default"];
+	var Errors = __webpack_require__(23)["default"];
+	var Selection = __webpack_require__(24)["default"];
 	var Timeline = (function () {
 	  var Timeline = function Timeline(editor, options) {
 	    var _this = this;
@@ -314,6 +425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.xGrid.call(this.xAxisGrid);
 	      this.xAxisElement.call(this.xAxis);
 	      this.svg.attr("height", height);
+	      this.timeIndicator.updateHeight(height);
 	    }
 	  };
 	
@@ -323,13 +435,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Timeline;
 
 /***/ },
-/* 3 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var $ = __webpack_require__(13);
-	var Signals = __webpack_require__(14);
+	var $ = __webpack_require__(15);
+	var Signals = __webpack_require__(12);
 	var Property = __webpack_require__(25)["default"];
 	
 	
@@ -374,6 +486,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  PropertiesEditor.prototype.onSelect = function (domElement) {
 	    if (domElement === undefined) domElement = false;
+	    this.items.forEach(function (item) {
+	      item.remove();
+	    });
 	    this.items = [];
 	    this.$container.empty();
 	    if (domElement instanceof Array) {
@@ -401,10 +516,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!time_changed) {
 	      return;
 	    }
-	    for (var i = 0; i < this.items.length; i++) {
-	      var prop = this.items[i];
+	    this.items.forEach(function (prop) {
 	      prop.update();
-	    }
+	    });
 	  };
 	
 	  return PropertiesEditor;
@@ -413,7 +527,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = PropertiesEditor;
 
 /***/ },
-/* 4 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -468,7 +582,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = EditorMenu;
 
 /***/ },
-/* 5 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -541,13 +655,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = EditorControls;
 
 /***/ },
-/* 6 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(14);
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	
 	var SelectionManager = (function () {
 	  var SelectionManager = function SelectionManager(tweenTime) {
@@ -653,7 +767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = SelectionManager;
 
 /***/ },
-/* 7 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -701,12 +815,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Exporter;
 
 /***/ },
-/* 8 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var $ = __webpack_require__(13);
+	var $ = __webpack_require__(15);
 	
 	var UndoManager = (function () {
 	  var UndoManager = function UndoManager(editor) {
@@ -817,128 +931,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = UndoManager;
 
 /***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Utils = (function () {
-	  var Utils = function Utils() {};
-	
-	  Utils.formatMinutes = function (d) {
-	    // convert milliseconds to seconds
-	    d = d / 1000;
-	    var hours = Math.floor(d / 3600);
-	    var minutes = Math.floor((d - (hours * 3600)) / 60);
-	    var seconds = d - (minutes * 60);
-	    var output = seconds + "s";
-	    if (minutes) {
-	      output = minutes + "m " + output;
-	    }
-	    if (hours) {
-	      output = hours + "h " + output;
-	    }
-	    return output;
-	  };
-	
-	  Utils.getClosestTime = function (data, time, objectId, property_name, timer, tolerance) {
-	    if (objectId === undefined) objectId = false;
-	    if (property_name === undefined) property_name = false;
-	    if (timer === undefined) timer = false;
-	    if (tolerance === undefined) tolerance = 0.1;
-	    if (timer) {
-	      var timer_time = timer.getCurrentTime() / 1000;
-	      if (Math.abs(timer_time - time) <= tolerance) {
-	        return timer_time;
-	      }
-	    }
-	
-	    if (objectId || property_name) {
-	      for (var i = 0; i < data.length; i++) {
-	        var item = data[i];
-	        // Don't match item with itself, but allow property to match item start/end.
-	        if (item.id != objectId || property_name) {
-	          // First check start & end.
-	          if (Math.abs(item.start - time) <= tolerance) {
-	            return item.start;
-	          }
-	
-	          if (Math.abs(item.end - time) <= tolerance) {
-	            return item.end;
-	          }
-	        }
-	
-	        // Test properties keys
-	        for (var j = 0; j < item.properties.length; j++) {
-	          var prop = item.properties[j];
-	          // Don't match property with itself.
-	          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
-	            for (var k = 0; k < prop.keys; k++) {
-	              var key = prop.keys[k];
-	              if (Math.abs(key.time - time) <= tolerance) {
-	                return key.time;
-	              }
-	            }
-	          }
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Utils.getPreviousKey = function (keys, time) {
-	    var prevKey = false;
-	    for (var i = 0; i < keys.length; i++) {
-	      var key = keys[i];
-	      if (key.time < time) {
-	        prevKey = key;
-	      } else {
-	        return prevKey;
-	      }
-	    }
-	    return prevKey;
-	  };
-	
-	  Utils.sortKeys = function (keys) {
-	    var compare = function (a, b) {
-	      if (a.time < b.time) {
-	        return -1;
-	      }
-	      if (a.time > b.time) {
-	        return 1;
-	      }
-	      return 0;
-	    };
-	    return keys.sort(compare);
-	  };
-	
-	  Utils.guid = function () {
-	    var s4 = function () {
-	      return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
-	    };
-	    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
-	  };
-	
-	  return Utils;
-	})();
-	
-	exports["default"] = Utils;
-
-/***/ },
-/* 10 */,
-/* 11 */,
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
 
 /***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
-
-/***/ },
+/* 13 */,
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -948,19 +947,25 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(39);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-first\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-last\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-first\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-last\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
+	module.exports = __WEBPACK_EXTERNAL_MODULE_15__;
 
 /***/ },
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var H = __webpack_require__(37);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-first\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-last\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-first\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-last\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(14);
 	
-	var Signals = __webpack_require__(14);
-	var Utils = __webpack_require__(9)["default"];
+	var Signals = __webpack_require__(12);
+	var Utils = __webpack_require__(2)["default"];
 	var Header = (function () {
 	  var Header = function Header(timer, initialDomain, tweenTime, width, margin) {
 	    this.timer = timer;
@@ -1109,7 +1114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Header;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1119,9 +1124,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.timeline = timeline;
 	    this.container = container;
 	    this.timeSelection = this.container.selectAll(".time-indicator").data(this.timeline.currentTime);
-	    var timeGrp = this.timeSelection.enter().append("svg").attr("class", "time-indicator timeline__right-mask").attr("width", window.innerWidth - this.timeline.label_position_x).attr("height", 442);
+	    this.timeGrp = this.timeSelection.enter().append("svg").attr("class", "time-indicator timeline__right-mask").attr("width", window.innerWidth - this.timeline.label_position_x).attr("height", 442);
 	
-	    this.timeSelection = timeGrp.append("rect").attr("class", "time-indicator__line").attr("x", -1).attr("y", -this.timeline.margin.top - 5).attr("width", 1).attr("height", 1000);
+	    this.timeSelection = this.timeGrp.append("rect").attr("class", "time-indicator__line").attr("x", -1).attr("y", -this.timeline.margin.top - 5).attr("width", 1).attr("height", 1000);
+	  };
+	
+	  TimeIndicator.prototype.updateHeight = function (height) {
+	    this.timeGrp.attr("height", height);
+	    this.timeSelection.attr("height", height + this.timeline.margin.top + 5);
 	  };
 	
 	  TimeIndicator.prototype.render = function () {
@@ -1135,15 +1145,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = TimeIndicator;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(14);
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	var _ = __webpack_require__(1);
-	var Utils = __webpack_require__(9)["default"];
+	var Utils = __webpack_require__(2)["default"];
 	var Items = (function () {
 	  var Items = function Items(timeline, container) {
 	    this.timeline = timeline;
@@ -1331,12 +1341,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Items;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(14);
 	
 	var KeysPreview = (function () {
 	  var KeysPreview = function KeysPreview(timeline, container) {
@@ -1400,14 +1410,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = KeysPreview;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(14);
-	var Utils = __webpack_require__(9)["default"];
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
+	var Utils = __webpack_require__(2)["default"];
 	var Properties = (function () {
 	  var Properties = function Properties(timeline) {
 	    this.timeline = timeline;
@@ -1421,7 +1431,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    var propVal = function (d) {
 	      if (d.properties) {
-	        return d.properties;
+	        return d.properties.filter(function (prop) {
+	          return prop.keys.length;
+	        });
 	      } else {
 	        return [];
 	      }
@@ -1429,18 +1441,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var propKey = function (d) {
 	      return d.name;
 	    };
-	    var visibleProperties = function (d) {
-	      return d.keys.length;
-	    };
 	
 	    var properties = bar.selectAll(".line-item").data(propVal, propKey);
-	
-	    var subGrp = properties.enter().append("g").filter(visibleProperties).attr("class", "line-item");
+	    var subGrp = properties.enter().append("g").attr("class", "line-item");
 	
 	    // Save subGrp in a variable for use in Errors.coffee
 	    self.subGrp = subGrp;
 	
-	    properties.filter(visibleProperties).attr("transform", function (d, i) {
+	    properties.attr("transform", function (d, i) {
 	      var sub_height = (i + 1) * self.timeline.lineHeight;
 	      return "translate(0," + sub_height + ")";
 	    });
@@ -1489,6 +1497,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    });
 	
+	    properties.exit().remove();
+	
 	    return properties;
 	  };
 	
@@ -1498,14 +1508,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Properties;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(14);
-	var Utils = __webpack_require__(9)["default"];
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
+	var Utils = __webpack_require__(2)["default"];
 	var _ = __webpack_require__(1);
 	
 	var Keys = (function () {
@@ -1709,7 +1719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Keys;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1754,7 +1764,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Errors;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1781,6 +1791,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var self = this;
 	    this.svg.on("mousedown", function () {
 	      var p = d3.mouse(this);
+	      // Only init selection if we click on the timeline and not on the labels.
+	      if (p[0] < self.timeline.margin.left) {
+	        return;
+	      }
 	      self.svg.append("rect").attr({
 	        "class": "selection",
 	        x: p[0],
@@ -1868,13 +1882,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Selection;
 
 /***/ },
-/* 24 */,
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	var PropertyNumber = __webpack_require__(28)["default"];
 	var PropertyColor = __webpack_require__(29)["default"];
 	var PropertyTween = __webpack_require__(30)["default"];
@@ -2013,6 +2026,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return $container;
 	  };
 	
+	  Property.prototype.remove = function () {
+	    this.items.forEach(function (item) {
+	      item.remove();
+	    });
+	    if (this.keyAdded) {
+	      this.keyAdded.dispose();
+	    }
+	
+	    delete this.editor;
+	    delete this.$el;
+	
+	    delete this.timeline;
+	    delete this.timer;
+	    delete this.selectionManager;
+	    delete this.keyAdded;
+	    delete this.items;
+	    delete this.numberProp;
+	    delete this.tweenProp;
+	  };
+	
 	  Property.prototype.addNumberProperty = function (instance_prop, lineData, key_val, $container) {
 	    var propClass = PropertyNumber;
 	    if (instance_prop.type && instance_prop.type === "color") {
@@ -2058,7 +2091,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(39);
+	var H = __webpack_require__(37);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"properties-editor\">");t.b("\n" + i);t.b("  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  <div class=\"properties-editor__main\"></div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"properties-editor\">\n  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  <div class=\"properties-editor__main\"></div>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
@@ -2266,7 +2299,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	if (typeof module !== "undefined" && module !== null) {
 	  module.exports = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(37) !== null) && (__webpack_require__(38) != null)) {
+	} else if (("function" !== "undefined" && __webpack_require__(38) !== null) && (__webpack_require__(39) != null)) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 	    return saveAs;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -2291,7 +2324,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  child.__proto__ = parent;
 	};
 	
-	var $ = __webpack_require__(13);
+	var $ = __webpack_require__(15);
 	var PropertyBase = __webpack_require__(33)["default"];
 	var DraggableNumber = __webpack_require__(31);
 	
@@ -2357,6 +2390,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    $input.change(this.onInputChange);
 	  };
 	
+	  PropertyNumber.prototype.remove = function () {
+	    PropertyBase.prototype.remove.call(this);
+	    if (this.$input.data("draggable")) {
+	      this.$input.data("draggable").destroy();
+	    }
+	
+	    delete this.$input;
+	    delete this.$el;
+	  };
+	
 	  PropertyNumber.prototype.update = function () {
 	    PropertyBase.prototype.update.call(this);
 	    var val = this.getCurrentVal();
@@ -2392,12 +2435,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  child.__proto__ = parent;
 	};
 	
-	var $ = __webpack_require__(13);
+	var $ = __webpack_require__(15);
 	__webpack_require__(32);
 	var PropertyBase = __webpack_require__(33)["default"];
 	
 	
-	var tpl_property = __webpack_require__(36);
+	var tpl_property = __webpack_require__(35);
 	
 	var PropertyColor = (function (PropertyBase) {
 	  var PropertyColor = function PropertyColor(instance_property, lineData, editor, key_val) {
@@ -2437,15 +2480,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      move: function (color) {
 	        if (color._a == 1) {
-	          _this.$input.val(color.toHexString());
+	          $input.val(color.toHexString());
 	        } else {
-	          _this.$input.val(color.toRgbString());
+	          $input.val(color.toRgbString());
 	        }
+	
 	        _this.onInputChange();
 	      }
 	    });
 	
 	    $input.change(this.onInputChange);
+	  };
+	
+	  PropertyColor.prototype.remove = function () {
+	    PropertyBase.prototype.remove.call(this);
+	    this.$el.find("input").spectrum("destroy");
+	    delete this.$el;
+	    delete this.$input;
 	  };
 	
 	  PropertyColor.prototype.update = function () {
@@ -2466,9 +2517,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var $ = __webpack_require__(13);
+	var $ = __webpack_require__(15);
 	
-	var tpl_property = __webpack_require__(35);
+	var tpl_property = __webpack_require__(36);
 	
 	var PropertyTween = (function () {
 	  var PropertyTween =
@@ -2486,7 +2537,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.timer = this.editor.timer;
 	    this.$time = false;
+	    this.$el = false;
 	    this.render();
+	  };
+	
+	  PropertyTween.prototype.remove = function () {
+	    delete this.$el;
+	    delete this.instance_property;
+	    delete this.lineData;
+	    delete this.editor;
+	    delete this.key_val;
+	    delete this.timeline;
+	
+	    delete this.timer;
+	    delete this.$time;
 	  };
 	
 	  PropertyTween.prototype.render = function () {
@@ -2580,9 +2644,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	var _ = __webpack_require__(1);
-	var Utils = __webpack_require__(9)["default"];
+	var Utils = __webpack_require__(2)["default"];
 	var PropertyBase = (function () {
 	  var PropertyBase =
 	  // @instance_property: The current property on the data object.
@@ -2654,14 +2718,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // There is no keys, simply update the property value (for data saving)
 	      this.instance_property.val = current_value;
 	      // Also directly set the lineData value.
-	      this.lineData.values[function (_val) {
-	        return _val.instance_property.name();
-	      }] = current_value;
-	
+	      this.lineData.values[this.instance_property.name] = current_value;
 	      // Simply update the custom object with new values.
 	      if (this.lineData.object) {
-	        currentTime = function (_val2) {
-	          return _val2.timer.getCurrentTime();
+	        currentTime = function (_val) {
+	          return _val.timer.getCurrentTime();
 	        } / 1000;
 	        // Set the property on the instance object.
 	        this.lineData.object.update(currentTime - this.lineData.start);
@@ -2669,7 +2730,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    // Something changed, make the lineData dirty to rebuild things. d
-	    return this.lineData._isDirty = true;
+	    this.lineData._isDirty = true;
 	  };
 	
 	  PropertyBase.prototype.getCurrentKey = function () {
@@ -2711,6 +2772,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.$key.toggleClass("property__key--active", key);
 	  };
 	
+	  PropertyBase.prototype.remove = function () {
+	    if (this.keyAdded) {
+	      this.keyAdded.dispose();
+	    }
+	    delete this.instance_property;
+	    delete this.lineData;
+	    delete this.editor;
+	    delete this.key_val;
+	
+	    delete this.timer;
+	    delete this.keyAdded;
+	    delete this.$key;
+	  };
+	
 	  return PropertyBase;
 	})();
 	
@@ -2720,40 +2795,25 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(39);
+	var H = __webpack_require__(37);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input type=\"number\" id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input type=\"number\" id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(39);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--tween\">");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">easing</label>");t.b("\n" + i);t.b("  <div class=\"property__select\">");t.b("\n" + i);t.b("    <div class=\"custom-select\">");t.b("\n" + i);t.b("      <select id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\">");t.b("\n" + i);if(t.s(t.f("options",c,p,1),c,p,0,212,279,"{{ }}")){t.rs(c,p,function(c,p,t){t.b("        <option value=\"");t.b(t.v(t.d(".",c,p,0)));t.b("\" ");t.b(t.v(t.f("selected",c,p,0)));t.b(">");t.b(t.v(t.d(".",c,p,0)));t.b("</option>");t.b("\n" + i);});c.pop();}t.b("      </select>");t.b("\n" + i);t.b("    </div>");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n" + i);t.b("<div class=\"properties-editor__actions actions\">");t.b("\n" + i);t.b("  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">");t.b(t.v(t.f("time",c,p,0)));t.b("</strong> seconds</span>");t.b("\n" + i);t.b("  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>");t.b("\n" + i);t.b("</div>");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--tween\">\n  <label for=\"{{id}}\" class=\"property__label\">easing</label>\n  <div class=\"property__select\">\n    <div class=\"custom-select\">\n      <select id=\"{{id}}\">\n        {{#options}}\n        <option value=\"{{.}}\" {{selected}}>{{.}}</option>\n        {{/options}}\n      </select>\n    </div>\n  </div>\n</div>\n<div class=\"properties-editor__actions actions\">\n  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">{{time}}</strong> seconds</span>\n  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>\n</div>", H); return T.render.apply(T, arguments); };
+	var H = __webpack_require__(37);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(39);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
+	var H = __webpack_require__(37);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--tween\">");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">easing</label>");t.b("\n" + i);t.b("  <div class=\"property__select\">");t.b("\n" + i);t.b("    <div class=\"custom-select\">");t.b("\n" + i);t.b("      <select id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\">");t.b("\n" + i);if(t.s(t.f("options",c,p,1),c,p,0,212,279,"{{ }}")){t.rs(c,p,function(c,p,t){t.b("        <option value=\"");t.b(t.v(t.d(".",c,p,0)));t.b("\" ");t.b(t.v(t.f("selected",c,p,0)));t.b(">");t.b(t.v(t.d(".",c,p,0)));t.b("</option>");t.b("\n" + i);});c.pop();}t.b("      </select>");t.b("\n" + i);t.b("    </div>");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n" + i);t.b("<div class=\"properties-editor__actions actions\">");t.b("\n" + i);t.b("  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">");t.b(t.v(t.f("time",c,p,0)));t.b("</strong> seconds</span>");t.b("\n" + i);t.b("  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>");t.b("\n" + i);t.b("</div>");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--tween\">\n  <label for=\"{{id}}\" class=\"property__label\">easing</label>\n  <div class=\"property__select\">\n    <div class=\"custom-select\">\n      <select id=\"{{id}}\">\n        {{#options}}\n        <option value=\"{{.}}\" {{selected}}>{{.}}</option>\n        {{/options}}\n      </select>\n    </div>\n  </div>\n</div>\n<div class=\"properties-editor__actions actions\">\n  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">{{time}}</strong> seconds</span>\n  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>\n</div>", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function() { throw new Error("define cannot be used indirect"); };
-
-
-/***/ },
-/* 38 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ },
-/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2779,6 +2839,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	Hogan.Template = __webpack_require__(42).Template;
 	Hogan.template = Hogan.Template;
 	module.exports = Hogan;
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function() { throw new Error("define cannot be used indirect"); };
+
+
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
 /* 40 */

@@ -20,6 +20,10 @@ export default class Selection {
     var self = this;
     this.svg.on("mousedown", function() {
       var p = d3.mouse(this);
+      // Only init selection if we click on the timeline and not on the labels.
+      if (p[0] < self.timeline.margin.left) {
+        return;
+      }
       self.svg.append('rect')
         .attr({
           class: 'selection',

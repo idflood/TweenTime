@@ -170,6 +170,7 @@ export default class Timeline {
       this.xGrid.call(this.xAxisGrid);
       this.xAxisElement.call(this.xAxis);
       this.svg.attr("height", height);
+      this.timeIndicator.updateHeight(height);
     }
   }
 }
