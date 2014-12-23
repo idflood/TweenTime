@@ -14,7 +14,7 @@ export default class Properties {
 
     var propVal = function(d) {
       if (d.properties) {
-        return d.properties;
+        return d.properties.filter((prop) => {return prop.keys.length;});
       } else {
         return [];
       }
@@ -22,22 +22,16 @@ export default class Properties {
     var propKey = function(d) {
       return d.name;
     };
-    var visibleProperties = function(d) {
-      return d.keys.length;
-    };
 
     var properties = bar.selectAll('.line-item').data(propVal, propKey);
-
     var subGrp = properties.enter()
       .append('g')
-      .filter(visibleProperties)
       .attr("class", 'line-item');
 
     // Save subGrp in a variable for use in Errors.coffee
     self.subGrp = subGrp;
 
-    properties.filter(visibleProperties)
-      .attr ("transform", function(d, i) {
+    properties.attr ("transform", function(d, i) {
         var sub_height = (i + 1) * self.timeline.lineHeight;
         return "translate(0," + sub_height + ")";
       });
@@ -104,6 +98,8 @@ export default class Properties {
           return "none";
         }
       });
+
+    properties.exit().remove();
 
     return properties;
   }
