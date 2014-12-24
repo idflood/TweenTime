@@ -41,9 +41,10 @@ export default class Utils {
         // Test properties keys
         for (var j = 0; j < item.properties.length; j++) {
           var prop = item.properties[j];
+
           // Don't match property with itself.
           if (prop.keys && (item.id != objectId || prop.name != property_name)) {
-            for (var k = 0; k < prop.keys; k++) {
+            for (var k = 0; k < prop.keys.length; k++) {
               var key = prop.keys[k];
               if (Math.abs(key.time - time) <= tolerance) {
                 return key.time;
