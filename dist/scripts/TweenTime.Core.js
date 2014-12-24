@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("lodash"), require("./signals"), require("TweenMax"));
 	else
 		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["_"], root["signals"], root["TweenMax"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_15__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -220,9 +220,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Test properties keys
 	        for (var j = 0; j < item.properties.length; j++) {
 	          var prop = item.properties[j];
+	
 	          // Don't match property with itself.
 	          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
-	            for (var k = 0; k < prop.keys; k++) {
+	            for (var k = 0; k < prop.keys.length; k++) {
 	              var key = prop.keys[k];
 	              if (Math.abs(key.time - time) <= tolerance) {
 	                return key.time;
@@ -279,7 +280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(13);
+	var Signals = __webpack_require__(12);
 	
 	var Timer = (function () {
 	  var Timer = function Timer(options) {
@@ -372,8 +373,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(13);
-	var TweenMax = __webpack_require__(15);
+	var Signals = __webpack_require__(12);
+	var TweenMax = __webpack_require__(13);
 	
 	var Orchestrator = (function () {
 	  var Orchestrator = function Orchestrator(timer, data) {
@@ -575,18 +576,16 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */,
 /* 10 */,
 /* 11 */,
-/* 12 */,
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
+
+/***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
-
-/***/ },
-/* 14 */,
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_15__;
 
 /***/ }
 /******/ ])

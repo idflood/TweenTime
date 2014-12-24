@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("lodash"), require("d3"), require(undefined), require("jquery"), require("DraggableNumber"), require("spectrum"));
+		module.exports = factory(require("lodash"), require(undefined), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
 	else if(typeof define === 'function' && define.amd)
-		define(["lodash", "d3", "signals", "jquery", "DraggableNumber", "spectrum"], factory);
+		define(["lodash", "signals", "d3", "jquery", "DraggableNumber", "spectrum"], factory);
 	else if(typeof exports === 'object')
-		exports["Editor"] = factory(require("lodash"), require("d3"), require("./signals"), require("jquery"), require("DraggableNumber"), require("spectrum"));
+		exports["Editor"] = factory(require("lodash"), require("./signals"), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["d3"], root["signals"], root["$"], root["DraggableNumber"], root["spectrum"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_14__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__) {
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["signals"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_14__, __WEBPACK_EXTERNAL_MODULE_15__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,7 +56,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var tpl_timeline = __webpack_require__(24);
+	var tpl_timeline = __webpack_require__(16);
 	var Timeline = __webpack_require__(5)["default"];
 	var PropertiesEditor = __webpack_require__(6)["default"];
 	var EditorMenu = __webpack_require__(7)["default"];
@@ -211,9 +211,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Test properties keys
 	        for (var j = 0; j < item.properties.length; j++) {
 	          var prop = item.properties[j];
+	
 	          // Don't match property with itself.
 	          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
-	            for (var k = 0; k < prop.keys; k++) {
+	            for (var k = 0; k < prop.keys.length; k++) {
 	              var key = prop.keys[k];
 	              if (Math.abs(key.time - time) <= tolerance) {
 	                return key.time;
@@ -272,17 +273,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(14);
 	
 	var Utils = __webpack_require__(2)["default"];
-	var Header = __webpack_require__(16)["default"];
-	var TimeIndicator = __webpack_require__(17)["default"];
-	var Items = __webpack_require__(18)["default"];
-	var KeysPreview = __webpack_require__(19)["default"];
-	var Properties = __webpack_require__(20)["default"];
-	var Keys = __webpack_require__(21)["default"];
-	var Errors = __webpack_require__(22)["default"];
-	var Selection = __webpack_require__(23)["default"];
+	var Header = __webpack_require__(17)["default"];
+	var TimeIndicator = __webpack_require__(18)["default"];
+	var Items = __webpack_require__(19)["default"];
+	var KeysPreview = __webpack_require__(20)["default"];
+	var Properties = __webpack_require__(21)["default"];
+	var Keys = __webpack_require__(22)["default"];
+	var Errors = __webpack_require__(23)["default"];
+	var Selection = __webpack_require__(24)["default"];
 	var Timeline = (function () {
 	  var Timeline = function Timeline(editor, options) {
 	    var _this = this;
@@ -440,8 +441,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var $ = __webpack_require__(14);
-	var Signals = __webpack_require__(13);
+	var $ = __webpack_require__(15);
+	var Signals = __webpack_require__(12);
 	var Property = __webpack_require__(25)["default"];
 	
 	
@@ -484,20 +485,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.keyAdded.dispatch();
 	  };
 	
-	  PropertiesEditor.prototype.onSelect = function (domElement) {
-	    if (domElement === undefined) domElement = false;
+	  PropertiesEditor.prototype.onSelect = function (data) {
+	    if (data === undefined) data = false;
 	    this.items.forEach(function (item) {
 	      item.remove();
 	    });
 	    this.items = [];
 	    this.$container.empty();
-	    if (domElement instanceof Array) {
-	      for (var i = 0; i < domElement.length; i++) {
-	        var element = domElement[i];
-	        this.addProperty(element);
+	    if (data instanceof Array) {
+	      for (var i = 0; i < data.length; i++) {
+	        this.addProperty(data[i]);
 	      }
 	    } else {
-	      this.addProperty(domElement);
+	      this.addProperty(data);
 	    }
 	
 	    // When selecting anything, automatically display the properties editor.
@@ -506,8 +506,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 	
-	  PropertiesEditor.prototype.addProperty = function (domElement) {
-	    var prop = new Property(this.editor, this.$container, domElement);
+	  PropertiesEditor.prototype.addProperty = function (data) {
+	    var prop = new Property(this.editor, this.$container, data);
 	    prop.keyAdded.add(this.onKeyAdded);
 	    this.items.push(prop);
 	  };
@@ -660,8 +660,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(13);
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
+	var _ = __webpack_require__(1);
 	
 	var SelectionManager = (function () {
 	  var SelectionManager = function SelectionManager(tweenTime) {
@@ -677,7 +678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var found = false;
 	      for (var j = 0; j < result.length; j++) {
 	        var item2 = result[j];
-	        if (item.isEqualNode(item2)) {
+	        if (_.isEqual(item, item2)) {
 	          found = true;
 	          break;
 	        }
@@ -698,13 +699,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  SelectionManager.prototype.sortSelection = function () {
 	    var compare = function (a, b) {
-	      if (!a.__data__ || !b.__data__) {
+	      if (!a.time || !b.time) {
 	        return 0;
 	      }
-	      if (a.__data__.time < b.__data__.time) {
+	      if (a.time < b.time) {
 	        return -1;
 	      }
-	      if (a.__data__.time > b.__data__.time) {
+	      if (a.time > b.time) {
 	        return 1;
 	      }
 	      return 0;
@@ -722,8 +723,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.onSelect.dispatch(this.selection, false);
 	  };
 	
+	  SelectionManager.prototype.addDataRelations = function () {
+	    // We need to add some parent references in main data object.
+	    // Add a _property reference to each keys.
+	    // Add a _line property for each references.
+	    var data = this.tweenTime.data;
+	    for (var lineIndex = 0; lineIndex < data.length; lineIndex++) {
+	      var line = data[lineIndex];
+	      for (var propIndex = 0; propIndex < line.properties.length; propIndex++) {
+	        var property = line.properties[propIndex];
+	        property._line = line;
+	        for (var keyIndex = 0; keyIndex < property.keys.length; keyIndex++) {
+	          var key = property.keys[keyIndex];
+	          key._property = property;
+	        }
+	      }
+	    }
+	  };
+	
 	  SelectionManager.prototype.select = function (item, addToSelection) {
 	    if (addToSelection === undefined) addToSelection = false;
+	    this.addDataRelations();
+	
 	    if (!addToSelection) {
 	      this.selection = [];
 	    }
@@ -751,12 +772,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    d3.selectAll(".key--selected").classed("key--selected", false);
 	
 	    for (var i = 0; i < this.selection.length; i++) {
-	      var item = this.selection[i];
-	      var d3item = d3.select(item);
-	      if (d3item.classed("bar")) {
-	        d3item.classed("bar--selected", true);
-	      } else if (d3item.classed("key")) {
-	        d3item.classed("key--selected", true);
+	      var data = this.selection[i];
+	      if (data._dom) {
+	        var d3item = d3.select(data._dom);
+	        if (d3item.classed("bar")) {
+	          d3item.classed("bar--selected", true);
+	        } else if (d3item.classed("key")) {
+	          d3item.classed("key--selected", true);
+	        }
 	      }
 	    }
 	  };
@@ -820,7 +843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var $ = __webpack_require__(14);
+	var $ = __webpack_require__(15);
 	
 	var UndoManager = (function () {
 	  var UndoManager = function UndoManager(editor) {
@@ -937,27 +960,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
 
 /***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
-
-/***/ },
+/* 13 */,
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
 
 /***/ },
-/* 15 */,
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_15__;
+
+/***/ },
 /* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var H = __webpack_require__(37);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-first\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-last\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-first\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-last\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
+
+/***/ },
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(14);
 	
-	var Signals = __webpack_require__(13);
+	var Signals = __webpack_require__(12);
 	var Utils = __webpack_require__(2)["default"];
 	var Header = (function () {
 	  var Header = function Header(timer, initialDomain, tweenTime, width, margin) {
@@ -1107,7 +1137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Header;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1139,13 +1169,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = TimeIndicator;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(13);
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	var _ = __webpack_require__(1);
 	var Utils = __webpack_require__(2)["default"];
 	var Items = (function () {
@@ -1161,7 +1191,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var tweenTime = self.timeline.tweenTime;
 	
 	    var selectBar = function () {
-	      self.timeline.selectionManager.select(this);
+	      var data = d3.select(this).datum();
+	      self.timeline.selectionManager.select(data);
 	    };
 	
 	    var dragmove = function (d) {
@@ -1335,12 +1366,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Items;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(14);
 	
 	var KeysPreview = (function () {
 	  var KeysPreview = function KeysPreview(timeline, container) {
@@ -1404,13 +1435,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = KeysPreview;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(13);
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	var Utils = __webpack_require__(2)["default"];
 	var Properties = (function () {
 	  var Properties = function Properties(timeline) {
@@ -1420,7 +1451,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Properties.prototype.render = function (bar) {
-	    var _this = this;
 	    var self = this;
 	
 	    var propVal = function (d) {
@@ -1448,10 +1478,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    subGrp.append("rect").attr("class", "click-handler click-handler--property").attr("x", 0).attr("y", 0).attr("width", self.timeline.x(self.timeline.timer.totalDuration + 100)).attr("height", self.timeline.lineHeight).on("dblclick", function (d) {
-	      var lineObject = _this.parentNode.parentNode;
+	      var lineObject = this.parentNode.parentNode;
 	      var lineValue = d3.select(lineObject).datum();
 	      var def = d["default"] ? d["default"] : 0;
-	      var mouse = d3.mouse(_this);
+	      var mouse = d3.mouse(this);
 	      var dx = self.timeline.x.invert(mouse[0]);
 	      dx = dx.getTime() / 1000;
 	      var prevKey = Utils.getPreviousKey(d.keys, dx);
@@ -1459,16 +1489,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (prevKey) {
 	        def = prevKey.val;
 	      }
+	      d._line = lineValue;
 	      var newKey = {
 	        time: dx,
-	        val: def
+	        val: def,
+	        _property: d
 	      };
 	      d.keys.push(newKey);
 	      // Sort the keys for tweens creation
 	      d.keys = Utils.sortKeys(d.keys);
 	
 	      lineValue._isDirty = true;
-	      keyContainer = _this.parentNode;
+	      var keyContainer = this.parentNode;
 	      self.onKeyAdded.dispatch(newKey, keyContainer);
 	    });
 	
@@ -1502,13 +1534,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Properties;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(12);
-	var Signals = __webpack_require__(13);
+	var d3 = __webpack_require__(14);
+	var Signals = __webpack_require__(12);
 	var Utils = __webpack_require__(2)["default"];
 	var _ = __webpack_require__(1);
 	
@@ -1527,7 +1559,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      d3.selectAll(".key--selected").classed("key--selected", false);
 	      key.classed("key--selected", true);
 	      key = key[0][0];
-	      self.timeline.selectionManager.select(key);
+	      data._dom = key;
+	      self.timeline.selectionManager.select(data);
 	    }
 	  };
 	
@@ -1536,12 +1569,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var tweenTime = self.timeline.tweenTime;
 	
 	    var dragmove = function (d) {
-	      var _this = this;
 	      var sourceEvent = d3.event.sourceEvent;
 	      var propertyObject = this.parentNode;
 	      var lineObject = propertyObject.parentNode.parentNode;
 	      var propertyData = d3.select(propertyObject).datum();
 	      var lineData = d3.select(lineObject).datum();
+	      var key_data = d;
 	
 	      var currentDomainStart = self.timeline.x.domain()[0];
 	      var mouse = d3.mouse(this);
@@ -1555,11 +1588,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selection_first_time = false;
 	      var selection_last_time = false;
 	      if (selection.length) {
-	        selection_first_time = d3.select(selection[0]).datum().time;
-	        selection_last_time = d3.select(selection[selection.length - 1]).datum().time;
+	        selection_first_time = selection[0].time;
+	        selection_last_time = selection[selection.length - 1].time;
 	      }
+	
 	      selection = _.filter(selection, function (item) {
-	        return item.isEqualNode(_this) === false;
+	        return _.isEqual(item, key_data) === false;
 	      });
 	
 	      var timeMatch = false;
@@ -1576,12 +1610,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var time_offset = d.time - old_time;
 	
 	      var updateKeyItem = function (item) {
-	        var itemPropertyObject = item.parentNode;
-	        var itemPropertyData = d3.select(itemPropertyObject).datum();
-	        var itemLineObject = itemPropertyObject.parentNode.parentNode;
-	        var itemLineData = d3.select(itemLineObject).datum();
-	        itemLineData._isDirty = true;
-	        itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys);
+	        var property = item._property;
+	        property._line._isDirty = true;
+	        property.keys = Utils.sortKeys(property.keys);
 	      };
 	
 	      var key_scale = false;
@@ -1597,8 +1628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        for (var i = 0; i < selection.length; i++) {
-	          var item = selection[i];
-	          data = d3.select(item).datum();
+	          var data = selection[i];
 	          if (key_scale === false) {
 	            data.time += time_offset;
 	          } else {
@@ -1608,7 +1638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              data.time = selection_first_time + (data.time - selection_first_time) * key_scale;
 	            }
 	          }
-	          updateKeyItem(item);
+	          updateKeyItem(data);
 	        }
 	      }
 	
@@ -1643,7 +1673,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return;
 	        }
 	      }
-	      self.timeline.selectionManager.select(this, addToSelection);
+	      var key_data = d3.select(this).datum();
+	
+	      // Also keep a reference to the key dom element.
+	      key_data._dom = this;
+	
+	      self.timeline.selectionManager.select(key_data, addToSelection);
 	    };
 	
 	    var dragend = function () {
@@ -1713,7 +1748,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Keys;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1758,7 +1793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Errors;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1851,6 +1886,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selection = [];
 	      d3.selectAll(".key").each(function (state_data) {
 	        var item_data = d3.select(this.parentNode.parentNode.parentNode).datum();
+	        var key_data = d3.select(this).datum();
+	
+	        // Also keep a reference to the key dom element.
+	        key_data._dom = this;
+	
 	        if (item_data.collapsed !== true) {
 	          var itemBounding = d3.select(this)[0][0].getBoundingClientRect();
 	          var y = itemBounding.top - containerBounding.top;
@@ -1858,7 +1898,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // use or condition for top and bottom
 	            if ((y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)) {
 	              d3.select(this).classed("key--selected", true);
-	              selection.push(this);
+	
+	              selection.push(key_data);
 	            }
 	          }
 	        }
@@ -1876,24 +1917,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Selection;
 
 /***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var H = __webpack_require__(40);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-first\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-last\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-first\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-last\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
-
-/***/ },
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(13);
+	var Signals = __webpack_require__(12);
 	var PropertyNumber = __webpack_require__(28)["default"];
 	var PropertyColor = __webpack_require__(29)["default"];
 	var PropertyTween = __webpack_require__(30)["default"];
 	var Property = (function () {
-	  var Property = function Property(editor, $el, domElement) {
+	  var Property = function Property(editor, $el, data) {
 	    this.editor = editor;
 	    this.$el = $el;
 	
@@ -1907,32 +1941,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.numberProp = false;
 	    this.tweenProp = false;
 	
-	    var d3Object = d3.select(domElement);
-	
 	    var key_val = false;
 	    var propertyObject = false;
 	    var propertyData = false;
 	    var lineObject = false;
 	    var lineData = false;
 	
-	    if (d3Object.classed("key")) {
-	      propertyObject = domElement.parentNode;
-	      lineObject = propertyObject.parentNode.parentNode;
-	      lineData = d3.select(lineObject).datum();
-	      propertyData = d3.select(propertyObject).datum();
-	      key_val = d3Object.datum();
+	    // For keys the _property data should be defined.
+	    if (data._property) {
+	      propertyData = data._property;
+	      lineData = propertyData._line;
+	      key_val = data;
 	    }
 	
-	    // click on bar
-	    if (d3Object.classed("bar")) {
-	      lineData = d3Object.datum();
-	    }
-	
-	    // click on bar label
-	    if (d3Object.classed("line-label")) {
-	      domElement = domElement.parentNode;
-	      d3Object = d3.select(domElement);
-	      lineData = d3Object.datum();
+	    // Check if we selected a main item.
+	    if (data.id) {
+	      lineData = data;
 	    }
 	
 	    // data and propertyData are defined on key select.
@@ -1962,7 +1986,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (property_name) {
 	      // Add tween select if we are editing a key.
-	      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData, domElement);
+	      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
 	      this.items.push(tweenProp);
 	    }
 	  };
@@ -2058,7 +2082,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return prop;
 	  };
 	
-	  Property.prototype.addTweenProperty = function (instance_prop, lineData, key_val, $container, propertyData, domElement) {
+	  Property.prototype.addTweenProperty = function (instance_prop, lineData, key_val, $container, propertyData) {
 	    var _this = this;
 	    var tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
 	    $container.append(tween.$el);
@@ -2069,7 +2093,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var index = propertyData.keys.indexOf(key_val);
 	      if (index > -1) {
 	        propertyData.keys.splice(index, 1);
-	        _this.editor.propertiesEditor.keyRemoved.dispatch(domElement);
+	        if (key_val._dom) {
+	          _this.editor.propertiesEditor.keyRemoved.dispatch(key_val._dom);
+	        }
 	        return lineData._isDirty = true;
 	      }
 	    });
@@ -2092,7 +2118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(40);
+	var H = __webpack_require__(37);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"properties-editor\">");t.b("\n" + i);t.b("  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  <div class=\"properties-editor__main\"></div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"properties-editor\">\n  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  <div class=\"properties-editor__main\"></div>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
@@ -2300,12 +2326,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	if (typeof module !== "undefined" && module !== null) {
 	  module.exports = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(37) !== null) && (__webpack_require__(38) != null)) {
+	} else if (("function" !== "undefined" && __webpack_require__(38) !== null) && (__webpack_require__(39) != null)) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 	    return saveAs;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)(module)))
 
 /***/ },
 /* 28 */
@@ -2325,7 +2351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  child.__proto__ = parent;
 	};
 	
-	var $ = __webpack_require__(14);
+	var $ = __webpack_require__(15);
 	var PropertyBase = __webpack_require__(33)["default"];
 	var DraggableNumber = __webpack_require__(31);
 	
@@ -2436,7 +2462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  child.__proto__ = parent;
 	};
 	
-	var $ = __webpack_require__(14);
+	var $ = __webpack_require__(15);
 	__webpack_require__(32);
 	var PropertyBase = __webpack_require__(33)["default"];
 	
@@ -2518,7 +2544,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var $ = __webpack_require__(14);
+	var $ = __webpack_require__(15);
 	
 	var tpl_property = __webpack_require__(36);
 	
@@ -2645,7 +2671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(13);
+	var Signals = __webpack_require__(12);
 	var _ = __webpack_require__(1);
 	var Utils = __webpack_require__(2)["default"];
 	var PropertyBase = (function () {
@@ -2796,57 +2822,25 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(40);
+	var H = __webpack_require__(37);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input type=\"number\" id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input type=\"number\" id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(40);
+	var H = __webpack_require__(37);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(40);
+	var H = __webpack_require__(37);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--tween\">");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">easing</label>");t.b("\n" + i);t.b("  <div class=\"property__select\">");t.b("\n" + i);t.b("    <div class=\"custom-select\">");t.b("\n" + i);t.b("      <select id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\">");t.b("\n" + i);if(t.s(t.f("options",c,p,1),c,p,0,212,279,"{{ }}")){t.rs(c,p,function(c,p,t){t.b("        <option value=\"");t.b(t.v(t.d(".",c,p,0)));t.b("\" ");t.b(t.v(t.f("selected",c,p,0)));t.b(">");t.b(t.v(t.d(".",c,p,0)));t.b("</option>");t.b("\n" + i);});c.pop();}t.b("      </select>");t.b("\n" + i);t.b("    </div>");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n" + i);t.b("<div class=\"properties-editor__actions actions\">");t.b("\n" + i);t.b("  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">");t.b(t.v(t.f("time",c,p,0)));t.b("</strong> seconds</span>");t.b("\n" + i);t.b("  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>");t.b("\n" + i);t.b("</div>");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--tween\">\n  <label for=\"{{id}}\" class=\"property__label\">easing</label>\n  <div class=\"property__select\">\n    <div class=\"custom-select\">\n      <select id=\"{{id}}\">\n        {{#options}}\n        <option value=\"{{.}}\" {{selected}}>{{.}}</option>\n        {{/options}}\n      </select>\n    </div>\n  </div>\n</div>\n<div class=\"properties-editor__actions actions\">\n  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">{{time}}</strong> seconds</span>\n  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>\n</div>", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function() { throw new Error("define cannot be used indirect"); };
-
-
-/***/ },
-/* 38 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	module.exports = function (module) {
-	  if (!module.webpackPolyfill) {
-	    module.deprecate = function () {};
-	    module.paths = [];
-	    // module.parent = undefined by default
-	    module.children = [];
-	    module.webpackPolyfill = 1;
-	  }
-	  return module;
-	};
-
-/***/ },
-/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2872,6 +2866,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	Hogan.Template = __webpack_require__(42).Template;
 	Hogan.template = Hogan.Template;
 	module.exports = Hogan;
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function() { throw new Error("define cannot be used indirect"); };
+
+
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = function (module) {
+	  if (!module.webpackPolyfill) {
+	    module.deprecate = function () {};
+	    module.paths = [];
+	    // module.parent = undefined by default
+	    module.children = [];
+	    module.webpackPolyfill = 1;
+	  }
+	  return module;
+	};
 
 /***/ },
 /* 41 */
