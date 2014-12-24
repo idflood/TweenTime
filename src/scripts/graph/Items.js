@@ -16,7 +16,8 @@ export default class Items {
     var tweenTime = self.timeline.tweenTime
 
     var selectBar = function() {
-      self.timeline.selectionManager.select(this);
+      var data = d3.select(this).datum();
+      self.timeline.selectionManager.select(data);
     }
 
     var dragmove = function(d) {

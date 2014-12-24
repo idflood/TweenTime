@@ -211,9 +211,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Test properties keys
 	        for (var j = 0; j < item.properties.length; j++) {
 	          var prop = item.properties[j];
+	
 	          // Don't match property with itself.
 	          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
-	            for (var k = 0; k < prop.keys; k++) {
+	            for (var k = 0; k < prop.keys.length; k++) {
 	              var key = prop.keys[k];
 	              if (Math.abs(key.time - time) <= tolerance) {
 	                return key.time;
@@ -410,7 +411,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    if (this._isDirty) {
-	      console.log("...");
 	      // No need to call this on each frames, but only on brush, key drag, ...
 	      var bar = this.items.render();
 	      this.keysPreview.render(bar);
@@ -485,20 +485,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.keyAdded.dispatch();
 	  };
 	
-	  PropertiesEditor.prototype.onSelect = function (domElement) {
-	    if (domElement === undefined) domElement = false;
+	  PropertiesEditor.prototype.onSelect = function (data) {
+	    if (data === undefined) data = false;
 	    this.items.forEach(function (item) {
 	      item.remove();
 	    });
 	    this.items = [];
 	    this.$container.empty();
-	    if (domElement instanceof Array) {
-	      for (var i = 0; i < domElement.length; i++) {
-	        var element = domElement[i];
-	        this.addProperty(element);
+	    if (data instanceof Array) {
+	      for (var i = 0; i < data.length; i++) {
+	        this.addProperty(data[i]);
 	      }
 	    } else {
-	      this.addProperty(domElement);
+	      this.addProperty(data);
 	    }
 	
 	    // When selecting anything, automatically display the properties editor.
@@ -507,8 +506,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 	
-	  PropertiesEditor.prototype.addProperty = function (domElement) {
-	    var prop = new Property(this.editor, this.$container, domElement);
+	  PropertiesEditor.prototype.addProperty = function (data) {
+	    var prop = new Property(this.editor, this.$container, data);
 	    prop.keyAdded.add(this.onKeyAdded);
 	    this.items.push(prop);
 	  };
@@ -663,6 +662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var d3 = __webpack_require__(14);
 	var Signals = __webpack_require__(12);
+	var _ = __webpack_require__(1);
 	
 	var SelectionManager = (function () {
 	  var SelectionManager = function SelectionManager(tweenTime) {
@@ -678,7 +678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var found = false;
 	      for (var j = 0; j < result.length; j++) {
 	        var item2 = result[j];
-	        if (item.isEqualNode(item2)) {
+	        if (_.isEqual(item, item2)) {
 	          found = true;
 	          break;
 	        }
@@ -699,13 +699,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  SelectionManager.prototype.sortSelection = function () {
 	    var compare = function (a, b) {
-	      if (!a.__data__ || !b.__data__) {
+	      if (!a.time || !b.time) {
 	        return 0;
 	      }
-	      if (a.__data__.time < b.__data__.time) {
+	      if (a.time < b.time) {
 	        return -1;
 	      }
-	      if (a.__data__.time > b.__data__.time) {
+	      if (a.time > b.time) {
 	        return 1;
 	      }
 	      return 0;
@@ -723,8 +723,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.onSelect.dispatch(this.selection, false);
 	  };
 	
+	  SelectionManager.prototype.addDataRelations = function () {
+	    // We need to add some parent references in main data object.
+	    // Add a _property reference to each keys.
+	    // Add a _line property for each references.
+	    var data = this.tweenTime.data;
+	    for (var lineIndex = 0; lineIndex < data.length; lineIndex++) {
+	      var line = data[lineIndex];
+	      for (var propIndex = 0; propIndex < line.properties.length; propIndex++) {
+	        var property = line.properties[propIndex];
+	        property._line = line;
+	        for (var keyIndex = 0; keyIndex < property.keys.length; keyIndex++) {
+	          var key = property.keys[keyIndex];
+	          key._property = property;
+	        }
+	      }
+	    }
+	  };
+	
 	  SelectionManager.prototype.select = function (item, addToSelection) {
 	    if (addToSelection === undefined) addToSelection = false;
+	    this.addDataRelations();
+	
 	    if (!addToSelection) {
 	      this.selection = [];
 	    }
@@ -752,12 +772,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    d3.selectAll(".key--selected").classed("key--selected", false);
 	
 	    for (var i = 0; i < this.selection.length; i++) {
-	      var item = this.selection[i];
-	      var d3item = d3.select(item);
-	      if (d3item.classed("bar")) {
-	        d3item.classed("bar--selected", true);
-	      } else if (d3item.classed("key")) {
-	        d3item.classed("key--selected", true);
+	      var data = this.selection[i];
+	      if (data._dom) {
+	        var d3item = d3.select(data._dom);
+	        if (d3item.classed("bar")) {
+	          d3item.classed("bar--selected", true);
+	        } else if (d3item.classed("key")) {
+	          d3item.classed("key--selected", true);
+	        }
 	      }
 	    }
 	  };
@@ -1169,7 +1191,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var tweenTime = self.timeline.tweenTime;
 	
 	    var selectBar = function () {
-	      self.timeline.selectionManager.select(this);
+	      var data = d3.select(this).datum();
+	      self.timeline.selectionManager.select(data);
 	    };
 	
 	    var dragmove = function (d) {
@@ -1428,7 +1451,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Properties.prototype.render = function (bar) {
-	    var _this = this;
 	    var self = this;
 	
 	    var propVal = function (d) {
@@ -1456,10 +1478,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    subGrp.append("rect").attr("class", "click-handler click-handler--property").attr("x", 0).attr("y", 0).attr("width", self.timeline.x(self.timeline.timer.totalDuration + 100)).attr("height", self.timeline.lineHeight).on("dblclick", function (d) {
-	      var lineObject = _this.parentNode.parentNode;
+	      var lineObject = this.parentNode.parentNode;
 	      var lineValue = d3.select(lineObject).datum();
 	      var def = d["default"] ? d["default"] : 0;
-	      var mouse = d3.mouse(_this);
+	      var mouse = d3.mouse(this);
 	      var dx = self.timeline.x.invert(mouse[0]);
 	      dx = dx.getTime() / 1000;
 	      var prevKey = Utils.getPreviousKey(d.keys, dx);
@@ -1467,16 +1489,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (prevKey) {
 	        def = prevKey.val;
 	      }
+	      d._line = lineValue;
 	      var newKey = {
 	        time: dx,
-	        val: def
+	        val: def,
+	        _property: d
 	      };
 	      d.keys.push(newKey);
 	      // Sort the keys for tweens creation
 	      d.keys = Utils.sortKeys(d.keys);
 	
 	      lineValue._isDirty = true;
-	      keyContainer = _this.parentNode;
+	      var keyContainer = this.parentNode;
 	      self.onKeyAdded.dispatch(newKey, keyContainer);
 	    });
 	
@@ -1535,7 +1559,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      d3.selectAll(".key--selected").classed("key--selected", false);
 	      key.classed("key--selected", true);
 	      key = key[0][0];
-	      self.timeline.selectionManager.select(key);
+	      data._dom = key;
+	      self.timeline.selectionManager.select(data);
 	    }
 	  };
 	
@@ -1544,12 +1569,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var tweenTime = self.timeline.tweenTime;
 	
 	    var dragmove = function (d) {
-	      var _this = this;
 	      var sourceEvent = d3.event.sourceEvent;
 	      var propertyObject = this.parentNode;
 	      var lineObject = propertyObject.parentNode.parentNode;
 	      var propertyData = d3.select(propertyObject).datum();
 	      var lineData = d3.select(lineObject).datum();
+	      var key_data = d;
 	
 	      var currentDomainStart = self.timeline.x.domain()[0];
 	      var mouse = d3.mouse(this);
@@ -1563,11 +1588,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selection_first_time = false;
 	      var selection_last_time = false;
 	      if (selection.length) {
-	        selection_first_time = d3.select(selection[0]).datum().time;
-	        selection_last_time = d3.select(selection[selection.length - 1]).datum().time;
+	        selection_first_time = selection[0].time;
+	        selection_last_time = selection[selection.length - 1].time;
 	      }
+	
 	      selection = _.filter(selection, function (item) {
-	        return item.isEqualNode(_this) === false;
+	        return _.isEqual(item, key_data) === false;
 	      });
 	
 	      var timeMatch = false;
@@ -1584,12 +1610,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var time_offset = d.time - old_time;
 	
 	      var updateKeyItem = function (item) {
-	        var itemPropertyObject = item.parentNode;
-	        var itemPropertyData = d3.select(itemPropertyObject).datum();
-	        var itemLineObject = itemPropertyObject.parentNode.parentNode;
-	        var itemLineData = d3.select(itemLineObject).datum();
-	        itemLineData._isDirty = true;
-	        itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys);
+	        var property = item._property;
+	        property._line._isDirty = true;
+	        property.keys = Utils.sortKeys(property.keys);
 	      };
 	
 	      var key_scale = false;
@@ -1605,8 +1628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        for (var i = 0; i < selection.length; i++) {
-	          var item = selection[i];
-	          data = d3.select(item).datum();
+	          var data = selection[i];
 	          if (key_scale === false) {
 	            data.time += time_offset;
 	          } else {
@@ -1616,7 +1638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              data.time = selection_first_time + (data.time - selection_first_time) * key_scale;
 	            }
 	          }
-	          updateKeyItem(item);
+	          updateKeyItem(data);
 	        }
 	      }
 	
@@ -1651,7 +1673,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return;
 	        }
 	      }
-	      self.timeline.selectionManager.select(this, addToSelection);
+	      var key_data = d3.select(this).datum();
+	
+	      // Also keep a reference to the key dom element.
+	      key_data._dom = this;
+	
+	      self.timeline.selectionManager.select(key_data, addToSelection);
 	    };
 	
 	    var dragend = function () {
@@ -1859,6 +1886,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selection = [];
 	      d3.selectAll(".key").each(function (state_data) {
 	        var item_data = d3.select(this.parentNode.parentNode.parentNode).datum();
+	        var key_data = d3.select(this).datum();
+	
+	        // Also keep a reference to the key dom element.
+	        key_data._dom = this;
+	
 	        if (item_data.collapsed !== true) {
 	          var itemBounding = d3.select(this)[0][0].getBoundingClientRect();
 	          var y = itemBounding.top - containerBounding.top;
@@ -1866,7 +1898,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // use or condition for top and bottom
 	            if ((y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)) {
 	              d3.select(this).classed("key--selected", true);
-	              selection.push(this);
+	
+	              selection.push(key_data);
 	            }
 	          }
 	        }
@@ -1894,7 +1927,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var PropertyColor = __webpack_require__(29)["default"];
 	var PropertyTween = __webpack_require__(30)["default"];
 	var Property = (function () {
-	  var Property = function Property(editor, $el, domElement) {
+	  var Property = function Property(editor, $el, data) {
 	    this.editor = editor;
 	    this.$el = $el;
 	
@@ -1908,32 +1941,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.numberProp = false;
 	    this.tweenProp = false;
 	
-	    var d3Object = d3.select(domElement);
-	
 	    var key_val = false;
 	    var propertyObject = false;
 	    var propertyData = false;
 	    var lineObject = false;
 	    var lineData = false;
 	
-	    if (d3Object.classed("key")) {
-	      propertyObject = domElement.parentNode;
-	      lineObject = propertyObject.parentNode.parentNode;
-	      lineData = d3.select(lineObject).datum();
-	      propertyData = d3.select(propertyObject).datum();
-	      key_val = d3Object.datum();
+	    // For keys the _property data should be defined.
+	    if (data._property) {
+	      propertyData = data._property;
+	      lineData = propertyData._line;
+	      key_val = data;
 	    }
 	
-	    // click on bar
-	    if (d3Object.classed("bar")) {
-	      lineData = d3Object.datum();
-	    }
-	
-	    // click on bar label
-	    if (d3Object.classed("line-label")) {
-	      domElement = domElement.parentNode;
-	      d3Object = d3.select(domElement);
-	      lineData = d3Object.datum();
+	    // Check if we selected a main item.
+	    if (data.id) {
+	      lineData = data;
 	    }
 	
 	    // data and propertyData are defined on key select.
@@ -1963,7 +1986,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (property_name) {
 	      // Add tween select if we are editing a key.
-	      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData, domElement);
+	      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
 	      this.items.push(tweenProp);
 	    }
 	  };
@@ -2059,7 +2082,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return prop;
 	  };
 	
-	  Property.prototype.addTweenProperty = function (instance_prop, lineData, key_val, $container, propertyData, domElement) {
+	  Property.prototype.addTweenProperty = function (instance_prop, lineData, key_val, $container, propertyData) {
 	    var _this = this;
 	    var tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
 	    $container.append(tween.$el);
@@ -2070,7 +2093,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var index = propertyData.keys.indexOf(key_val);
 	      if (index > -1) {
 	        propertyData.keys.splice(index, 1);
-	        _this.editor.propertiesEditor.keyRemoved.dispatch(domElement);
+	        if (key_val._dom) {
+	          _this.editor.propertiesEditor.keyRemoved.dispatch(key_val._dom);
+	        }
 	        return lineData._isDirty = true;
 	      }
 	    });

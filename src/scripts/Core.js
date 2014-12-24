@@ -76,11 +76,18 @@ export default class Core {
       key.val = new_val;
     }
     else {
-      // If no key, create it and add it to the array.
-      key = {val: new_val, time: time_in_seconds};
-      property.keys.push(key);
-      // Also sort the keys.
-      property.keys = Utils.sortKeys(property.keys);
+      if (property.keys.length === 0) {
+        // If the property doesn't have any key simply the the value.
+        property.val = new_val;
+      }
+      else {
+        // If we are not on a key but the property has other keys,
+        // create it and add it to the keys array.
+        key = {val: new_val, time: time_in_seconds, _property: property};
+        property.keys.push(key);
+        // Also sort the keys.
+        property.keys = Utils.sortKeys(property.keys);
+      }
     }
   }
 

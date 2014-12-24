@@ -54,17 +54,7 @@
           "properties": [
             {
               "name": "x",
-              "keys": [
-                {
-                  "time": 0,
-                  "val": 0
-                },
-                {
-                  "time": 2,
-                  "val": 100,
-                  "ease": "Quart.easeInOut"
-                }
-              ],
+              "keys": [],
               "val": 42
             },
             {
@@ -146,9 +136,9 @@
         tweenTime.setValue(yprop, new_val.y);
 
         // force the timeline to update.
-        editor.timeline.isDirty = true;
+        editor.timeline._isDirty = true;
         // And mark the box data as dirty to update the values.
-        box_data.isDirty = true;
+        box_data._isDirty = true;
       });
 
       $(window).mouseup(function(e) {

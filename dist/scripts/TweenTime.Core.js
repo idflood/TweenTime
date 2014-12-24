@@ -139,11 +139,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // If we found a key, simply update the value.
 	      key.val = new_val;
 	    } else {
-	      // If no key, create it and add it to the array.
-	      key = { val: new_val, time: time_in_seconds };
-	      property.keys.push(key);
-	      // Also sort the keys.
-	      property.keys = Utils.sortKeys(property.keys);
+	      if (property.keys.length === 0) {
+	        // If the property doesn't have any key simply the the value.
+	        property.val = new_val;
+	      } else {
+	        // If we are not on a key but the property has other keys,
+	        // create it and add it to the keys array.
+	        key = { val: new_val, time: time_in_seconds, _property: property };
+	        property.keys.push(key);
+	        // Also sort the keys.
+	        property.keys = Utils.sortKeys(property.keys);
+	      }
 	    }
 	  };
 	
@@ -220,9 +226,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Test properties keys
 	        for (var j = 0; j < item.properties.length; j++) {
 	          var prop = item.properties[j];
+	
 	          // Don't match property with itself.
 	          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
-	            for (var k = 0; k < prop.keys; k++) {
+	            for (var k = 0; k < prop.keys.length; k++) {
 	              var key = prop.keys[k];
 	              if (Math.abs(key.time - time) <= tolerance) {
 	                return key.time;

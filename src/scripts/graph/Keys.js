@@ -10,7 +10,7 @@ export default class Keys {
   }
 
   selectNewKey(data, container) {
-    var self = this
+    var self = this;
     var key = d3.select(container).selectAll('.key').filter(function(item) {
       return item.time === data.time;
     });
@@ -18,7 +18,8 @@ export default class Keys {
       d3.selectAll('.key--selected').classed('key--selected', false);
       key.classed('key--selected', true);
       key = key[0][0];
-      self.timeline.selectionManager.select(key);
+      data._dom = key;
+      self.timeline.selectionManager.select(data);
     }
   }
 
@@ -32,6 +33,7 @@ export default class Keys {
       var lineObject = propertyObject.parentNode.parentNode;
       var propertyData = d3.select(propertyObject).datum();
       var lineData = d3.select(lineObject).datum();
+      var key_data = d;
 
       var currentDomainStart = self.timeline.x.domain()[0];
       var mouse = d3.mouse(this);
@@ -45,10 +47,11 @@ export default class Keys {
       var selection_first_time = false;
       var selection_last_time = false;
       if (selection.length) {
-        selection_first_time = d3.select(selection[0]).datum().time;
-        selection_last_time = d3.select(selection[selection.length - 1]).datum().time;
+        selection_first_time = selection[0].time;
+        selection_last_time = selection[selection.length - 1].time;
       }
-      selection = _.filter(selection, (item) => {return item.isEqualNode(this) === false;})
+
+      selection = _.filter(selection, (item) => {return _.isEqual(item, key_data) === false;})
 
       var timeMatch = false
       if (sourceEvent.shiftKey) {
@@ -64,12 +67,9 @@ export default class Keys {
       var time_offset = d.time - old_time;
 
       var updateKeyItem = function(item) {
-        var itemPropertyObject = item.parentNode;
-        var itemPropertyData = d3.select(itemPropertyObject).datum();
-        var itemLineObject = itemPropertyObject.parentNode.parentNode;
-        var itemLineData = d3.select(itemLineObject).datum();
-        itemLineData._isDirty = true;
-        itemPropertyData.keys = Utils.sortKeys(itemPropertyData.keys);
+        var property = item._property;
+        property._line._isDirty = true;
+        property.keys = Utils.sortKeys(property.keys);
       }
 
       var key_scale = false;
@@ -85,8 +85,7 @@ export default class Keys {
         }
 
         for (var i = 0; i < selection.length; i++) {
-          var item = selection[i];
-          data = d3.select(item).datum();
+          var data = selection[i];
           if (key_scale === false) {
             data.time += time_offset;
           } else {
@@ -96,7 +95,7 @@ export default class Keys {
               data.time = selection_first_time + (data.time - selection_first_time) * key_scale;
             }
           }
-          updateKeyItem(item);
+          updateKeyItem(data);
         }
       }
 
@@ -131,7 +130,12 @@ export default class Keys {
           return;
         }
       }
-      self.timeline.selectionManager.select(this, addToSelection);
+      var key_data = d3.select(this).datum();
+
+      // Also keep a reference to the key dom element.
+      key_data._dom = this;
+
+      self.timeline.selectionManager.select(key_data, addToSelection);
     }
 
     var dragend = function() {

@@ -41,17 +41,16 @@ export default class PropertiesEditor {
     this.keyAdded.dispatch();
   }
 
-  onSelect(domElement = false) {
+  onSelect(data = false) {
     this.items.forEach((item) => {item.remove()});
     this.items = [];
     this.$container.empty();
-    if (domElement instanceof Array) {
-      for (var i = 0; i < domElement.length; i++) {
-        var element = domElement[i];
-        this.addProperty(element);
+    if (data instanceof Array) {
+      for (var i = 0; i < data.length; i++) {
+        this.addProperty(data[i]);
       }
     } else {
-      this.addProperty(domElement);
+      this.addProperty(data);
     }
 
     // When selecting anything, automatically display the properties editor.
@@ -60,8 +59,8 @@ export default class PropertiesEditor {
     }
   }
 
-  addProperty(domElement) {
-    var prop = new Property(this.editor, this.$container, domElement);
+  addProperty(data) {
+    var prop = new Property(this.editor, this.$container, data);
     prop.keyAdded.add(this.onKeyAdded);
     this.items.push(prop);
   }

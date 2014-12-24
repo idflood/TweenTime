@@ -42,7 +42,7 @@ export default class Properties {
       .attr('y', 0)
       .attr('width', self.timeline.x(self.timeline.timer.totalDuration + 100))
       .attr('height', self.timeline.lineHeight)
-      .on('dblclick', (d) => {
+      .on('dblclick', function(d) {
         var lineObject = this.parentNode.parentNode;
         var lineValue = d3.select(lineObject).datum();
         var def = d["default"] ? d["default"] : 0;
@@ -54,16 +54,18 @@ export default class Properties {
         if (prevKey) {
           def = prevKey.val;
         }
+        d._line = lineValue;
         var newKey = {
           time: dx,
-          val: def
+          val: def,
+          _property: d
         };
         d.keys.push(newKey);
         // Sort the keys for tweens creation
         d.keys = Utils.sortKeys(d.keys);
 
         lineValue._isDirty = true;
-        keyContainer = this.parentNode;
+        var keyContainer = this.parentNode;
         self.onKeyAdded.dispatch(newKey, keyContainer);
       });
 
