@@ -4,7 +4,7 @@ import PropertyColor from './PropertyColor';
 import PropertyTween from './PropertyTween';
 
 export default class Property {
-  constructor(editor, $el, domElement) {
+  constructor(editor, $el, data) {
     this.editor = editor;
     this.$el = $el;
 
@@ -18,32 +18,22 @@ export default class Property {
     this.numberProp = false;
     this.tweenProp = false;
 
-    var d3Object = d3.select(domElement);
-
     var key_val = false;
     var propertyObject = false;
     var propertyData = false;
     var lineObject = false;
     var lineData = false;
 
-    if (d3Object.classed('key')) {
-      propertyObject = domElement.parentNode;
-      lineObject = propertyObject.parentNode.parentNode;
-      lineData = d3.select(lineObject).datum();
-      propertyData = d3.select(propertyObject).datum();
-      key_val = d3Object.datum();
+    // For keys the _property data should be defined.
+    if (data._property) {
+      propertyData = data._property;
+      lineData = propertyData._line;
+      key_val = data;
     }
 
-    // click on bar
-    if (d3Object.classed('bar')) {
-      lineData = d3Object.datum();
-    }
-
-    // click on bar label
-    if (d3Object.classed('line-label')) {
-      domElement = domElement.parentNode;
-      d3Object = d3.select(domElement);
-      lineData = d3Object.datum();
+    // Check if we selected a main item.
+    if (data.id) {
+      lineData = data;
     }
 
     // data and propertyData are defined on key select.
@@ -73,7 +63,7 @@ export default class Property {
 
     if (property_name) {
       // Add tween select if we are editing a key.
-      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData, domElement);
+      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
       this.items.push(tweenProp);
     }
   }
@@ -166,7 +156,7 @@ export default class Property {
     return prop;
   }
 
-  addTweenProperty(instance_prop, lineData, key_val, $container, propertyData, domElement) {
+  addTweenProperty(instance_prop, lineData, key_val, $container, propertyData) {
     var tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
     $container.append(tween.$el);
 
@@ -176,7 +166,9 @@ export default class Property {
       var index = propertyData.keys.indexOf(key_val);
       if (index > -1) {
         propertyData.keys.splice(index, 1);
-        this.editor.propertiesEditor.keyRemoved.dispatch(domElement);
+        if (key_val._dom) {
+          this.editor.propertiesEditor.keyRemoved.dispatch(key_val._dom);
+        }
         return lineData._isDirty = true;
       }
     })
