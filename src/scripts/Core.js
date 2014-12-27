@@ -4,7 +4,7 @@ import Utils from './core/Utils';
 import Timer from './core/Timer';
 import Orchestrator from './core/Orchestrator';
 
-export default class Core {
+class Core {
   constructor(data, options = {}) {
     this.data = data;
     this.timer = new Timer(options);
