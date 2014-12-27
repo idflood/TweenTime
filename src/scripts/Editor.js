@@ -31,7 +31,7 @@ class Editor {
 
     this.menu = new EditorMenu(this.tweenTime, this.$timeline, this);
     if (this.options.onMenuCreated != null) {
-      this.options.onMenuCreated(this.$timeline.find('.timeline__menu'));
+      this.options.onMenuCreated(this.$timeline.find('.timeline__menu'), this);
     }
 
     this.controls = new EditorControls(this.tweenTime, this.$timeline);
@@ -41,6 +41,14 @@ class Editor {
     window.editorEnabled = true;
     window.dispatchEvent(new Event('resize'));
     window.requestAnimationFrame(() => this.update());
+  }
+
+  select(item, addToSelection = false) {
+    this.selectionManager.select(item, addToSelection);
+  }
+
+  getSelection() {
+    return this.selectionManager.getSelection();
   }
 
   onKeyAdded() {
