@@ -13,7 +13,7 @@ export default class EditorControls {
         // Space
         this.playPause();
       }
-    })
+    });
   }
 
   playPause() {
