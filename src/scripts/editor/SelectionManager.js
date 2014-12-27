@@ -9,6 +9,32 @@ export default class SelectionManager {
     this.onSelect = new Signals.Signal();
   }
 
+  select(item, addToSelection = false) {
+    this.addDataRelations();
+
+    if (!addToSelection) {
+      this.selection = [];
+    }
+    if (item instanceof Array) {
+      for (var i = 0; i < item.length; i++) {
+        var el = item[i];
+        this.selection.push(el);
+      }
+    }
+    else {
+      this.selection.push(item);
+    }
+
+    this.removeDuplicates();
+    this.highlightItems();
+    this.sortSelection();
+    this.onSelect.dispatch(this.selection, addToSelection);
+  }
+
+  getSelection() {
+    return this.selection;
+  }
+
   removeDuplicates() {
     var result = [];
     for (var i = 0; i < this.selection.length; i++) {
@@ -77,32 +103,6 @@ export default class SelectionManager {
         }
       }
     }
-  }
-
-  select(item, addToSelection = false) {
-    this.addDataRelations();
-
-    if (!addToSelection) {
-      this.selection = [];
-    }
-    if (item instanceof Array) {
-      for (var i = 0; i < item.length; i++) {
-        var el = item[i];
-        this.selection.push(el);
-      }
-    }
-    else {
-      this.selection.push(item);
-    }
-
-    this.removeDuplicates();
-    this.highlightItems();
-    this.sortSelection();
-    this.onSelect.dispatch(this.selection, addToSelection);
-  }
-
-  getSelection() {
-    return this.selection;
   }
 
   highlightItems() {

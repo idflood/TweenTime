@@ -43,6 +43,14 @@ class Editor {
     window.requestAnimationFrame(() => this.update());
   }
 
+  select(item, addToSelection = false) {
+    this.selectionManager.select(item, addToSelection);
+  }
+
+  getSelection() {
+    return this.selectionManager.getSelection();
+  }
+
   onKeyAdded() {
     this.undoManager.addState();
     this.render(false, false, true);
