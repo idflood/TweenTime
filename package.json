@@ -5,10 +5,10 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-util": "^3.0.1",
-    "gulp-sass": "^1.1.0",
+    "gulp-sass": "^1.2.4",
     "gulp-sourcemaps": "^1.2.8",
-    "gulp-livereload": "^2.1.1",
-    "webpack": "^1.4.13",
+    "gulp-livereload": "^3.0.2",
+    "webpack": "^1.4.14",
     "6to5": "^1.15.0",
     "6to5-loader": "^0.2.4",
     "hogan.js": "^3.0.2",
