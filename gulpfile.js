@@ -10,7 +10,6 @@ var getWebpackConfig = function() {
   return {
     context: __dirname + "/src/scripts",
     entry: {
-      //vendor: ['gsap', 'd3', 'jquery', 'mustache.js', 'lodash', 'draggable-number.js'],
       Core: "./Core",
       Editor: "./Editor",
     },
@@ -47,12 +46,6 @@ var getWebpackConfig = function() {
           commonjs: "lodash",
           commonjs2: "lodash",
           amd: "lodash"
-        },
-        'mustache.js': {
-          root: 'Mustache',
-          commonjs: "mustache",
-          commonjs2: "mustache",
-          amd: "mustache"
         }
       }
     ],
@@ -67,14 +60,6 @@ var getWebpackConfig = function() {
         { test: /\.js$/, exclude: [/bower_components/, /node_modules/, /dist/], loader: '6to5-loader?runtime=true'},
         { test: /\.tpl.html$/, loader: 'mustache'},
       ],
-    },
-    resolve: {
-      root: [path.join(__dirname, "src/scripts/bower_components")],
-      // Add alias when the library doesn't automagically load with bower resolver.
-      alias: {
-        //spectrum: 'bower_components/spectrum/spectrum.js'
-        //'js-signals': 'bower_components/js-signals/dist/signals.js'
-      }
     },
     plugins: [
       new webpack.ResolverPlugin(
