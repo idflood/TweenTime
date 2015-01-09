@@ -64,7 +64,7 @@ var getWebpackConfig = function() {
     },
     module: {
       loaders: [
-        { test: /\.js$/, loader: '6to5-loader'},
+        { test: /\.js$/, exclude: [/bower_components/, /node_modules/, /dist/], loader: '6to5-loader?runtime=true'},
         { test: /\.tpl.html$/, loader: 'mustache'},
       ],
     },
@@ -79,8 +79,7 @@ var getWebpackConfig = function() {
     plugins: [
       new webpack.ResolverPlugin(
           new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
-      ),
-      new webpack.optimize.DedupePlugin()
+      )
     ],
   };
 };

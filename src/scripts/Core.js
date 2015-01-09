@@ -1,3 +1,4 @@
+import '6to5/runtime';
 var _ = require('lodash');
 
 import Utils from './core/Utils';
