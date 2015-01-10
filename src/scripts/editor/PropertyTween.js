@@ -1,11 +1,11 @@
-let $ = require('jquery');
+import 'jquery';
 
 let tpl_property = require('../templates/propertyTween.tpl.html');
 
 export default class PropertyTween {
   // instance_property: The current property on the data object.
   // lineData: The line data object.
-  constructor(instance_property, lineData, editor, key_val = false, timeline) {
+  constructor(instance_property, lineData, editor, key_val = false, timeline = false) {
     this.instance_property = instance_property;
     this.lineData = lineData;
     this.editor = editor;
@@ -68,7 +68,7 @@ export default class PropertyTween {
         this.$time.blur();
         this.updateKeyTime(this.$time.text());
       }
-    })
+    });
 
     this.$time.on('click', () => document.execCommand('selectAll', false, null));
     this.$el.find('select').change(this.onChange);

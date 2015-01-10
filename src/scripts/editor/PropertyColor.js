@@ -1,4 +1,4 @@
-let $ = require('jquery');
+import 'jquery';
 require('spectrum');
 import PropertyBase from './PropertyBase';
 
@@ -20,7 +20,7 @@ export default class PropertyColor extends PropertyBase {
       id: this.instance_property.name, // "circleRadius" instead of "circle radius"
       label: this.instance_property.label || this.instance_property.name,
       val: val
-    }
+    };
 
     var view = tpl_property(data);
     this.$el = $(view);
@@ -46,7 +46,7 @@ export default class PropertyColor extends PropertyBase {
 
         this.onInputChange();
       }
-    })
+    });
 
     $input.change(this.onInputChange);
   }

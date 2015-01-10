@@ -74,15 +74,15 @@ export default class Header {
       .call(this.xAxis);
 
     var onBrush = () => {
-      var extent0 = this.brush.extent()
+      var extent0 = this.brush.extent();
       // Get domain as milliseconds and not date.
-      var start = extent0[0].getTime()
-      var end = extent0[1].getTime()
+      var start = extent0[0].getTime();
+      var end = extent0[1].getTime();
       // Set the initial domain.
-      this.initialDomain[0] = start
-      this.initialDomain[1] = end
-      this.setDomain(this.initialDomain)
-    }
+      this.initialDomain[0] = start;
+      this.initialDomain[1] = end;
+      this.setDomain(this.initialDomain);
+    };
 
     this.brush = d3.svg.brush()
       .x(this.x)
@@ -108,7 +108,7 @@ export default class Header {
       var event = d3.event.sourceEvent;
       event.stopPropagation();
       var tweenTime = self.tweenTime;
-      var event_x = event.x != null ? event.x : event.clientX;
+      var event_x = event.x !== undefined ? event.x : event.clientX;
       var dx = self.xDisplayed.invert(event_x - self.margin.left);
       dx = dx.getTime();
       dx = Math.max(0, dx);
@@ -125,7 +125,7 @@ export default class Header {
         timeMatch = dx;
       }
       self.timer.seek([timeMatch]);
-    }
+    };
 
     var dragTime = d3.behavior.drag()
       .origin(function(d) {
@@ -142,11 +142,11 @@ export default class Header {
       .attr('height', 50)
       .attr('fill-opacity', 0)
       .on('click', function() {
-        var mouse = d3.mouse(this)
-        var dx = self.xDisplayed.invert(mouse[0])
-        dx = dx.getTime()
-        dx = Math.max(0, dx)
-        self.timer.seek([dx])
+        var mouse = d3.mouse(this);
+        var dx = self.xDisplayed.invert(mouse[0]);
+        dx = dx.getTime();
+        dx = Math.max(0, dx);
+        self.timer.seek([dx]);
       });
 
     var timeGrp = timeSelection.enter().append("g")

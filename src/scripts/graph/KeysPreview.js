@@ -36,7 +36,7 @@ export default class KeysPreview {
       }
       // Show only when item is collapsed
       return "display: none;";
-    }
+    };
 
     properties.selectAll('.key--preview')
       .attr("style", setItemStyle);

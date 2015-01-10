@@ -1,4 +1,4 @@
-let $ = require('jquery');
+import 'jquery';
 
 export default class UndoManager {
   constructor(editor) {
@@ -19,7 +19,7 @@ export default class UndoManager {
           }
           else {
             // (command | ctrl) shift Z
-            this.redo()
+            this.redo();
           }
         }
       }
@@ -45,7 +45,7 @@ export default class UndoManager {
   }
 
   addState() {
-    var data = JSON.parse(this.editor.exporter.getJSON())
+    var data = JSON.parse(this.editor.exporter.getJSON());
 
     // if we did some undo before and then edit something,
     // we want to remove all actions past the current index first.

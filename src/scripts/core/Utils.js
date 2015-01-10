@@ -30,11 +30,11 @@ export default class Utils {
         if (item.id != objectId || property_name) {
           // First check start & end.
           if (Math.abs(item.start - time) <= tolerance) {
-            return item.start
+            return item.start;
           }
 
           if (Math.abs(item.end - time) <= tolerance) {
-            return item.end
+            return item.end;
           }
         }
 
@@ -80,14 +80,14 @@ export default class Utils {
         return 1;
       }
       return 0;
-    }
+    };
     return keys.sort(compare);
   }
 
   static guid() {
     var s4 = function() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    }
+    };
     return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
   }
 }

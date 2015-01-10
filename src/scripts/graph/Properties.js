@@ -5,8 +5,8 @@ import Utils from '../core/Utils';
 export default class Properties {
   constructor(timeline) {
     this.timeline = timeline;
-    this.onKeyAdded = new Signals.Signal()
-    this.subGrp = false
+    this.onKeyAdded = new Signals.Signal();
+    this.subGrp = false;
   }
 
   render(bar) {

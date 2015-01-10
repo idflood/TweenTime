@@ -128,7 +128,7 @@ export default class Property {
   }
 
   remove() {
-    this.items.forEach((item) => {item.remove()});
+    this.items.forEach((item) => {item.remove();});
     if (this.keyAdded) {
       this.keyAdded.dispose();
     }
@@ -169,9 +169,9 @@ export default class Property {
         if (key_val._dom) {
           this.editor.propertiesEditor.keyRemoved.dispatch(key_val._dom);
         }
-        return lineData._isDirty = true;
+        lineData._isDirty = true;
       }
-    })
+    });
     return tween;
   }
 

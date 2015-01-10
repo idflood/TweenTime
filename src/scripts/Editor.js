@@ -30,7 +30,7 @@ class Editor {
     this.propertiesEditor.keyRemoved.add(this.onKeyRemoved);
 
     this.menu = new EditorMenu(this.tweenTime, this.$timeline, this);
-    if (this.options.onMenuCreated != null) {
+    if (this.options.onMenuCreated !== undefined) {
       this.options.onMenuCreated(this.$timeline.find('.timeline__menu'), this);
     }
 

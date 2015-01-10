@@ -51,9 +51,9 @@ export default class Keys {
         selection_last_time = selection[selection.length - 1].time;
       }
 
-      selection = _.filter(selection, (item) => {return _.isEqual(item, key_data) === false;})
+      selection = _.filter(selection, (item) => {return _.isEqual(item, key_data) === false;});
 
-      var timeMatch = false
+      var timeMatch = false;
       if (sourceEvent.shiftKey) {
         timeMatch = Utils.getClosestTime(tweenTime.data, dx, lineData.id, propertyData.name, tweenTime.timer);
       }
@@ -70,12 +70,12 @@ export default class Keys {
         var property = item._property;
         property._line._isDirty = true;
         property.keys = Utils.sortKeys(property.keys);
-      }
+      };
 
       var key_scale = false;
       var is_first = false;
       if (selection.length) {
-        if (sourceEvent.altKey && (selection_first_time != null) && (selection_last_time != null)) {
+        if (sourceEvent.altKey && (selection_first_time !== false) && (selection_last_time !== false)) {
           is_first = selection_first_time === old_time;
           if (is_first) {
             key_scale = (selection_last_time - d.time) / (selection_last_time - old_time);
@@ -101,7 +101,7 @@ export default class Keys {
 
       lineData._isDirty = true;
       self.onKeyUpdated.dispatch();
-    }
+    };
 
     var propValue = function(d) {
       return d.keys;
@@ -136,11 +136,11 @@ export default class Keys {
       key_data._dom = this;
 
       self.timeline.selectionManager.select(key_data, addToSelection);
-    }
+    };
 
     var dragend = function() {
       self.timeline.editor.undoManager.addState();
-    }
+    };
 
     var drag = d3.behavior.drag()
       .origin((d) => {return d;})
@@ -162,7 +162,7 @@ export default class Keys {
 
     properties.selectAll('.key')
       .attr('class', function(d) {
-        var cls = 'key'
+        var cls = 'key';
         // keep selected class
         if (d3.select(this).classed('key--selected')) {
           cls += " key--selected";
