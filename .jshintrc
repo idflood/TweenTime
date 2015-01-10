@@ -1,0 +1,6 @@
+{
+  "indent"        : 2,
+  "esnext"        : true,
+  "jquery"        : true,
+  "globals"       : {}
+}

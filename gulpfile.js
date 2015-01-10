@@ -5,6 +5,7 @@ var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
 var webpack = require("webpack");
+var jshint = require('gulp-jshint');
 
 var getWebpackConfig = function() {
   return {
@@ -69,6 +70,15 @@ var getWebpackConfig = function() {
   };
 };
 
+gulp.task('lint-scripts', function() {
+  gulp.src([
+    'src/scripts/**/*.js',
+    '!src/scripts/bower_components/**'
+    ])
+    .pipe(jshint('.jshintrc'))
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
 gulp.task('scripts', function(cb) {
   var conf = getWebpackConfig();
   webpack(conf, function(err, stats) {
@@ -130,8 +140,8 @@ gulp.task('watch', function() {
   gulp.watch(['examples/*.html'], livereload.changed);
   gulp.watch(['dist/styles/*.css', 'dist/scripts/*.js'], livereload.changed);
   gulp.watch('src/styles/**', ['styles']);
-  gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts:dist']);
+  gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['lint-scripts', 'scripts:dist']);
 });
 
-gulp.task('default', ['watch', 'livereload', 'styles', 'scripts:dist']);
-gulp.task('build', ['styles', 'scripts', 'scripts:dist']);
+gulp.task('default', ['watch', 'livereload', 'styles', 'lint-scripts', 'scripts:dist']);
+gulp.task('build', ['styles', 'scripts', 'lint-scripts', 'scripts:dist']);

@@ -13,6 +13,8 @@
     "6to5-loader": "^0.2.4",
     "hogan.js": "^3.0.2",
     "loader-utils": "^0.2.5",
-    "mustache-loader": "^0.2.0"
+    "mustache-loader": "^0.2.0",
+    "gulp-jshint": "^1.9.0",
+    "jshint-stylish": "^1.0.0"
   }
 }
