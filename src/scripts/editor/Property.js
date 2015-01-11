@@ -58,14 +58,16 @@ export default class Property {
         if (instance_prop.name === property_name) {
           $tween_container = $grp_container;
         }
+
+        if (property_name) {
+          // Add tween select if we are editing a key, so only if there is property_name.
+          var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
+          this.items.push(tweenProp);
+        }
       }
     }
 
-    if (property_name) {
-      // Add tween select if we are editing a key.
-      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
-      this.items.push(tweenProp);
-    }
+
   }
 
   onKeyAdded() {
