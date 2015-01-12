@@ -12,13 +12,13 @@ export default class Items {
   }
 
   render() {
-    var self = this
-    var tweenTime = self.timeline.tweenTime
+    var self = this;
+    var tweenTime = self.timeline.tweenTime;
 
     var selectBar = function() {
       var data = d3.select(this).datum();
       self.timeline.selectionManager.select(data);
-    }
+    };
 
     var dragmove = function(d) {
       var dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
@@ -36,7 +36,7 @@ export default class Items {
       }
       d._isDirty = true;
       self.onUpdate.dispatch();
-    }
+    };
 
     var dragmoveLeft = function(d) {
       d3.event.sourceEvent.stopPropagation();
@@ -53,7 +53,7 @@ export default class Items {
       d.start = timeMatch;
       d._isDirty = true;
       self.onUpdate.dispatch();
-    }
+    };
 
     var dragmoveRight = function(d) {
       d3.event.sourceEvent.stopPropagation();
@@ -70,30 +70,30 @@ export default class Items {
       d.end = timeMatch;
       d._isDirty = true;
       self.onUpdate.dispatch();
-    }
+    };
 
     var dragLeft = d3.behavior.drag()
       .origin(function() {
-        var t = d3.select(this)
+        var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on("drag", dragmoveLeft);
 
     var dragRight = d3.behavior.drag()
       .origin(function() {
-        var t = d3.select(this)
+        var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on("drag", dragmoveRight);
 
     var drag = d3.behavior.drag()
       .origin(function() {
-        var t = d3.select(this)
+        var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on("drag", dragmove);
 
-    var bar_border = 1
+    var bar_border = 1;
     var bar = this.container.selectAll(".line-grp")
       .data(this.timeline.tweenTime.data, (d) => {return d.id;});
 
@@ -128,7 +128,7 @@ export default class Items {
 
     self.dy = 10 + this.timeline.margin.top;
     bar.attr("transform", function(d) {
-      var y = self.dy
+      var y = self.dy;
       self.dy += self.timeline.lineHeight;
       if (!d.collapsed) {
         var numProperties = 0;
@@ -144,11 +144,11 @@ export default class Items {
     });
 
     var barWithStartAndEnd = function(d) {
-      if ((d.start != null) && (d.end != null)) {
+      if ((d.start !== undefined) && (d.end !== undefined)) {
         return true;
       }
       return false;
-    }
+    };
 
     bar.selectAll('.bar-anchor--left')
       .filter(barWithStartAndEnd)
@@ -165,21 +165,21 @@ export default class Items {
       .on('mousedown', function() {
         // Don't trigger mousedown on linescontainer else
         // it create the selection rectangle
-        d3.event.stopPropagation()
+        d3.event.stopPropagation();
       });
 
     bar.selectAll('.bar')
       .filter(barWithStartAndEnd)
       .attr("x", (d) => {return self.timeline.x(d.start * 1000) + bar_border;})
       .attr("width", function(d) {
-        return Math.max(0, (self.timeline.x(d.end) - self.timeline.x(d.start)) * 1000 - bar_border)
+        return Math.max(0, (self.timeline.x(d.end) - self.timeline.x(d.start)) * 1000 - bar_border);
       })
       .call(drag)
       .on("click", selectBar)
       .on('mousedown', function() {
         // Don't trigger mousedown on linescontainer else
         // it create the selection rectangle
-        d3.event.stopPropagation()
+        d3.event.stopPropagation();
       });
 
     barEnter.append("text")
@@ -192,9 +192,8 @@ export default class Items {
         // Don't trigger mousedown on linescontainer else
         // it create the selection rectangle
         d3.event.stopPropagation();
-      })
+      });
 
-    var self = this
     barEnter.append("text")
       .attr("class", "line__toggle")
       .attr("x", self.timeline.label_position_x - 10)

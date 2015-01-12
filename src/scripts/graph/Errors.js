@@ -5,9 +5,9 @@ export default class Errors {
 
   render(properties) {
     var self = this;
-    var subGrp = self.timeline.properties.subGrp
+    var subGrp = self.timeline.properties.subGrp;
     var propertiesWithError = function(d) {
-      return d.errors != null;
+      return d.errors !== undefined;
     };
     // use insert with :first-child to prepend.
     subGrp.insert('svg', ':first-child')

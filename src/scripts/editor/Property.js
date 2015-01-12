@@ -58,14 +58,16 @@ export default class Property {
         if (instance_prop.name === property_name) {
           $tween_container = $grp_container;
         }
+
+        if (property_name) {
+          // Add tween select if we are editing a key, so only if there is property_name.
+          var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
+          this.items.push(tweenProp);
+        }
       }
     }
 
-    if (property_name) {
-      // Add tween select if we are editing a key.
-      var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
-      this.items.push(tweenProp);
-    }
+
   }
 
   onKeyAdded() {
@@ -128,7 +130,7 @@ export default class Property {
   }
 
   remove() {
-    this.items.forEach((item) => {item.remove()});
+    this.items.forEach((item) => {item.remove();});
     if (this.keyAdded) {
       this.keyAdded.dispose();
     }
@@ -169,9 +171,9 @@ export default class Property {
         if (key_val._dom) {
           this.editor.propertiesEditor.keyRemoved.dispatch(key_val._dom);
         }
-        return lineData._isDirty = true;
+        lineData._isDirty = true;
       }
-    })
+    });
     return tween;
   }
 

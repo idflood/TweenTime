@@ -39,7 +39,7 @@ export default class Selection {
         'user-select': 'none'
       });
     }).on("mousemove", function() {
-      var s = self.svg.select('.selection')
+      var s = self.svg.select('.selection');
       if (s.empty()) {
         return;
       }

@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("lodash"), require("./signals"), require("TweenMax"));
 	else
 		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["_"], root["signals"], root["TweenMax"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_14__, __WEBPACK_EXTERNAL_MODULE_15__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_14__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,11 +56,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
+	__webpack_require__(12);
+	
 	var _ = __webpack_require__(1);
 	
-	var Utils = __webpack_require__(9)["default"];
-	var Timer = __webpack_require__(10)["default"];
-	var Orchestrator = __webpack_require__(11)["default"];
+	var Utils = __webpack_require__(2)["default"];
+	var Timer = __webpack_require__(3)["default"];
+	var Orchestrator = __webpack_require__(4)["default"];
 	var Core = (function () {
 	  var Core = function Core(data, options) {
 	    if (options === undefined) options = {};
@@ -71,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Core.prototype.getItem = function (item_id) {
 	    // In case we passed the item object directly return it.
-	    if (item_id != null && typeof item_id == "object") {
+	    if (item_id && typeof item_id == "object") {
 	      return item_id;
 	    }
 	
@@ -115,7 +117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return undefined;
 	    }
 	
-	    if (values[prop_name] != null) {
+	    if (values[prop_name] !== undefined) {
 	      return values[prop_name];
 	    } else {
 	      return undefined;
@@ -169,14 +171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 /***/ },
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -285,12 +280,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Utils;
 
 /***/ },
-/* 10 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(14);
+	var Signals = __webpack_require__(13);
 	
 	var Timer = (function () {
 	  var Timer = function Timer(options) {
@@ -378,13 +373,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Timer;
 
 /***/ },
-/* 11 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(14);
-	var TweenMax = __webpack_require__(15);
+	var Signals = __webpack_require__(13);
+	var TweenMax = __webpack_require__(14);
 	
 	var Orchestrator = (function () {
 	  var Orchestrator = function Orchestrator(timer, data) {
@@ -447,9 +442,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Orchestrator.prototype.update = function (timestamp) {
 	    var seconds = timestamp / 1000;
 	    var has_dirty_items = false;
+	    var i, item, property, property_key;
 	
-	    for (var i = 0; i < this.data.length; i++) {
-	      var item = this.data[i];
+	    for (i = 0; i < this.data.length; i++) {
+	      item = this.data[i];
 	      if (!item._domHelper) {
 	        this.initSpecialProperties(item);
 	      }
@@ -474,8 +470,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        item._isDirty = false;
 	        //item._timeline.clear();
 	
-	        for (var property_key = 0; property_key < item.properties.length; property_key++) {
-	          var property = item.properties[property_key];
+	        for (property_key = 0; property_key < item.properties.length; property_key++) {
+	          property = item.properties[property_key];
 	          if (property._timeline) {
 	            property._timeline.clear();
 	          } else {
@@ -557,10 +553,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.mainTimeline.seek(seconds);
 	
 	    // update the css properties.
-	    for (var i = 0; i < this.data.length; i++) {
-	      var item = this.data[i];
-	      for (var property_key = 0; property_key < item.properties.length; property_key++) {
-	        var property = item.properties[property_key];
+	    for (i = 0; i < this.data.length; i++) {
+	      item = this.data[i];
+	      for (property_key = 0; property_key < item.properties.length; property_key++) {
+	        property = item.properties[property_key];
 	        if (property.css && property.keys.length) {
 	          // Only css values.
 	          item.values[property.name] = item._domHelper.style[property.name];
@@ -579,18 +575,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Orchestrator;
 
 /***/ },
-/* 12 */,
-/* 13 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {(function(global){var to5Runtime=global.to5Runtime={};to5Runtime.extends=function(child,parent){child.prototype=Object.create(parent.prototype,{constructor:{value:child,enumerable:false,writable:true,configurable:true}});child.__proto__=parent};to5Runtime.classProps=function(child,staticProps,instanceProps){if(staticProps)Object.defineProperties(child,staticProps);if(instanceProps)Object.defineProperties(child.prototype,instanceProps)};to5Runtime.applyConstructor=function(Constructor,args){var instance=Object.create(Constructor.prototype);var result=Constructor.apply(instance,args);return result!=null&&(typeof result=="object"||typeof result=="function")?result:instance};to5Runtime.taggedTemplateLiteral=function(strings,raw){return Object.defineProperties(strings,{raw:{value:raw}})};to5Runtime.interopRequire=function(obj){return obj&&(obj["default"]||obj)};to5Runtime.toArray=function(arr){return Array.isArray(arr)?arr:Array.from(arr)};to5Runtime.objectSpread=function(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i]}return target};to5Runtime.hasOwn=Object.prototype.hasOwnProperty;to5Runtime.slice=Array.prototype.slice})(typeof global==="undefined"?self:global);
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+
+/***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_15__;
 
 /***/ }
 /******/ ])

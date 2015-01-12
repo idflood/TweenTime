@@ -1,4 +1,4 @@
-let $ = require('jquery');
+import 'jquery';
 import PropertyBase from './PropertyBase';
 let DraggableNumber = require('draggable-number.js');
 
@@ -30,13 +30,13 @@ export default class PropertyNumber extends PropertyBase {
 
     var view = tpl_property(data);
     this.$el = $(view);
-    this.$el.find('.property__key').click(this.onKeyClick)
+    this.$el.find('.property__key').click(this.onKeyClick);
 
     var $input = this.$el.find('input');
 
     var onChangeEnd = () => {
       this.editor.undoManager.addState();
-    }
+    };
 
     var draggableOptions = {
       changeCallback: () => this.onInputChange(),

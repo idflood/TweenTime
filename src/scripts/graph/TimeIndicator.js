@@ -2,7 +2,7 @@ export default class TimeIndicator {
   constructor(timeline, container) {
     this.timeline = timeline;
     this.container = container;
-    this.timeSelection = this.container.selectAll('.time-indicator').data(this.timeline.currentTime)
+    this.timeSelection = this.container.selectAll('.time-indicator').data(this.timeline.currentTime);
     this.timeGrp = this.timeSelection.enter().append("svg")
       .attr('class', "time-indicator timeline__right-mask")
       .attr('width', window.innerWidth - this.timeline.label_position_x)

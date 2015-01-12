@@ -64,7 +64,7 @@ export default class Timeline {
     this.linesContainer = this.svg.append("g")
       .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
 
-    this.header = new Header(this.timer, this.initialDomain, this.tweenTime, width, margin)
+    this.header = new Header(this.timer, this.initialDomain, this.tweenTime, width, margin);
     this.timeIndicator = new TimeIndicator(this, this.svgContainerTime);
 
     this.selection = new Selection(this, this.svg, margin);
@@ -115,16 +115,16 @@ export default class Timeline {
     window.requestAnimationFrame(() => {this.render();});
 
     window.onresize = () => {
-      var INNER_WIDTH = window.innerWidth
-      var width = INNER_WIDTH - margin.left - margin.right
-      this.svg.attr("width", width + margin.left + margin.right)
+      var INNER_WIDTH = window.innerWidth;
+      var width = INNER_WIDTH - margin.left - margin.right;
+      this.svg.attr("width", width + margin.left + margin.right);
       this.svg.selectAll('.timeline__right-mask')
-        .attr('width', INNER_WIDTH)
-      this.x.range([0, width])
+        .attr('width', INNER_WIDTH);
+      this.x.range([0, width]);
 
-      this._isDirty = true
-      this.header.resize(INNER_WIDTH)
-      this.render()
+      this._isDirty = true;
+      this.header.resize(INNER_WIDTH);
+      this.render();
     };
   }
 
@@ -134,16 +134,17 @@ export default class Timeline {
 
   render(time, time_changed) {
     if (time_changed) {
+      var domainLength;
       // Update current domain when playing to keep time indicator in view.
-      var margin_ms = 16
+      var margin_ms = 16;
       if (this.timer.getCurrentTime() > this.initialDomain[1]) {
-        var domainLength = this.initialDomain[1] - this.initialDomain[0];
+        domainLength = this.initialDomain[1] - this.initialDomain[0];
         this.initialDomain[0] += domainLength - margin_ms;
         this.initialDomain[1] += domainLength - margin_ms;
         this.header.setDomain(this.initialDomain);
       }
       if (this.timer.getCurrentTime() < this.initialDomain[0]) {
-        var domainLength = this.initialDomain[1] - this.initialDomain[0];
+        domainLength = this.initialDomain[1] - this.initialDomain[0];
         this.initialDomain[0] = this.timer.getCurrentTime();
         this.initialDomain[1] = this.initialDomain[0] + domainLength;
         this.header.setDomain(this.initialDomain);

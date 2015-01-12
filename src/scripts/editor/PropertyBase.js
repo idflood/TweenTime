@@ -40,7 +40,7 @@ export default class PropertyBase {
     if (this.key_val) {
       return this.key_val.val;
     }
-    if (this.lineData.values != null && this.lineData.values[prop_name]) {
+    if (this.lineData.values !== undefined && this.lineData.values[prop_name]) {
       return this.lineData.values[prop_name];
     }
     return val;
@@ -56,7 +56,7 @@ export default class PropertyBase {
 
     if (this.instance_property.keys && this.instance_property.keys.length) {
       // Add a new key if there is no other key at same time
-      var current_key = _.find(this.instance_property.keys, (key) => key.time == currentTime)
+      var current_key = _.find(this.instance_property.keys, (key) => key.time == currentTime);
 
       if (current_key) {
         // if there is a key update it
@@ -74,7 +74,7 @@ export default class PropertyBase {
       this.lineData.values[this.instance_property.name] = current_value;
       // Simply update the custom object with new values.
       if (this.lineData.object) {
-        currentTime = @timer.getCurrentTime() / 1000;
+        currentTime = this.timer.getCurrentTime() / 1000;
         // Set the property on the instance object.
         this.lineData.object.update(currentTime - this.lineData.start);
       }
@@ -98,7 +98,7 @@ export default class PropertyBase {
         return key;
       }
     }
-    return false
+    return false;
   }
 
   addKey(val) {
@@ -115,7 +115,7 @@ export default class PropertyBase {
 
   render() {
     // current values are defined in @lineData.values
-    this.values = this.lineData.values != null ? this.lineData.values : {};
+    this.values = this.lineData.values !== undefined ? this.lineData.values : {};
   }
 
   update() {

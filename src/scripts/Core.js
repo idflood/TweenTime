@@ -1,3 +1,4 @@
+import '6to5/runtime';
 var _ = require('lodash');
 
 import Utils from './core/Utils';
@@ -13,7 +14,7 @@ class Core {
 
   getItem(item_id) {
     // In case we passed the item object directly return it.
-    if (item_id != null && typeof item_id == 'object') {
+    if (item_id && typeof item_id == 'object') {
       return item_id;
     }
 
@@ -34,7 +35,7 @@ class Core {
 
   getValues(item_id_or_obj) {
     // If we passed the item name get the object from it.
-    item_id_or_obj = this.getItem(item_id_or_obj)
+    item_id_or_obj = this.getItem(item_id_or_obj);
 
     // Return false if we have no item
     if (!item_id_or_obj) {
@@ -53,7 +54,7 @@ class Core {
       return undefined;
     }
 
-    if (values[prop_name] != null) {
+    if (values[prop_name] !== undefined) {
       return values[prop_name];
     }
     else {

@@ -6,10 +6,10 @@ export default class Orchestrator {
     this.update = this.update.bind(this);
     this.timer = timer;
     this.data = data;
-    this.mainTimeline = new TimelineMax({paused: true})
-    this.onUpdate = new Signals.Signal()
-    this.timer.updated.add(this.update)
-    this.update(0)
+    this.mainTimeline = new TimelineMax({paused: true});
+    this.onUpdate = new Signals.Signal();
+    this.timer.updated.add(this.update);
+    this.update(0);
   }
 
   getTotalDuration() {
@@ -61,9 +61,10 @@ export default class Orchestrator {
   update(timestamp) {
     var seconds = timestamp / 1000;
     var has_dirty_items = false;
+    var i, item, property, property_key;
 
-    for (var i = 0; i < this.data.length; i++) {
-      var item = this.data[i];
+    for (i = 0; i < this.data.length; i++) {
+      item = this.data[i];
       if (!item._domHelper) {
         this.initSpecialProperties(item);
       }
@@ -81,15 +82,15 @@ export default class Orchestrator {
       }
 
       if (item._isDirty) {
-        has_dirty_items = true
+        has_dirty_items = true;
       }
 
       if (item._timeline && item._isDirty && item.properties) {
         item._isDirty = false;
         //item._timeline.clear();
 
-        for (var property_key = 0; property_key < item.properties.length; property_key++) {
-          var property = item.properties[property_key];
+        for (property_key = 0; property_key < item.properties.length; property_key++) {
+          property = item.properties[property_key];
           if (property._timeline) {
             property._timeline.clear();
           }
@@ -166,7 +167,7 @@ export default class Orchestrator {
           seconds = seconds - 0.0000001;
         }
         else {
-          seconds = seconds + 0.0000001
+          seconds = seconds + 0.0000001;
         }
       }
     }
@@ -175,10 +176,10 @@ export default class Orchestrator {
     this.mainTimeline.seek(seconds);
 
     // update the css properties.
-    for (var i = 0; i < this.data.length; i++) {
-      var item = this.data[i];
-      for (var property_key = 0; property_key < item.properties.length; property_key++) {
-        var property = item.properties[property_key];
+    for (i = 0; i < this.data.length; i++) {
+      item = this.data[i];
+      for (property_key = 0; property_key < item.properties.length; property_key++) {
+        property = item.properties[property_key];
         if (property.css && property.keys.length) {
           // Only css values.
           item.values[property.name] = item._domHelper.style[property.name];

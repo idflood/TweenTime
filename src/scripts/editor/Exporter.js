@@ -25,11 +25,11 @@ export default class Exporter {
       if (key.indexOf('_') === 0) {
         return undefined;
       }
-      if (options.json_replacer != null) {
+      if (options.json_replacer !== undefined) {
         return options.json_replacer(key, val);
       }
       return val;
-    }
+    };
 
     data = this.getData();
     return JSON.stringify(data, json_replacer, 2);
