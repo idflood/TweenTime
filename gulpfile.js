@@ -2,6 +2,8 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var path = require("path");
 var sass = require('gulp-sass');
+var autoprefixer = require("gulp-autoprefixer");
+var csso = require('gulp-csso');
 var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
 var webpack = require("webpack");
@@ -125,9 +127,17 @@ gulp.task('styles', function() {
   gulp.src('src/styles/editor.sass')
     .pipe(sourcemaps.init())
     .pipe(sass({
-      style: 'expanded',
+      sourceComments: false,
+      omitSourceMapUrl: true,
       errLogToConsole: true
     }))
+    .pipe(sourcemaps.write({includeContent: false}))
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(autoprefixer({
+      browsers: ['> 5%', 'last 2 versions'],
+      cascade: false
+    }))
+    //.pipe(csso()) ... still no sourcemaps support https://github.com/ben-eb/gulp-csso/issues/4
     .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest('./dist/styles/'));
 });
