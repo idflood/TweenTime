@@ -1,12 +1,12 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("lodash"), require(undefined), require("d3"), require("jquery"), require("spectrum"), require("DraggableNumber"));
+		module.exports = factory(require("lodash"), require(undefined), require("jquery"), require("d3"), require("DraggableNumber"), require("spectrum"));
 	else if(typeof define === 'function' && define.amd)
-		define(["lodash", "signals", "d3", "jquery", "spectrum", "DraggableNumber"], factory);
+		define(["lodash", "signals", "jquery", "d3", "DraggableNumber", "spectrum"], factory);
 	else if(typeof exports === 'object')
-		exports["Editor"] = factory(require("lodash"), require("./signals"), require("d3"), require("jquery"), require("spectrum"), require("DraggableNumber"));
+		exports["Editor"] = factory(require("lodash"), require("./signals"), require("jquery"), require("d3"), require("DraggableNumber"), require("spectrum"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["signals"], root["d3"], root["$"], root["spectrum"], root["DraggableNumber"]);
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["signals"], root["$"], root["d3"], root["DraggableNumber"], root["spectrum"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_15__, __WEBPACK_EXTERNAL_MODULE_16__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -282,7 +282,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	
 	var Utils = __webpack_require__(2)["default"];
 	var Header = __webpack_require__(17)["default"];
@@ -451,7 +451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
 	var Signals = __webpack_require__(13);
 	var Property = __webpack_require__(26)["default"];
@@ -671,7 +671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	var Signals = __webpack_require__(13);
 	var _ = __webpack_require__(1);
 	
@@ -839,7 +839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return val;
 	    };
 	
-	    data = this.getData();
+	    var data = this.getData();
 	    return JSON.stringify(data, json_replacer, 2);
 	  };
 	
@@ -854,7 +854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
 	var UndoManager = (function () {
 	  var UndoManager = function UndoManager(editor) {
@@ -990,7 +990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	
 	var Signals = __webpack_require__(13);
 	var Utils = __webpack_require__(2)["default"];
@@ -1179,7 +1179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	var Signals = __webpack_require__(13);
 	var _ = __webpack_require__(1);
 	var Utils = __webpack_require__(2)["default"];
@@ -1375,7 +1375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	
 	var KeysPreview = (function () {
 	  var KeysPreview = function KeysPreview(timeline, container) {
@@ -1444,7 +1444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	var Signals = __webpack_require__(13);
 	var Utils = __webpack_require__(2)["default"];
 	var Properties = (function () {
@@ -1543,7 +1543,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	var Signals = __webpack_require__(13);
 	var Utils = __webpack_require__(2)["default"];
 	var _ = __webpack_require__(1);
@@ -1924,7 +1924,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(41);
+	var H = __webpack_require__(40);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-first\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-last\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-first\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-last\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
@@ -2130,7 +2130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(41);
+	var H = __webpack_require__(40);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"properties-editor\">");t.b("\n" + i);t.b("  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  <div class=\"properties-editor__main\"></div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"properties-editor\">\n  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  <div class=\"properties-editor__main\"></div>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
@@ -2375,13 +2375,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	if (typeof module !== "undefined" && module !== null) {
 	  module.exports = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(36) !== null) && (__webpack_require__(37) != null)) {
+	} else if (("function" !== "undefined" && __webpack_require__(37) !== null) && (__webpack_require__(38) != null)) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
 	    return saveAs;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)(module)))
 
 /***/ },
 /* 29 */
@@ -2389,12 +2389,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
 	var PropertyBase = __webpack_require__(34)["default"];
-	var DraggableNumber = __webpack_require__(33);
+	var DraggableNumber = __webpack_require__(32);
 	
-	var tpl_property = __webpack_require__(40);
+	var tpl_property = __webpack_require__(35);
 	
 	var PropertyNumber = (function (PropertyBase) {
 	  var PropertyNumber =
@@ -2489,13 +2489,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
-	__webpack_require__(32);
+	__webpack_require__(33);
 	var PropertyBase = __webpack_require__(34)["default"];
 	
 	
-	var tpl_property = __webpack_require__(35);
+	var tpl_property = __webpack_require__(36);
 	
 	var PropertyColor = (function (PropertyBase) {
 	  var PropertyColor = function PropertyColor(instance_property, lineData, editor, key_val) {
@@ -2572,9 +2572,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
-	var tpl_property = __webpack_require__(39);
+	var tpl_property = __webpack_require__(41);
 	
 	var PropertyTween = (function () {
 	  var PropertyTween =
@@ -2849,18 +2849,25 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(41);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
+	var H = __webpack_require__(40);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input type=\"number\" id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input type=\"number\" id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var H = __webpack_require__(40);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
+
+/***/ },
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -2868,7 +2875,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(module) {
@@ -2884,21 +2891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var H = __webpack_require__(41);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--tween\">");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">easing</label>");t.b("\n" + i);t.b("  <div class=\"property__select\">");t.b("\n" + i);t.b("    <div class=\"custom-select\">");t.b("\n" + i);t.b("      <select id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\">");t.b("\n" + i);if(t.s(t.f("options",c,p,1),c,p,0,212,279,"{{ }}")){t.rs(c,p,function(c,p,t){t.b("        <option value=\"");t.b(t.v(t.d(".",c,p,0)));t.b("\" ");t.b(t.v(t.f("selected",c,p,0)));t.b(">");t.b(t.v(t.d(".",c,p,0)));t.b("</option>");t.b("\n" + i);});c.pop();}t.b("      </select>");t.b("\n" + i);t.b("    </div>");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n" + i);t.b("<div class=\"properties-editor__actions actions\">");t.b("\n" + i);t.b("  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">");t.b(t.v(t.f("time",c,p,0)));t.b("</strong> seconds</span>");t.b("\n" + i);t.b("  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>");t.b("\n" + i);t.b("</div>");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--tween\">\n  <label for=\"{{id}}\" class=\"property__label\">easing</label>\n  <div class=\"property__select\">\n    <div class=\"custom-select\">\n      <select id=\"{{id}}\">\n        {{#options}}\n        <option value=\"{{.}}\" {{selected}}>{{.}}</option>\n        {{/options}}\n      </select>\n    </div>\n  </div>\n</div>\n<div class=\"properties-editor__actions actions\">\n  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">{{time}}</strong> seconds</span>\n  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>\n</div>", H); return T.render.apply(T, arguments); };
-
-/***/ },
 /* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var H = __webpack_require__(41);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input type=\"number\" id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input type=\"number\" id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
-
-/***/ },
-/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2923,6 +2916,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	Hogan.template = Hogan.Template;
 	module.exports = Hogan;
 
+
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var H = __webpack_require__(40);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--tween\">");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">easing</label>");t.b("\n" + i);t.b("  <div class=\"property__select\">");t.b("\n" + i);t.b("    <div class=\"custom-select\">");t.b("\n" + i);t.b("      <select id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\">");t.b("\n" + i);if(t.s(t.f("options",c,p,1),c,p,0,212,279,"{{ }}")){t.rs(c,p,function(c,p,t){t.b("        <option value=\"");t.b(t.v(t.d(".",c,p,0)));t.b("\" ");t.b(t.v(t.f("selected",c,p,0)));t.b(">");t.b(t.v(t.d(".",c,p,0)));t.b("</option>");t.b("\n" + i);});c.pop();}t.b("      </select>");t.b("\n" + i);t.b("    </div>");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n" + i);t.b("<div class=\"properties-editor__actions actions\">");t.b("\n" + i);t.b("  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">");t.b(t.v(t.f("time",c,p,0)));t.b("</strong> seconds</span>");t.b("\n" + i);t.b("  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>");t.b("\n" + i);t.b("</div>");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--tween\">\n  <label for=\"{{id}}\" class=\"property__label\">easing</label>\n  <div class=\"property__select\">\n    <div class=\"custom-select\">\n      <select id=\"{{id}}\">\n        {{#options}}\n        <option value=\"{{.}}\" {{selected}}>{{.}}</option>\n        {{/options}}\n      </select>\n    </div>\n  </div>\n</div>\n<div class=\"properties-editor__actions actions\">\n  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">{{time}}</strong> seconds</span>\n  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>\n</div>", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 42 */
