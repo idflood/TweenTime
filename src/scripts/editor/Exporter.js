@@ -31,7 +31,7 @@ export default class Exporter {
       return val;
     };
 
-    data = this.getData();
+    var data = this.getData();
     return JSON.stringify(data, json_replacer, 2);
   }
 }
