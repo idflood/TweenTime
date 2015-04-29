@@ -22,7 +22,7 @@ export default class PropertyNumber extends PropertyBase {
     // By default assign the property default value
     var val = this.getCurrentVal();
 
-    data = {
+    var data = {
       id: this.instance_property.name, // "circleRadius" instead of "circle radius"
       label: this.instance_property.label || this.instance_property.name,
       val: val
