@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("lodash"), require(undefined), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
+		module.exports = factory(require("lodash"), require(undefined), require("jquery"), require("d3"), require("DraggableNumber"), require("spectrum"));
 	else if(typeof define === 'function' && define.amd)
-		define(["lodash", "signals", "d3", "jquery", "DraggableNumber", "spectrum"], factory);
+		define(["lodash", "signals", "jquery", "d3", "DraggableNumber", "spectrum"], factory);
 	else if(typeof exports === 'object')
-		exports["Editor"] = factory(require("lodash"), require("./signals"), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
+		exports["Editor"] = factory(require("lodash"), require("./signals"), require("jquery"), require("d3"), require("DraggableNumber"), require("spectrum"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["signals"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_15__, __WEBPACK_EXTERNAL_MODULE_16__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__) {
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["_"], root["signals"], root["$"], root["d3"], root["DraggableNumber"], root["spectrum"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_15__, __WEBPACK_EXTERNAL_MODULE_16__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -57,13 +57,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	var tpl_timeline = __webpack_require__(25);
-	var Timeline = __webpack_require__(5)["default"];
-	var PropertiesEditor = __webpack_require__(6)["default"];
-	var EditorMenu = __webpack_require__(7)["default"];
-	var EditorControls = __webpack_require__(8)["default"];
-	var SelectionManager = __webpack_require__(9)["default"];
-	var Exporter = __webpack_require__(10)["default"];
-	var UndoManager = __webpack_require__(11)["default"];
+	var Timeline = __webpack_require__(6)["default"];
+	var PropertiesEditor = __webpack_require__(7)["default"];
+	var EditorMenu = __webpack_require__(8)["default"];
+	var EditorControls = __webpack_require__(9)["default"];
+	var SelectionManager = __webpack_require__(10)["default"];
+	var Exporter = __webpack_require__(11)["default"];
+	var UndoManager = __webpack_require__(12)["default"];
+	var Signals = __webpack_require__(2);
+	
 	var Editor = (function () {
 	  var Editor = function Editor(tweenTime, options) {
 	    var _this = this;
@@ -95,6 +97,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.controls = new EditorControls(this.tweenTime, this.$timeline);
 	    this.undoManager = new UndoManager(this);
+	
+	    // Public events.
+	    this.onSelect = new Signals.Signal();
+	    var self = this;
+	    this.selectionManager.add(function (selection, addToSelection) {
+	      // Propagate the event.
+	      self.onSelect.dispatch(selection, addToSelection);
+	    });
 	
 	    // Will help resize the canvas to correct size (minus sidebar and timeline)
 	    window.editorEnabled = true;
@@ -167,6 +177,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -275,16 +291,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Utils;
 
 /***/ },
-/* 3 */,
 /* 4 */,
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	
-	var Utils = __webpack_require__(2)["default"];
+	var Utils = __webpack_require__(3)["default"];
 	var Header = __webpack_require__(17)["default"];
 	var TimeIndicator = __webpack_require__(18)["default"];
 	var Items = __webpack_require__(19)["default"];
@@ -446,14 +462,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Timeline;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
-	var Signals = __webpack_require__(13);
+	var Signals = __webpack_require__(2);
 	var Property = __webpack_require__(26)["default"];
 	
 	
@@ -538,7 +554,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = PropertiesEditor;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -593,7 +609,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = EditorMenu;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -666,13 +682,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = EditorControls;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
-	var Signals = __webpack_require__(13);
+	var d3 = __webpack_require__(16);
+	var Signals = __webpack_require__(2);
 	var _ = __webpack_require__(1);
 	
 	var SelectionManager = (function () {
@@ -801,7 +817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = SelectionManager;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -849,12 +865,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Exporter;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
 	var UndoManager = (function () {
 	  var UndoManager = function UndoManager(editor) {
@@ -965,13 +981,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = UndoManager;
 
 /***/ },
-/* 12 */,
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
-
-/***/ },
+/* 13 */,
 /* 14 */,
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
@@ -990,10 +1000,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	
-	var Signals = __webpack_require__(13);
-	var Utils = __webpack_require__(2)["default"];
+	var Signals = __webpack_require__(2);
+	var Utils = __webpack_require__(3)["default"];
 	var Header = (function () {
 	  var Header = function Header(timer, initialDomain, tweenTime, width, margin) {
 	    this.timer = timer;
@@ -1179,10 +1189,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
-	var Signals = __webpack_require__(13);
+	var d3 = __webpack_require__(16);
+	var Signals = __webpack_require__(2);
 	var _ = __webpack_require__(1);
-	var Utils = __webpack_require__(2)["default"];
+	var Utils = __webpack_require__(3)["default"];
 	var Items = (function () {
 	  var Items = function Items(timeline, container) {
 	    this.timeline = timeline;
@@ -1375,7 +1385,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
+	var d3 = __webpack_require__(16);
 	
 	var KeysPreview = (function () {
 	  var KeysPreview = function KeysPreview(timeline, container) {
@@ -1444,9 +1454,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
-	var Signals = __webpack_require__(13);
-	var Utils = __webpack_require__(2)["default"];
+	var d3 = __webpack_require__(16);
+	var Signals = __webpack_require__(2);
+	var Utils = __webpack_require__(3)["default"];
 	var Properties = (function () {
 	  var Properties = function Properties(timeline) {
 	    this.timeline = timeline;
@@ -1543,9 +1553,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var d3 = __webpack_require__(15);
-	var Signals = __webpack_require__(13);
-	var Utils = __webpack_require__(2)["default"];
+	var d3 = __webpack_require__(16);
+	var Signals = __webpack_require__(2);
+	var Utils = __webpack_require__(3)["default"];
 	var _ = __webpack_require__(1);
 	
 	var Keys = (function () {
@@ -1933,7 +1943,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(13);
+	var Signals = __webpack_require__(2);
 	var PropertyNumber = __webpack_require__(29)["default"];
 	var PropertyColor = __webpack_require__(30)["default"];
 	var PropertyTween = __webpack_require__(31)["default"];
@@ -2389,7 +2399,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
 	var PropertyBase = __webpack_require__(34)["default"];
 	var DraggableNumber = __webpack_require__(32);
@@ -2489,7 +2499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
 	__webpack_require__(33);
 	var PropertyBase = __webpack_require__(34)["default"];
@@ -2572,7 +2582,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(16);
+	__webpack_require__(15);
 	
 	var tpl_property = __webpack_require__(37);
 	
@@ -2700,9 +2710,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(13);
+	var Signals = __webpack_require__(2);
 	var _ = __webpack_require__(1);
-	var Utils = __webpack_require__(2)["default"];
+	var Utils = __webpack_require__(3)["default"];
 	var PropertyBase = (function () {
 	  var PropertyBase =
 	  // @instance_property: The current property on the data object.

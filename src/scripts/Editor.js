@@ -6,6 +6,7 @@ import EditorControls from './editor/EditorControls';
 import SelectionManager from './editor/SelectionManager';
 import Exporter from './editor/Exporter';
 import UndoManager from './editor/UndoManager';
+let Signals = require('js-signals');
 
 class Editor {
   constructor(tweenTime, options = {}) {
@@ -36,6 +37,14 @@ class Editor {
 
     this.controls = new EditorControls(this.tweenTime, this.$timeline);
     this.undoManager = new UndoManager(this);
+
+    // Public events.
+    this.onSelect = new Signals.Signal();
+    var self = this;
+    this.selectionManager.add(function(selection, addToSelection) {
+      // Propagate the event.
+      self.onSelect.dispatch(selection, addToSelection);
+    });
 
     // Will help resize the canvas to correct size (minus sidebar and timeline)
     window.editorEnabled = true;
