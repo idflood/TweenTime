@@ -41,7 +41,7 @@ class Editor {
     // Public events.
     this.onSelect = new Signals.Signal();
     var self = this;
-    this.selectionManager.add(function(selection, addToSelection) {
+    this.selectionManager.onSelect.add(function(selection, addToSelection) {
       // Propagate the event.
       self.onSelect.dispatch(selection, addToSelection);
     });
