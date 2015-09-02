@@ -24,10 +24,11 @@ export default class PropertiesEditor {
     this.keyRemoved = new Signals.Signal();
     this.items = [];
 
+    this.parentElement = editor.el;
     // Close properties by default.
-    $('body').addClass('properties-is-closed');
+    this.parentElement.addClass('properties-is-closed');
     // Add the properties editor to the document.
-    $('body').append(this.$el);
+    this.parentElement.append(this.$el);
 
     this.selectionManager.onSelect.add(this.onSelect);
 
@@ -56,7 +57,7 @@ export default class PropertiesEditor {
 
     // When selecting anything, automatically display the properties editor.
     if (this.items.length) {
-      $('body').removeClass('properties-is-closed');
+      this.parentElement.removeClass('properties-is-closed');
     }
   }
 
