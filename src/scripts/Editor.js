@@ -18,9 +18,10 @@ class Editor {
     this.onKeyAdded = this.onKeyAdded.bind(this);
     this.onKeyRemoved = this.onKeyRemoved.bind(this);
 
+    var el = options.el || $('body');
     this.$timeline = $(tpl_timeline());
-    $('body').append(this.$timeline);
-    $('body').addClass('has-editor');
+    el.append(this.$timeline);
+    el.addClass('has-editor');
 
     this.selectionManager = new SelectionManager(this.tweenTime);
     this.exporter = new Exporter(this);
