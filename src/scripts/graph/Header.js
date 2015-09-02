@@ -4,7 +4,7 @@ let Signals = require('js-signals');
 import Utils from '../core/Utils';
 
 export default class Header {
-  constructor(timer, initialDomain, tweenTime, width, margin) {
+  constructor(editor, timer, initialDomain, tweenTime, width, margin) {
     this.timer = timer;
     this.initialDomain = initialDomain;
     this.tweenTime = tweenTime;
@@ -27,7 +27,7 @@ export default class Header {
       .tickSize(-5, 0)
       .tickFormat(Utils.formatMinutes);
 
-    this.svg = d3.select('.timeline__header').append('svg')
+    this.svg = d3.select(editor.$timeline.get(0)).select('.timeline__header').append('svg')
       .attr('width', width + this.margin.left + this.margin.right)
       .attr('height', 56);
 

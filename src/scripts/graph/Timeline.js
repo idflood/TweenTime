@@ -51,7 +51,7 @@ export default class Timeline {
       .tickSize(-height, 0)
       .tickFormat(Utils.formatMinutes);
 
-    this.svg = d3.select('.timeline__main').append('svg')
+    this.svg = d3.select(editor.$timeline.get(0)).select('.timeline__main').append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', 600);
 
@@ -64,7 +64,7 @@ export default class Timeline {
     this.linesContainer = this.svg.append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    this.header = new Header(this.timer, this.initialDomain, this.tweenTime, width, margin);
+    this.header = new Header(editor, this.timer, this.initialDomain, this.tweenTime, width, margin);
     this.timeIndicator = new TimeIndicator(this, this.svgContainerTime);
 
     this.selection = new Selection(this, this.svg, margin);

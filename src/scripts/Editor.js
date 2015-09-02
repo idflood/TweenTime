@@ -19,7 +19,7 @@ class Editor {
     this.onKeyRemoved = this.onKeyRemoved.bind(this);
 
     var el = options.el || $('body');
-    this.$timeline = $(options.template || tpl_timeline());
+    this.$timeline = $(tpl_timeline());
     el.append(this.$timeline);
     el.addClass('has-editor');
 
