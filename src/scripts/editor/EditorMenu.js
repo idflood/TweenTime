@@ -11,21 +11,22 @@ export default class EditorMenu {
   }
 
   initToggle() {
+    var parentElement = this.editor.el;
     var timelineClosed = false;
     var $toggleLink = this.$timeline.find('[data-action="toggle"]');
     $toggleLink.click((e) => {
       e.preventDefault();
       timelineClosed = !timelineClosed;
       $toggleLink.toggleClass('menu-item--toggle-up', timelineClosed);
-      $('body').toggleClass('timeline-is-closed', timelineClosed);
+      parentElement.toggleClass('timeline-is-closed', timelineClosed);
       return window.dispatchEvent(new Event('resize'));
     });
-    var $toggleLinkSide = $('.properties-editor').find('[data-action="toggle"]');
+    var $toggleLinkSide = $('.properties-editor', parentElement).find('[data-action="toggle"]');
     $toggleLinkSide.click((e) => {
       var propertiesClosed;
       e.preventDefault();
-      propertiesClosed = !$('body').hasClass('properties-is-closed');
-      $('body').toggleClass('properties-is-closed', propertiesClosed);
+      propertiesClosed = !parentElement.hasClass('properties-is-closed');
+      parentElement.toggleClass('properties-is-closed', propertiesClosed);
       return window.dispatchEvent(new Event('resize'));
     });
   }
