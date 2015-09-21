@@ -70,19 +70,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _EditorMenu2 = _interopRequireDefault(_EditorMenu);
 	
-	var _EditorControls = __webpack_require__(38);
+	var _EditorControls = __webpack_require__(37);
 	
 	var _EditorControls2 = _interopRequireDefault(_EditorControls);
 	
-	var _SelectionManager = __webpack_require__(39);
+	var _SelectionManager = __webpack_require__(38);
 	
 	var _SelectionManager2 = _interopRequireDefault(_SelectionManager);
 	
-	var _Exporter = __webpack_require__(40);
+	var _Exporter = __webpack_require__(39);
 	
 	var _Exporter2 = _interopRequireDefault(_Exporter);
 	
-	var _UndoManager = __webpack_require__(41);
+	var _UndoManager = __webpack_require__(40);
 	
 	var _UndoManager2 = _interopRequireDefault(_UndoManager);
 	
@@ -90,7 +90,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var tpl_timeline = __webpack_require__(42);
+	var tpl_timeline = __webpack_require__(41);
 	
 	var Signals = __webpack_require__(3);
 	
@@ -110,9 +110,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.onKeyAdded = this.onKeyAdded.bind(this);
 	    this.onKeyRemoved = this.onKeyRemoved.bind(this);
 	
+	    var el = options.el || $('body');
+	    this.el = el;
 	    this.$timeline = $(tpl_timeline());
-	    $('body').append(this.$timeline);
-	    $('body').addClass('has-editor');
+	    el.append(this.$timeline);
+	    el.addClass('has-editor');
 	
 	    this.selectionManager = new _SelectionManager2.default(this.tweenTime);
 	    this.exporter = new _Exporter2.default(this);
@@ -448,7 +450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.xAxis = d3.svg.axis().scale(this.x).orient('top').tickSize(-height, 0).tickFormat(_Utils2.default.formatMinutes);
 	
-	    this.svg = d3.select('.timeline__main').append('svg').attr('width', width + margin.left + margin.right).attr('height', 600);
+	    this.svg = d3.select(editor.$timeline.get(0)).select('.timeline__main').append('svg').attr('width', width + margin.left + margin.right).attr('height', 600);
 	
 	    this.svgContainer = this.svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 	
@@ -456,7 +458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.linesContainer = this.svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 	
-	    this.header = new _Header2.default(this.timer, this.initialDomain, this.tweenTime, width, margin);
+	    this.header = new _Header2.default(editor, this.timer, this.initialDomain, this.tweenTime, width, margin);
 	    this.timeIndicator = new _TimeIndicator2.default(this, this.svgContainerTime);
 	
 	    this.selection = new _Selection2.default(this, this.svg, margin);
@@ -593,7 +595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Signals = __webpack_require__(3);
 	
 	var Header = (function () {
-	  function Header(timer, initialDomain, tweenTime, width, margin) {
+	  function Header(editor, timer, initialDomain, tweenTime, width, margin) {
 	    _classCallCheck(this, Header);
 	
 	    this.timer = timer;
@@ -614,7 +616,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.xAxis = d3.svg.axis().scale(this.x).orient('top').tickSize(-5, 0).tickFormat(_Utils2.default.formatMinutes);
 	
-	    this.svg = d3.select('.timeline__header').append('svg').attr('width', width + this.margin.left + this.margin.right).attr('height', 56);
+	    this.svg = d3.select(editor.$timeline.get(0)).select('.timeline__header').append('svg').attr('width', width + this.margin.left + this.margin.right).attr('height', 56);
 	
 	    this.svgContainer = this.svg.append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 	
@@ -1700,10 +1702,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.keyRemoved = new Signals.Signal();
 	    this.items = [];
 	
+	    this.parentElement = editor.el;
 	    // Close properties by default.
-	    $('body').addClass('properties-is-closed');
+	    this.parentElement.addClass('properties-is-closed');
 	    // Add the properties editor to the document.
-	    $('body').append(this.$el);
+	    this.parentElement.append(this.$el);
 	
 	    this.selectionManager.onSelect.add(this.onSelect);
 	
@@ -1738,7 +1741,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // When selecting anything, automatically display the properties editor.
 	      if (this.items.length) {
-	        $('body').removeClass('properties-is-closed');
+	        this.parentElement.removeClass('properties-is-closed');
 	      }
 	    }
 	  }, {
@@ -3441,21 +3444,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(EditorMenu, [{
 	    key: 'initToggle',
 	    value: function initToggle() {
+	      var parentElement = this.editor.el;
 	      var timelineClosed = false;
 	      var $toggleLink = this.$timeline.find('[data-action="toggle"]');
 	      $toggleLink.click(function (e) {
 	        e.preventDefault();
 	        timelineClosed = !timelineClosed;
 	        $toggleLink.toggleClass('menu-item--toggle-up', timelineClosed);
-	        $('body').toggleClass('timeline-is-closed', timelineClosed);
+	        parentElement.toggleClass('timeline-is-closed', timelineClosed);
 	        return window.dispatchEvent(new Event('resize'));
 	      });
-	      var $toggleLinkSide = $('.properties-editor').find('[data-action="toggle"]');
+	      var $toggleLinkSide = $('.properties-editor', parentElement).find('[data-action="toggle"]');
 	      $toggleLinkSide.click(function (e) {
 	        var propertiesClosed;
 	        e.preventDefault();
-	        propertiesClosed = !$('body').hasClass('properties-is-closed');
-	        $('body').toggleClass('properties-is-closed', propertiesClosed);
+	        propertiesClosed = !parentElement.hasClass('properties-is-closed');
+	        parentElement.toggleClass('properties-is-closed', propertiesClosed);
 	        return window.dispatchEvent(new Event('resize'));
 	      });
 	    }
@@ -3483,12 +3487,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {/* FileSaver.js
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
 	 * A saveAs() FileSaver implementation.
-	 * 2014-08-29
+	 * 1.1.20151003
 	 *
 	 * By Eli Grey, http://eligrey.com
-	 * License: X11/MIT
+	 * License: MIT
 	 *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
 	 */
 	
@@ -3497,16 +3501,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
 	
-	var saveAs = saveAs
-	  // IE 10+ (native saveAs)
-	  || (typeof navigator !== "undefined" &&
-	      navigator.msSaveOrOpenBlob && navigator.msSaveOrOpenBlob.bind(navigator))
-	  // Everyone else
-	  || (function(view) {
+	var saveAs = saveAs || (function(view) {
 		"use strict";
 		// IE <10 is explicitly unsupported
-		if (typeof navigator !== "undefined" &&
-		    /MSIE [1-9]\./.test(navigator.userAgent)) {
+		if (typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
 			return;
 		}
 		var
@@ -3518,13 +3516,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
 			, can_use_save_link = "download" in save_link
 			, click = function(node) {
-				var event = doc.createEvent("MouseEvents");
-				event.initMouseEvent(
-					"click", true, false, view, 0, 0, 0, 0, 0
-					, false, false, false, false, 0, null
-				);
+				var event = new MouseEvent("click");
 				node.dispatchEvent(event);
 			}
+			, is_safari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
 			, webkit_req_fs = view.webkitRequestFileSystem
 			, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
 			, throw_outside = function(ex) {
@@ -3534,9 +3529,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 			, force_saveable_type = "application/octet-stream"
 			, fs_min_size = 0
-			// See https://code.google.com/p/chromium/issues/detail?id=375297#c7 for
-			// the reasoning behind the timeout and revocation flow
-			, arbitrary_revoke_timeout = 10
+			// See https://code.google.com/p/chromium/issues/detail?id=375297#c7 and
+			// https://github.com/eligrey/FileSaver.js/commit/485930a#commitcomment-8768047
+			// for the reasoning behind the timeout and revocation flow
+			, arbitrary_revoke_timeout = 500 // in ms
 			, revoke = function(file) {
 				var revoker = function() {
 					if (typeof file === "string") { // file is an object URL
@@ -3565,7 +3561,17 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 			}
-			, FileSaver = function(blob, name) {
+			, auto_bom = function(blob) {
+				// prepend BOM for UTF-8 XML and text/* types (including HTML)
+				if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+					return new Blob(["\ufeff", blob], {type: blob.type});
+				}
+				return blob;
+			}
+			, FileSaver = function(blob, name, no_auto_bom) {
+				if (!no_auto_bom) {
+					blob = auto_bom(blob);
+				}
 				// First try a.download, then web filesystem, then object URLs
 				var
 					  filesaver = this
@@ -3578,6 +3584,19 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 					// on any filesys errors revert to saving with object URLs
 					, fs_error = function() {
+						if (target_view && is_safari && typeof FileReader !== "undefined") {
+							// Safari doesn't allow downloading of blob urls
+							var reader = new FileReader();
+							reader.onloadend = function() {
+								var base64Data = reader.result;
+								target_view.location.href = "data:attachment/file" + base64Data.slice(base64Data.search(/[,;]/));
+								filesaver.readyState = filesaver.DONE;
+								dispatch_all();
+							};
+							reader.readAsDataURL(blob);
+							filesaver.readyState = filesaver.INIT;
+							return;
+						}
 						// don't create more object URLs than needed
 						if (blob_changed || !object_url) {
 							object_url = get_URL().createObjectURL(blob);
@@ -3586,7 +3605,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							target_view.location.href = object_url;
 						} else {
 							var new_tab = view.open(object_url, "_blank");
-							if (new_tab == undefined && typeof safari !== "undefined") {
+							if (new_tab == undefined && is_safari) {
 								//Apple do not allow window.open, see http://bit.ly/1kZffRI
 								view.location.href = object_url
 							}
@@ -3613,10 +3632,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					object_url = get_URL().createObjectURL(blob);
 					save_link.href = object_url;
 					save_link.download = name;
-					click(save_link);
-					filesaver.readyState = filesaver.DONE;
-					dispatch_all();
-					revoke(object_url);
+					setTimeout(function() {
+						click(save_link);
+						dispatch_all();
+						revoke(object_url);
+						filesaver.readyState = filesaver.DONE;
+					});
 					return;
 				}
 				// Object and web filesystem URLs have a problem saving in Google Chrome when
@@ -3687,10 +3708,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				}), fs_error);
 			}
 			, FS_proto = FileSaver.prototype
-			, saveAs = function(blob, name) {
-				return new FileSaver(blob, name);
+			, saveAs = function(blob, name, no_auto_bom) {
+				return new FileSaver(blob, name, no_auto_bom);
 			}
 		;
+		// IE 10+ (native saveAs)
+		if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+			return function(blob, name, no_auto_bom) {
+				if (!no_auto_bom) {
+					blob = auto_bom(blob);
+				}
+				return navigator.msSaveOrOpenBlob(blob, name || "download");
+			};
+		}
+	
 		FS_proto.abort = function() {
 			var filesaver = this;
 			filesaver.readyState = filesaver.DONE;
@@ -3719,41 +3750,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	// while `this` is nsIContentFrameMessageManager
 	// with an attribute `content` that corresponds to the window
 	
-	if (typeof module !== "undefined" && module !== null) {
-	  module.exports = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(36) !== null) && (__webpack_require__(37) != null)) {
+	if (typeof module !== "undefined" && module.exports) {
+	  module.exports.saveAs = saveAs;
+	} else if (("function" !== "undefined" && __webpack_require__(35) !== null) && (__webpack_require__(36) != null)) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
 	    return saveAs;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)(module)))
+
 
 /***/ },
 /* 35 */
-/***/ function(module, exports) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-/* 36 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -3761,7 +3775,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3851,7 +3865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EditorControls;
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4020,7 +4034,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SelectionManager;
 
 /***/ },
-/* 40 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4082,7 +4096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Exporter;
 
 /***/ },
-/* 41 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4215,7 +4229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = UndoManager;
 
 /***/ },
-/* 42 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var H = __webpack_require__(24);
