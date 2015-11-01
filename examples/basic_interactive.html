@@ -99,7 +99,9 @@
         }
       ];
 
-      var tweenTime = new TweenTime.Core(data);
+      var tweenTime = new TweenTime.Core(data, {
+        defaultEase: 'Cubic.easeInOut'
+      });
       var editor = new TweenTime.Editor(tweenTime);
 
       var box_data = tweenTime.getItem('box');

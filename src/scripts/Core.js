@@ -8,6 +8,7 @@ import Orchestrator from './core/Orchestrator';
 class Core {
   constructor(data, options = {}) {
     this.data = data;
+    this.options = options;
     this.timer = new Timer(options);
     this.orchestrator = new Orchestrator(this.timer, this.data);
   }
@@ -85,6 +86,9 @@ class Core {
         // If we are not on a key but the property has other keys,
         // create it and add it to the keys array.
         key = {val: new_val, time: time_in_seconds, _property: property};
+        if (this.options.defaultEase) {
+          key.ease = this.options.defaultEase;
+        }
         property.keys.push(key);
         // Also sort the keys.
         property.keys = Utils.sortKeys(property.keys);
