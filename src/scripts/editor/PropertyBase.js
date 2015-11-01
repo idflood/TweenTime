@@ -49,6 +49,7 @@ export default class PropertyBase {
   onInputChange() {
     var current_value = this.getInputVal();
     var currentTime = this.timer.getCurrentTime() / 1000;
+
     // if we selected a key simply get the time from it.
     if (this.key_val) {
       currentTime = this.key_val.time;
@@ -102,11 +103,15 @@ export default class PropertyBase {
   }
 
   addKey(val) {
+    var core = this.editor.tweenTime;
     var currentTime = this.timer.getCurrentTime() / 1000;
     var key = {
       time: currentTime,
       val: val
     };
+    if (core.options.defaultEase) {
+      key.ease = core.options.defaultEase;
+    }
     this.instance_property.keys.push(key);
     this.instance_property.keys = Utils.sortKeys(this.instance_property.keys);
     this.lineData._isDirty = true;

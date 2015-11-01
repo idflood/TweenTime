@@ -11,6 +11,8 @@ export default class Properties {
 
   render(bar) {
     var self = this;
+    var editor = this.timeline.editor;
+    var core = editor.tweenTime;
 
     var propVal = function(d) {
       if (d.properties) {
@@ -60,9 +62,14 @@ export default class Properties {
           val: def,
           _property: d
         };
+        if (core.options.defaultEase) {
+          newKey.ease = core.options.defaultEase;
+        }
+
         d.keys.push(newKey);
         // Sort the keys for tweens creation
         d.keys = Utils.sortKeys(d.keys);
+        lineValue._isDirty = true;
 
         lineValue._isDirty = true;
         var keyContainer = this.parentNode;

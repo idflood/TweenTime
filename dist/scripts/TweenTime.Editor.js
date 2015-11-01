@@ -1751,6 +1751,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Properties.prototype.render = function (bar) {
 	    var self = this;
+	    var editor = this.timeline.editor;
+	    var core = editor.tweenTime;
 	
 	    var propVal = function (d) {
 	      if (d.properties) {
@@ -1794,9 +1796,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        val: def,
 	        _property: d
 	      };
+	      if (core.options.defaultEase) {
+	        newKey.ease = core.options.defaultEase;
+	      }
+	
 	      d.keys.push(newKey);
 	      // Sort the keys for tweens creation
 	      d.keys = Utils.sortKeys(d.keys);
+	      lineValue._isDirty = true;
 	
 	      lineValue._isDirty = true;
 	      var keyContainer = this.parentNode;
@@ -2386,7 +2393,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	    }
-	
 	  };
 	
 	  Property.prototype.onKeyAdded = function () {
@@ -2670,6 +2676,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  PropertyBase.prototype.onInputChange = function () {
 	    var current_value = this.getInputVal();
 	    var currentTime = this.timer.getCurrentTime() / 1000;
+	
 	    // if we selected a key simply get the time from it.
 	    if (this.key_val) {
 	      currentTime = this.key_val.time;
@@ -2723,11 +2730,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  PropertyBase.prototype.addKey = function (val) {
+	    var core = this.editor.tweenTime;
 	    var currentTime = this.timer.getCurrentTime() / 1000;
 	    var key = {
 	      time: currentTime,
 	      val: val
 	    };
+	    if (core.options.defaultEase) {
+	      key.ease = core.options.defaultEase;
+	    }
 	    this.instance_property.keys.push(key);
 	    this.instance_property.keys = Utils.sortKeys(this.instance_property.keys);
 	    this.lineData._isDirty = true;

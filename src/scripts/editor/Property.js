@@ -66,8 +66,6 @@ export default class Property {
         }
       }
     }
-
-
   }
 
   onKeyAdded() {
