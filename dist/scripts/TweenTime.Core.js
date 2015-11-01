@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("lodash"), require("./signals"), require("TweenMax"));
 	else
 		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["_"], root["signals"], root["TweenMax"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_14__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_7__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,17 +56,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	__webpack_require__(13);
+	__webpack_require__(1);
 	
-	var _ = __webpack_require__(1);
+	var _ = __webpack_require__(2);
 	
 	var Utils = __webpack_require__(3)["default"];
 	var Timer = __webpack_require__(4)["default"];
-	var Orchestrator = __webpack_require__(5)["default"];
+	var Orchestrator = __webpack_require__(6)["default"];
 	var Core = (function () {
 	  var Core = function Core(data, options) {
 	    if (options === undefined) options = {};
 	    this.data = data;
+	    this.options = options;
 	    this.timer = new Timer(options);
 	    this.orchestrator = new Orchestrator(this.timer, this.data);
 	  };
@@ -148,6 +149,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // If we are not on a key but the property has other keys,
 	        // create it and add it to the keys array.
 	        key = { val: new_val, time: time_in_seconds, _property: property };
+	        if (this.options.defaultEase) {
+	          key.ease = this.options.defaultEase;
+	        }
 	        property.keys.push(key);
 	        // Also sort the keys.
 	        property.keys = Utils.sortKeys(property.keys);
@@ -166,19 +170,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+	/* WEBPACK VAR INJECTION */(function(global) {(function(global){var to5Runtime=global.to5Runtime={};to5Runtime.extends=function(child,parent){child.prototype=Object.create(parent.prototype,{constructor:{value:child,enumerable:false,writable:true,configurable:true}});child.__proto__=parent};to5Runtime.classProps=function(child,staticProps,instanceProps){if(staticProps)Object.defineProperties(child,staticProps);if(instanceProps)Object.defineProperties(child.prototype,instanceProps)};to5Runtime.applyConstructor=function(Constructor,args){var instance=Object.create(Constructor.prototype);var result=Constructor.apply(instance,args);return result!=null&&(typeof result=="object"||typeof result=="function")?result:instance};to5Runtime.taggedTemplateLiteral=function(strings,raw){return Object.defineProperties(strings,{raw:{value:raw}})};to5Runtime.interopRequire=function(obj){return obj&&(obj["default"]||obj)};to5Runtime.toArray=function(arr){return Array.isArray(arr)?arr:Array.from(arr)};to5Runtime.objectSpread=function(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i]}return target};to5Runtime.hasOwn=Object.prototype.hasOwnProperty;to5Runtime.slice=Array.prototype.slice})(typeof global==="undefined"?self:global);
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 	
@@ -291,7 +296,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	
-	var Signals = __webpack_require__(2);
+	var Signals = __webpack_require__(5);
 	
 	var Timer = (function () {
 	  var Timer = function Timer(options) {
@@ -380,12 +385,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Signals = __webpack_require__(2);
-	var TweenMax = __webpack_require__(14);
+	var Signals = __webpack_require__(5);
+	var TweenMax = __webpack_require__(7);
 	
 	var Orchestrator = (function () {
 	  var Orchestrator = function Orchestrator(timer, data) {
@@ -581,27 +592,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = Orchestrator;
 
 /***/ },
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/* 7 */
+/***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {(function(global){var to5Runtime=global.to5Runtime={};to5Runtime.extends=function(child,parent){child.prototype=Object.create(parent.prototype,{constructor:{value:child,enumerable:false,writable:true,configurable:true}});child.__proto__=parent};to5Runtime.classProps=function(child,staticProps,instanceProps){if(staticProps)Object.defineProperties(child,staticProps);if(instanceProps)Object.defineProperties(child.prototype,instanceProps)};to5Runtime.applyConstructor=function(Constructor,args){var instance=Object.create(Constructor.prototype);var result=Constructor.apply(instance,args);return result!=null&&(typeof result=="object"||typeof result=="function")?result:instance};to5Runtime.taggedTemplateLiteral=function(strings,raw){return Object.defineProperties(strings,{raw:{value:raw}})};to5Runtime.interopRequire=function(obj){return obj&&(obj["default"]||obj)};to5Runtime.toArray=function(arr){return Array.isArray(arr)?arr:Array.from(arr)};to5Runtime.objectSpread=function(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i]}return target};to5Runtime.hasOwn=Object.prototype.hasOwnProperty;to5Runtime.slice=Array.prototype.slice})(typeof global==="undefined"?self:global);
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
 
 /***/ }
 /******/ ])
 });
-
+;
 //# sourceMappingURL=TweenTime.Core.js.map
