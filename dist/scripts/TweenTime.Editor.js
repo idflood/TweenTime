@@ -129,7 +129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Editor.prototype.onKeyRemoved = function (item) {
-	    this.selectionManager.removeItem(item);
+	    this.selectionManager.removeItem(item._id);
 	    this.undoManager.addState();
 	    if (this.selectionManager.selection.length) {
 	      this.selectionManager.triggerSelect();
@@ -2498,7 +2498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (index > -1) {
 	        propertyData.keys.splice(index, 1);
 	        if (key_val._dom) {
-	          _this.editor.propertiesEditor.keyRemoved.dispatch(key_val._dom);
+	          _this.editor.propertiesEditor.keyRemoved.dispatch(key_val);
 	        }
 	        lineData._isDirty = true;
 	      }
@@ -3485,10 +3485,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  SelectionManager.prototype.removeItem = function (item) {
+	    // If we pass an _id then search for the item and remove it.
+	    if (typeof item == "string") {
+	      var itemObj = _.find(this.selection, function (el) {
+	        return el._id == item;
+	      });
+	      if (itemObj) {
+	        return this.removeItem(itemObj);
+	      }
+	    }
+	
+	    // Remove the object if it exists in the selection.
 	    var index = this.selection.indexOf(item);
 	    if (index > -1) {
 	      this.selection.splice(index, 1);
 	    }
+	    this.triggerSelect();
 	  };
 	
 	  SelectionManager.prototype.sortSelection = function () {
