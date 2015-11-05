@@ -3,11 +3,11 @@ var gutil = require('gulp-util');
 var path = require("path");
 var sass = require('gulp-sass');
 var autoprefixer = require("gulp-autoprefixer");
-var csso = require('gulp-csso');
+var minifyCss = require('gulp-minify-css');
 var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
 var webpack = require("webpack");
-var jshint = require('gulp-jshint');
+var eslint = require('gulp-eslint');
 
 var getWebpackConfig = function() {
   return {
@@ -60,8 +60,18 @@ var getWebpackConfig = function() {
     },
     module: {
       loaders: [
-        { test: /\.js$/, exclude: [/bower_components/, /node_modules/, /dist/], loader: '6to5-loader?runtime=true'},
-        { test: /\.tpl.html$/, loader: 'mustache'},
+        {
+          test: /\.js$/,
+          exclude: [/bower_components/, /node_modules/, /dist/],
+          loader: 'babel',
+          query: {
+            presets: ['es2015']
+          }
+        },
+        {
+          test: /\.tpl.html$/,
+          loader: 'mustache'
+        }
       ],
     },
     plugins: [
@@ -77,8 +87,8 @@ gulp.task('lint-scripts', function() {
     'src/scripts/**/*.js',
     '!src/scripts/bower_components/**'
     ])
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
+    .pipe(eslint())
+    .pipe(eslint.formatEach('stylish', process.stderr));
 });
 
 gulp.task('scripts', function(cb) {
@@ -137,7 +147,7 @@ gulp.task('styles', function() {
       browsers: ['> 5%', 'last 2 versions'],
       cascade: false
     }))
-    //.pipe(csso()) ... still no sourcemaps support https://github.com/ben-eb/gulp-csso/issues/4
+    .pipe(minifyCss())
     .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest('./dist/styles/'));
 });
