@@ -1385,8 +1385,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var timeMatch = false;
 	      if (event.shiftKey) {
-	        time = dx / 1000;
-	        timeMatch = Utils.getClosestTime(tweenTime.data, time, "---non-existant");
+	        var time = dx / 1000;
+	        timeMatch = Utils.getClosestTime(tweenTime.data, time, "---non-existant", false, false, 0.3);
 	        if (timeMatch !== false) {
 	          timeMatch = timeMatch * 1000;
 	        }
