@@ -11,7 +11,7 @@ export default class UndoManager {
     this.addState();
 
     $(document).keydown((e) => {
-      if (e.keyCode == 90) {
+      if (e.keyCode === 90) {
         if (e.metaKey || e.ctrlKey) {
           if (!e.shiftKey) {
             // (command | ctrl) Z

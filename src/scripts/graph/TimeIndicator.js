@@ -3,8 +3,8 @@ export default class TimeIndicator {
     this.timeline = timeline;
     this.container = container;
     this.timeSelection = this.container.selectAll('.time-indicator').data(this.timeline.currentTime);
-    this.timeGrp = this.timeSelection.enter().append("svg")
-      .attr('class', "time-indicator timeline__right-mask")
+    this.timeGrp = this.timeSelection.enter().append('svg')
+      .attr('class', 'time-indicator timeline__right-mask')
       .attr('width', window.innerWidth - this.timeline.label_position_x)
       .attr('height', 442);
 
@@ -19,11 +19,11 @@ export default class TimeIndicator {
   }
 
   updateHeight(height) {
-    this.timeGrp.attr("height", height);
-    this.timeSelection.attr("height", height + this.timeline.margin.top + 5);
+    this.timeGrp.attr('height', height);
+    this.timeSelection.attr('height', height + this.timeline.margin.top + 5);
   }
 
   render() {
-    this.timeSelection.attr('transform', "translate(" + (this.timeline.x(this.timeline.currentTime[0]) - 0.5) + ",0)");
+    this.timeSelection.attr('transform', 'translate(' + (this.timeline.x(this.timeline.currentTime[0]) - 0.5) + ',0)');
   }
 }

@@ -23,16 +23,16 @@ export default class Header {
 
     this.xAxis = d3.svg.axis()
       .scale(this.x)
-      .orient("top")
+      .orient('top')
       .tickSize(-5, 0)
       .tickFormat(Utils.formatMinutes);
 
-    this.svg = d3.select('.timeline__header').append("svg")
-      .attr("width", width + this.margin.left + this.margin.right)
-      .attr("height", 56);
+    this.svg = d3.select('.timeline__header').append('svg')
+      .attr('width', width + this.margin.left + this.margin.right)
+      .attr('height', 56);
 
-    this.svgContainer = this.svg.append("g")
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+    this.svgContainer = this.svg.append('g')
+      .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
     this.createBrushHandle();
     this.createTimeHandle();
@@ -68,9 +68,9 @@ export default class Header {
   }
 
   createBrushHandle() {
-    this.xAxisElement = this.svgContainer.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (this.margin.top + 7) + ")")
+    this.xAxisElement = this.svgContainer.append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + (this.margin.top + 7) + ')')
       .call(this.xAxis);
 
     var onBrush = () => {
@@ -87,18 +87,18 @@ export default class Header {
     this.brush = d3.svg.brush()
       .x(this.x)
       .extent(this.initialDomain)
-      .on("brush", onBrush);
+      .on('brush', onBrush);
 
-    this.gBrush = this.svgContainer.append("g")
-      .attr("class", "brush")
+    this.gBrush = this.svgContainer.append('g')
+      .attr('class', 'brush')
       .call(this.brush)
-      .selectAll("rect")
+      .selectAll('rect')
       .attr('height', 20);
   }
 
   render() {
     var timeSelection = this.svgContainer.selectAll('.time-indicator');
-    timeSelection.attr('transform', 'translate(' + (this.xDisplayed(this.currentTime[0])) + ', 25)');
+    timeSelection.attr('transform', 'translate(' + this.xDisplayed(this.currentTime[0]) + ', 25)');
   }
 
   createTimeHandle() {
@@ -131,7 +131,7 @@ export default class Header {
       .origin(function(d) {
         return d;
       })
-      .on("drag", dragTimeMove);
+      .on('drag', dragTimeMove);
 
     var timeSelection = this.svgContainer.selectAll('.time-indicator').data(this.currentTime);
 
@@ -149,9 +149,9 @@ export default class Header {
         self.timer.seek([dx]);
       });
 
-    var timeGrp = timeSelection.enter().append("g")
-      .attr('class', "time-indicator")
-      .attr("transform", "translate(-0.5," + 30 + ")")
+    var timeGrp = timeSelection.enter().append('g')
+      .attr('class', 'time-indicator')
+      .attr('transform', 'translate(-0.5,' + 30 + ')')
       .call(dragTime);
 
     timeGrp.append('rect')
@@ -167,20 +167,20 @@ export default class Header {
 
     // Mask time indicator
     // todo: remove the mask.
-    this.svgContainer.append("rect")
-      .attr("class", "graph-mask")
-      .attr("x", -self.margin.left)
-      .attr("y", -self.margin.top)
-      .attr("width", self.margin.left - 5)
-      .attr("height", self.height);
+    this.svgContainer.append('rect')
+      .attr('class', 'graph-mask')
+      .attr('x', -self.margin.left)
+      .attr('y', -self.margin.top)
+      .attr('width', self.margin.left - 5)
+      .attr('height', self.height);
   }
 
   resize(width) {
-    width = width - this.margin.left - this.margin.right;
-    this.svg.attr("width", width + this.margin.left + this.margin.right);
+    let width2 = width - this.margin.left - this.margin.right;
+    this.svg.attr('width', width2 + this.margin.left + this.margin.right);
 
-    this.x.range([0, width]);
-    this.xDisplayed.range([0, width]);
+    this.x.range([0, width2]);
+    this.xDisplayed.range([0, width2]);
     this.xAxisElement.call(this.xAxis);
   }
 }

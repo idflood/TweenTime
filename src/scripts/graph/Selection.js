@@ -18,7 +18,7 @@ export default class Selection {
 
   init() {
     var self = this;
-    this.svg.on("mousedown", function() {
+    this.svg.on('mousedown', function() {
       var p = d3.mouse(this);
       // Only init selection if we click on the timeline and not on the labels.
       if (p[0] < self.timeline.margin.left) {
@@ -38,7 +38,7 @@ export default class Selection {
       $('body').css({
         'user-select': 'none'
       });
-    }).on("mousemove", function() {
+    }).on('mousemove', function() {
       var s = self.svg.select('.selection');
       if (s.empty()) {
         return;
@@ -60,14 +60,16 @@ export default class Selection {
       if (move.x < 1 || move.x * 2 < d.width) {
         d.x = p[0];
         d.width -= move.x;
-      } else {
+      }
+      else {
         d.width = move.x;
       }
 
       if (move.y < 1 || move.y * 2 < d.height) {
         d.y = p[1];
         d.height -= move.y;
-      } else {
+      }
+      else {
         d.height = move.y;
       }
 
@@ -109,6 +111,6 @@ export default class Selection {
     });
     // Attach the mouseup event to window so that it catch it event if
     // mouseup happen outside of the browser window.
-    $(window).on("mouseup", this.onMouseUp);
+    $(window).on('mouseup', this.onMouseUp);
   }
 }

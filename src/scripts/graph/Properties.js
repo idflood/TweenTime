@@ -17,9 +17,8 @@ export default class Properties {
     var propVal = function(d) {
       if (d.properties) {
         return d.properties.filter((prop) => {return prop.keys.length;});
-      } else {
-        return [];
       }
+      return [];
     };
     var propKey = function(d) {
       return d.name;
@@ -28,15 +27,15 @@ export default class Properties {
     var properties = bar.selectAll('.line-item').data(propVal, propKey);
     var subGrp = properties.enter()
       .append('g')
-      .attr("class", 'line-item');
+      .attr('class', 'line-item');
 
     // Save subGrp in a variable for use in Errors.coffee
     self.subGrp = subGrp;
 
-    properties.attr ("transform", function(d, i) {
-        var sub_height = (i + 1) * self.timeline.lineHeight;
-        return "translate(0," + sub_height + ")";
-      });
+    properties.attr('transform', function(d, i) {
+      let sub_height = (i + 1) * self.timeline.lineHeight;
+      return 'translate(0,' + sub_height + ')';
+    });
 
     subGrp.append('rect')
       .attr('class', 'click-handler click-handler--property')
@@ -47,7 +46,7 @@ export default class Properties {
       .on('dblclick', function(d) {
         var lineObject = this.parentNode.parentNode;
         var lineValue = d3.select(lineObject).datum();
-        var def = d["default"] ? d["default"] : 0;
+        var def = d.default ? d.default : 0;
         var mouse = d3.mouse(this);
         var dx = self.timeline.x.invert(mouse[0]);
         dx = dx.getTime() / 1000;
@@ -78,35 +77,34 @@ export default class Properties {
 
     // Mask
     subGrp.append('svg')
-      .attr('class','line-item__keys timeline__right-mask')
+      .attr('class', 'line-item__keys timeline__right-mask')
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight)
       .attr('fill', '#f00');
 
     subGrp.append('text')
-      .attr("class", "line-label line-label--small")
-      .attr("x", self.timeline.label_position_x + 10)
-      .attr("y", 15)
+      .attr('class', 'line-label line-label--small')
+      .attr('x', self.timeline.label_position_x + 10)
+      .attr('y', 15)
       .text(function(d) {
         return d.name;
       });
 
-    subGrp.append("line")
-      .attr("class", 'line-separator--secondary')
-      .attr("x1", -self.timeline.margin.left)
-      .attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100))
-      .attr("y1", self.timeline.lineHeight)
-      .attr("y2", self.timeline.lineHeight);
+    subGrp.append('line')
+      .attr('class', 'line-separator--secondary')
+      .attr('x1', -self.timeline.margin.left)
+      .attr('x2', self.timeline.x(self.timeline.timer.totalDuration + 100))
+      .attr('y1', self.timeline.lineHeight)
+      .attr('y2', self.timeline.lineHeight);
 
     bar.selectAll('.line-item').attr('display', function() {
-        var lineObject = this.parentNode;
-        var lineValue = d3.select(lineObject).datum();
-        if (!lineValue.collapsed) {
-          return "block";
-        } else {
-          return "none";
-        }
-      });
+      var lineObject = this.parentNode;
+      var lineValue = d3.select(lineObject).datum();
+      if (!lineValue.collapsed) {
+        return 'block';
+      }
+      return 'none';
+    });
 
     properties.exit().remove();
 

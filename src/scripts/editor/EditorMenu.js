@@ -36,7 +36,7 @@ export default class EditorMenu {
       e.preventDefault();
       var data = exporter.getJSON();
       var blob = new Blob([data], {
-        "type": "text/json;charset=utf-8"
+        type: 'text/json;charset=utf-8'
       });
       saveAs(blob, 'data.json');
     });

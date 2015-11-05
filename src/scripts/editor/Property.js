@@ -19,9 +19,9 @@ export default class Property {
     this.tweenProp = false;
 
     var key_val = false;
-    var propertyObject = false;
+    // var propertyObject = false;
     var propertyData = false;
-    var lineObject = false;
+    // var lineObject = false;
     var lineData = false;
 
     // For keys the _property data should be defined.
@@ -74,30 +74,30 @@ export default class Property {
   }
 
   getGroupContainer(instance_prop, $container) {
-    var $existing, $grp, grp_class;
+    var $existing;
+    var $grp;
+    var grp_class;
     if (!instance_prop.group) {
       grp_class = 'property-grp--general';
       $existing = $container.find('.' + grp_class);
       if ($existing.length) {
         return $existing;
-      } else {
-        $grp = this.createGroupContainer(grp_class);
-        $container.append($grp);
-        return $grp;
       }
-    } else {
-      // Replace all spaces to dash and make class lowercase
-      var group_name = instance_prop.group.replace(/\s+/g, '-').toLowerCase();
-      grp_class = 'property-grp--' + group_name;
-      $existing = $container.find('.' + grp_class);
-      if ($existing.length) {
-        return $existing;
-      } else {
-        $grp = this.createGroupContainer(grp_class, instance_prop.group);
-        $container.append($grp);
-        return $grp;
-      }
+
+      $grp = this.createGroupContainer(grp_class);
+      $container.append($grp);
+      return $grp;
     }
+    // Replace all spaces to dash and make class lowercase
+    var group_name = instance_prop.group.replace(/\s+/g, '-').toLowerCase();
+    grp_class = 'property-grp--' + group_name;
+    $existing = $container.find('.' + grp_class);
+    if ($existing.length) {
+      return $existing;
+    }
+    $grp = this.createGroupContainer(grp_class, instance_prop.group);
+    $container.append($grp);
+    return $grp;
   }
 
   createGroupContainer(grp_class, label = false) {
@@ -146,11 +146,11 @@ export default class Property {
   }
 
   addNumberProperty(instance_prop, lineData, key_val, $container) {
-    var propClass = PropertyNumber;
+    var PropClass = PropertyNumber;
     if (instance_prop.type && instance_prop.type === 'color') {
-      propClass = PropertyColor;
+      PropClass = PropertyColor;
     }
-    var prop = new propClass(instance_prop, lineData, this.editor, key_val);
+    var prop = new PropClass(instance_prop, lineData, this.editor, key_val);
     prop.keyAdded.add(this.onKeyAdded);
     $container.append(prop.$el);
     return prop;
@@ -176,7 +176,7 @@ export default class Property {
   }
 
   update() {
-    for (var i = 0; i < this.items.length; i++) {
+    for (var i = 0; i < this.items.length; i++) {
       var item = this.items[i];
       item.update();
     }

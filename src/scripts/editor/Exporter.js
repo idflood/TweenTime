@@ -18,7 +18,7 @@ export default class Exporter {
     };
   }
 
-  getJSON () {
+  getJSON() {
     var options = this.editor.options;
     var json_replacer = function(key, val) {
       // Disable all private properies from TweenMax/TimelineMax

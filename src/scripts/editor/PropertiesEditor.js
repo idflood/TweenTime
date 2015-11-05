@@ -49,7 +49,8 @@ export default class PropertiesEditor {
       for (var i = 0; i < data.length; i++) {
         this.addProperty(data[i]);
       }
-    } else {
+    }
+    else {
       this.addProperty(data);
     }
 

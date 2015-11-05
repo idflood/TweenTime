@@ -75,11 +75,12 @@ export default class Keys {
       var key_scale = false;
       var is_first = false;
       if (selection.length) {
-        if (sourceEvent.altKey && (selection_first_time !== false) && (selection_last_time !== false)) {
+        if (sourceEvent.altKey && selection_first_time !== false && selection_last_time !== false) {
           is_first = selection_first_time === old_time;
           if (is_first) {
             key_scale = (selection_last_time - d.time) / (selection_last_time - old_time);
-          } else {
+          }
+          else {
             key_scale = (d.time - selection_first_time) / (old_time - selection_first_time);
           }
         }
@@ -88,10 +89,12 @@ export default class Keys {
           var data = selection[i];
           if (key_scale === false) {
             data.time += time_offset;
-          } else {
+          }
+          else {
             if (is_first) {
               data.time = selection_last_time - (selection_last_time - data.time) * key_scale;
-            } else {
+            }
+            else {
               data.time = selection_first_time + (data.time - selection_first_time) * key_scale;
             }
           }
@@ -125,7 +128,7 @@ export default class Keys {
       var addToSelection = event.shiftKey;
       // if element is already selectionned and we are on
       // the dragstart event, we stop there since it is already selected.
-      if (d3.event.type && d3.event.type === "dragstart") {
+      if (d3.event.type && d3.event.type === 'dragstart') {
         if (d3.select(this).classed('key--selected')) {
           return;
         }
@@ -144,9 +147,9 @@ export default class Keys {
 
     var drag = d3.behavior.drag()
       .origin((d) => {return d;})
-      .on("drag", dragmove)
-      .on("dragstart", selectKey)
-      .on("dragend", dragend);
+      .on('drag', dragmove)
+      .on('dragstart', selectKey)
+      .on('dragend', dragend);
 
     var key_grp = keys.enter()
       .append('g')
@@ -165,14 +168,15 @@ export default class Keys {
         var cls = 'key';
         // keep selected class
         if (d3.select(this).classed('key--selected')) {
-          cls += " key--selected";
+          cls += ' key--selected';
         }
         if (d.ease) {
           var ease = d.ease.split('.');
           if (ease.length === 2) {
-            cls += " " + ease[1];
+            cls += ' ' + ease[1];
           }
-        } else {
+        }
+        else {
           // If no easing specified, the it's the default Quad.easeOut
           cls += ' easeOut';
         }
@@ -217,7 +221,7 @@ export default class Keys {
       var dx = self.timeline.x(d.time * 1000);
       dx = parseInt(dx, 10);
       var dy = 10;
-      return "translate(" + dx + "," + dy + ")";
+      return 'translate(' + dx + ',' + dy + ')';
     });
 
     keys.exit().remove();

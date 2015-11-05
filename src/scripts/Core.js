@@ -1,4 +1,3 @@
-import '6to5/runtime';
 var _ = require('lodash');
 
 import Utils from './core/Utils';
@@ -15,35 +14,35 @@ class Core {
 
   getItem(item_id) {
     // In case we passed the item object directly return it.
-    if (item_id && typeof item_id == 'object') {
+    if (item_id && typeof item_id === 'object') {
       return item_id;
     }
 
-    return _.find(this.data, (item) => item.id == item_id);
+    return _.find(this.data, (item) => item.id === item_id);
   }
 
   getProperty(prop_name, item_id_or_obj) {
     // If we passed the item name get the object from it.
-    item_id_or_obj = this.getItem(item_id_or_obj);
+    let item = this.getItem(item_id_or_obj);
 
     // Return false if we have no item
-    if (!item_id_or_obj) {
+    if (!item) {
       return false;
     }
 
-    return _.find(item_id_or_obj.properties, property => property.name == prop_name);
+    return _.find(item.properties, property => property.name === prop_name);
   }
 
   getValues(item_id_or_obj) {
     // If we passed the item name get the object from it.
-    item_id_or_obj = this.getItem(item_id_or_obj);
+    let item = this.getItem(item_id_or_obj);
 
     // Return false if we have no item
-    if (!item_id_or_obj) {
+    if (!item) {
       return undefined;
     }
 
-    return item_id_or_obj.values;
+    return item.values;
   }
 
   getValue(prop_name, item_id_or_obj) {
@@ -58,20 +57,19 @@ class Core {
     if (values[prop_name] !== undefined) {
       return values[prop_name];
     }
-    else {
-      return undefined;
-    }
+    return undefined;
   }
 
   getKeyAt(property, time_in_seconds) {
-    return _.find(property.keys, key => key.time == time_in_seconds);
+    return _.find(property.keys, key => key.time === time_in_seconds);
   }
 
   setValue(property, new_val, time_in_seconds = false) {
-    if (time_in_seconds === false) {
-      time_in_seconds = this.timer.getCurrentTime() / 1000;
+    let time = time_in_seconds;
+    if (time === false) {
+      time = this.timer.getCurrentTime() / 1000;
     }
-    var key = this.getKeyAt(property, time_in_seconds);
+    var key = this.getKeyAt(property, time);
 
     if (key) {
       // If we found a key, simply update the value.
@@ -85,7 +83,7 @@ class Core {
       else {
         // If we are not on a key but the property has other keys,
         // create it and add it to the keys array.
-        key = {val: new_val, time: time_in_seconds, _property: property};
+        key = {val: new_val, time: time, _property: property};
         if (this.options.defaultEase) {
           key.ease = this.options.defaultEase;
         }

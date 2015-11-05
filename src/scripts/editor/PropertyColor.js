@@ -12,7 +12,7 @@ export default class PropertyColor extends PropertyBase {
   }
 
   render() {
-    super();
+    super.render();
     // By default assign the property default value
     var val = this.getCurrentVal();
 
@@ -32,12 +32,12 @@ export default class PropertyColor extends PropertyBase {
       allowEmpty: false,
       showAlpha: true,
       clickoutFiresChange: false,
-      preferredFormat: "rgb",
+      preferredFormat: 'rgb',
       change: () => {
         this.editor.undoManager.addState();
       },
       move: (color) => {
-        if (color._a == 1) {
+        if (color._a === 1) {
           $input.val(color.toHexString());
         }
         else {
@@ -52,14 +52,14 @@ export default class PropertyColor extends PropertyBase {
   }
 
   remove() {
-    super();
+    super.remove();
     this.$el.find('input').spectrum('destroy');
     delete this.$el;
     delete this.$input;
   }
 
   update() {
-    super();
+    super.update();
     var val = this.getCurrentVal();
     this.$input.val(val);
     this.$input.spectrum('set', val);

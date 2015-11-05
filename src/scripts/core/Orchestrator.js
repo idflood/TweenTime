@@ -19,7 +19,7 @@ export default class Orchestrator {
   getEasing(key = false) {
     if (key && key.ease) {
       var ease_index = key.ease.split('.');
-      if (ease_index.length == 2 && window[ease_index[0]] && window[ease_index[0]][ease_index[1]]) {
+      if (ease_index.length === 2 && window[ease_index[0]] && window[ease_index[0]][ease_index[1]]) {
         return window[ease_index[0]][ease_index[1]];
       }
     }
@@ -32,7 +32,7 @@ export default class Orchestrator {
     for (var property_key = 0; property_key < item.properties.length; property_key++) {
       var property = item.properties[property_key];
       // Setup special properties
-      if (property.type && property.type == "color") {
+      if (property.type && property.type === 'color') {
         // If the property is a color mark it as css
         property.css = true;
       }
@@ -46,7 +46,7 @@ export default class Orchestrator {
 
   initItemValues(item) {
     item.values = {};
-    //item._isDirty = true
+    // item._isDirty = true
     for (var property_key = 0; property_key < item.properties.length; property_key++) {
       var property = item.properties[property_key];
       if (property.keys.length) {
@@ -61,7 +61,10 @@ export default class Orchestrator {
   update(timestamp) {
     var seconds = timestamp / 1000;
     var has_dirty_items = false;
-    var i, item, property, property_key;
+    var i;
+    var item;
+    var property;
+    var property_key;
 
     for (i = 0; i < this.data.length; i++) {
       item = this.data[i];
@@ -87,7 +90,7 @@ export default class Orchestrator {
 
       if (item._timeline && item._isDirty && item.properties) {
         item._isDirty = false;
-        //item._timeline.clear();
+        // item._timeline.clear();
 
         for (property_key = 0; property_key < item.properties.length; property_key++) {
           property = item.properties[property_key];

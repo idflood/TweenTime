@@ -56,9 +56,9 @@ export default class SelectionManager {
 
   removeItem(item) {
     // If we pass an _id then search for the item and remove it.
-    if (typeof item == 'string') {
+    if (typeof item === 'string') {
       let itemObj = _.find(this.selection, function(el) {
-        return el._id == item;
+        return el._id === item;
       });
       if (itemObj) {
         return this.removeItem(itemObj);

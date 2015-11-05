@@ -47,22 +47,22 @@ export default class Timeline {
 
     this.xAxis = d3.svg.axis()
       .scale(this.x)
-      .orient("top")
+      .orient('top')
       .tickSize(-height, 0)
       .tickFormat(Utils.formatMinutes);
 
-    this.svg = d3.select('.timeline__main').append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", 600);
+    this.svg = d3.select('.timeline__main').append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', 600);
 
-    this.svgContainer = this.svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    this.svgContainer = this.svg.append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    this.svgContainerTime = this.svg.append("g")
-      .attr("transform", "translate(" + margin.left + ",0)");
+    this.svgContainerTime = this.svg.append('g')
+      .attr('transform', 'translate(' + margin.left + ',0)');
 
-    this.linesContainer = this.svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
+    this.linesContainer = this.svg.append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     this.header = new Header(this.timer, this.initialDomain, this.tweenTime, width, margin);
     this.timeIndicator = new TimeIndicator(this, this.svgContainerTime);
@@ -91,17 +91,17 @@ export default class Timeline {
       .scale(this.x)
       .ticks(100)
       .tickSize(-this.items.dy, 0)
-      .tickFormat("")
-      .orient("top");
+      .tickFormat('')
+      .orient('top');
 
     this.xGrid = this.svgContainer.append('g')
       .attr('class', 'x axis grid')
-      .attr("transform", "translate(0," + margin.top + ")")
+      .attr('transform', 'translate(0,' + margin.top + ')')
       .call(this.xAxisGrid);
 
-    this.xAxisElement = this.svgContainer.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + margin.top + ")")
+    this.xAxisElement = this.svgContainer.append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + margin.top + ')')
       .call(this.xAxis);
 
     this.header.onBrush.add((extent) => {
@@ -116,11 +116,11 @@ export default class Timeline {
 
     window.onresize = () => {
       var INNER_WIDTH = window.innerWidth;
-      var width = INNER_WIDTH - margin.left - margin.right;
-      this.svg.attr("width", width + margin.left + margin.right);
+      var width2 = INNER_WIDTH - margin.left - margin.right;
+      this.svg.attr('width', width2 + margin.left + margin.right);
       this.svg.selectAll('.timeline__right-mask')
         .attr('width', INNER_WIDTH);
-      this.x.range([0, width]);
+      this.x.range([0, width2]);
 
       this._isDirty = true;
       this.header.resize(INNER_WIDTH);
@@ -172,7 +172,7 @@ export default class Timeline {
       this.xAxisGrid.tickSize(-height, 0);
       this.xGrid.call(this.xAxisGrid);
       this.xAxisElement.call(this.xAxis);
-      this.svg.attr("height", height);
+      this.svg.attr('height', height);
       this.timeIndicator.updateHeight(height);
     }
   }

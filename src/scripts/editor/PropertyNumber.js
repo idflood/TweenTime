@@ -18,7 +18,7 @@ export default class PropertyNumber extends PropertyBase {
   }
 
   render() {
-    super();
+    super.render();
     // By default assign the property default value
     var val = this.getCurrentVal();
 
@@ -56,7 +56,7 @@ export default class PropertyNumber extends PropertyBase {
   }
 
   remove() {
-    super();
+    super.render();
     if (this.$input.data('draggable')) {
       this.$input.data('draggable').destroy();
     }
@@ -66,7 +66,7 @@ export default class PropertyNumber extends PropertyBase {
   }
 
   update() {
-    super();
+    super.render();
     var val = this.getCurrentVal();
     var draggable = this.$input.data('draggable');
 

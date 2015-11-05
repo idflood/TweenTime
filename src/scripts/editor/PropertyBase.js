@@ -11,7 +11,7 @@ export default class PropertyBase {
     this.editor = editor;
     this.key_val = key_val;
 
-    //this.update = this.update.bind(this);
+    // this.update = this.update.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
     this.onKeyClick = this.onKeyClick.bind(this);
 
@@ -57,7 +57,7 @@ export default class PropertyBase {
 
     if (this.instance_property.keys && this.instance_property.keys.length) {
       // Add a new key if there is no other key at same time
-      var current_key = _.find(this.instance_property.keys, (key) => key.time == currentTime);
+      var current_key = _.find(this.instance_property.keys, (key) => key.time === currentTime);
 
       if (current_key) {
         // if there is a key update it

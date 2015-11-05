@@ -1,7 +1,7 @@
 let Signals = require('js-signals');
 
 export default class Timer {
-  constructor (options = {}) {
+  constructor(options = {}) {
     // in millisecond
     this.totalDuration = options.totalDuration || 240 * 1000;
     // Use an array for the time for easier d3.js integration (used as data for timeseeker).
@@ -13,7 +13,8 @@ export default class Timer {
     this.statusChanged = new Signals.Signal();
     this.durationChanged = new Signals.Signal();
     this.seeked = new Signals.Signal();
-    window.requestAnimationFrame((timestamp) => this.update(timestamp));
+    this.update = this.update.bind(this);
+    window.requestAnimationFrame(this.update);
   }
 
   getCurrentTime() {
@@ -51,7 +52,7 @@ export default class Timer {
 
   update(timestamp) {
     // Init timestamp
-    if (this.last_timeStamp == -1) {
+    if (this.last_timeStamp === -1) {
       this.last_timeStamp = timestamp;
     }
     var elapsed = timestamp - this.last_timeStamp;
@@ -70,6 +71,6 @@ export default class Timer {
 
     this.last_timeStamp = timestamp;
     this.last_time = this.time[0];
-    window.requestAnimationFrame((timestamp) => this.update(timestamp));
+    window.requestAnimationFrame(this.update);
   }
 }

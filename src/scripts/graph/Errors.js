@@ -11,7 +11,7 @@ export default class Errors {
     };
     // use insert with :first-child to prepend.
     subGrp.insert('svg', ':first-child')
-      .attr('class','line-item__errors')
+      .attr('class', 'line-item__errors')
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight);
 

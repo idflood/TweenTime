@@ -22,7 +22,7 @@ export default class Items {
 
     var dragmove = function(d) {
       var dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
-      var diff = (dx - d.start);
+      var diff = dx - d.start;
       d.start += diff;
       d.end += diff;
       if (d.properties) {
@@ -77,24 +77,24 @@ export default class Items {
         var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
-      .on("drag", dragmoveLeft);
+      .on('drag', dragmoveLeft);
 
     var dragRight = d3.behavior.drag()
       .origin(function() {
         var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
-      .on("drag", dragmoveRight);
+      .on('drag', dragmoveRight);
 
     var drag = d3.behavior.drag()
       .origin(function() {
         var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
-      .on("drag", dragmove);
+      .on('drag', dragmove);
 
     var bar_border = 1;
-    var bar = this.container.selectAll(".line-grp")
+    var bar = this.container.selectAll('.line-grp')
       .data(this.timeline.tweenTime.data, (d) => {return d.id;});
 
     var barEnter = bar.enter()
@@ -105,29 +105,29 @@ export default class Items {
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight);
 
-    barContainerRight.append("rect")
-      .attr("class", "bar")
+    barContainerRight.append('rect')
+      .attr('class', 'bar')
       // Add a unique id for SelectionManager.removeDuplicates
       .attr('id', () => {return Utils.guid();})
-      .attr("y", 3)
-      .attr("height", 14);
+      .attr('y', 3)
+      .attr('height', 14);
 
-    barContainerRight.append("rect")
-      .attr("class", "bar-anchor bar-anchor--left")
-      .attr("y", 2)
-      .attr("height", 16)
-      .attr("width", 6)
+    barContainerRight.append('rect')
+      .attr('class', 'bar-anchor bar-anchor--left')
+      .attr('y', 2)
+      .attr('height', 16)
+      .attr('width', 6)
       .call(dragLeft);
 
-    barContainerRight.append("rect")
-      .attr("class", "bar-anchor bar-anchor--right")
-      .attr("y", 2)
-      .attr("height", 16)
-      .attr("width", 6)
+    barContainerRight.append('rect')
+      .attr('class', 'bar-anchor bar-anchor--right')
+      .attr('y', 2)
+      .attr('height', 16)
+      .attr('width', 6)
       .call(dragRight);
 
     self.dy = 10 + this.timeline.margin.top;
-    bar.attr("transform", function(d) {
+    bar.attr('transform', function(d) {
       var y = self.dy;
       self.dy += self.timeline.lineHeight;
       if (!d.collapsed) {
@@ -140,11 +140,11 @@ export default class Items {
         }
         self.dy += numProperties * self.timeline.lineHeight;
       }
-      return "translate(0," + y + ")";
+      return 'translate(0,' + y + ')';
     });
 
     var barWithStartAndEnd = function(d) {
-      if ((d.start !== undefined) && (d.end !== undefined)) {
+      if (d.start !== undefined && d.end !== undefined) {
         return true;
       }
       return false;
@@ -152,7 +152,7 @@ export default class Items {
 
     bar.selectAll('.bar-anchor--left')
       .filter(barWithStartAndEnd)
-      .attr("x", (d) => {return self.timeline.x(d.start * 1000) - 1;})
+      .attr('x', (d) => {return self.timeline.x(d.start * 1000) - 1;})
       .on('mousedown', function() {
         // Don't trigger mousedown on linescontainer else
         // it create the selection rectangle
@@ -161,7 +161,7 @@ export default class Items {
 
     bar.selectAll('.bar-anchor--right')
       .filter(barWithStartAndEnd)
-      .attr("x", (d) => {return self.timeline.x(d.end * 1000) - 1;})
+      .attr('x', (d) => {return self.timeline.x(d.end * 1000) - 1;})
       .on('mousedown', function() {
         // Don't trigger mousedown on linescontainer else
         // it create the selection rectangle
@@ -170,22 +170,22 @@ export default class Items {
 
     bar.selectAll('.bar')
       .filter(barWithStartAndEnd)
-      .attr("x", (d) => {return self.timeline.x(d.start * 1000) + bar_border;})
-      .attr("width", function(d) {
+      .attr('x', (d) => {return self.timeline.x(d.start * 1000) + bar_border;})
+      .attr('width', function(d) {
         return Math.max(0, (self.timeline.x(d.end) - self.timeline.x(d.start)) * 1000 - bar_border);
       })
       .call(drag)
-      .on("click", selectBar)
+      .on('click', selectBar)
       .on('mousedown', function() {
         // Don't trigger mousedown on linescontainer else
         // it create the selection rectangle
         d3.event.stopPropagation();
       });
 
-    barEnter.append("text")
-      .attr("class", "line-label")
-      .attr("x", self.timeline.label_position_x + 10)
-      .attr("y", 16)
+    barEnter.append('text')
+      .attr('class', 'line-label')
+      .attr('x', self.timeline.label_position_x + 10)
+      .attr('y', 16)
       .text((d) => {return d.label;})
       .on('click', selectBar)
       .on('mousedown', function() {
@@ -194,29 +194,28 @@ export default class Items {
         d3.event.stopPropagation();
       });
 
-    barEnter.append("text")
-      .attr("class", "line__toggle")
-      .attr("x", self.timeline.label_position_x - 10)
-      .attr("y", 16)
+    barEnter.append('text')
+      .attr('class', 'line__toggle')
+      .attr('x', self.timeline.label_position_x - 10)
+      .attr('y', 16)
       .on('click', function(d) {
         d.collapsed = !d.collapsed;
         self.onUpdate.dispatch();
       });
 
-    bar.selectAll(".line__toggle").text(function(d) {
+    bar.selectAll('.line__toggle').text(function(d) {
       if (d.collapsed) {
-        return "▸";
-      } else {
-        return "▾";
+        return '▸';
       }
+      return '▾';
     });
 
-    barEnter.append("line")
-      .attr("class", 'line-separator')
-      .attr("x1", -self.timeline.margin.left)
-      .attr("x2", self.timeline.x(self.timeline.timer.totalDuration + 100))
-      .attr("y1", self.timeline.lineHeight)
-      .attr("y2", self.timeline.lineHeight);
+    barEnter.append('line')
+      .attr('class', 'line-separator')
+      .attr('x1', -self.timeline.margin.left)
+      .attr('x2', self.timeline.x(self.timeline.timer.totalDuration + 100))
+      .attr('y1', self.timeline.lineHeight)
+      .attr('y2', self.timeline.lineHeight);
 
     bar.exit().remove();
 

@@ -12,9 +12,9 @@ export default class KeysPreview {
     var propVal = function(d) {
       if (d.properties) {
         return d.properties;
-      } else {
-        return [];
       }
+
+      return [];
     };
     var propKey = function(d) {
       return d.name;
@@ -24,7 +24,7 @@ export default class KeysPreview {
 
     properties.enter()
       .append('svg')
-      .attr("class", 'keys-preview timeline__right-mask')
+      .attr('class', 'keys-preview timeline__right-mask')
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight);
 
@@ -32,14 +32,14 @@ export default class KeysPreview {
       var item = d3.select(this.parentNode.parentNode);
       var bar_data = item.datum();
       if (bar_data.collapsed === true) {
-        return "";
+        return '';
       }
       // Show only when item is collapsed
-      return "display: none;";
+      return 'display: none;';
     };
 
     properties.selectAll('.key--preview')
-      .attr("style", setItemStyle);
+      .attr('style', setItemStyle);
 
     var keyValue = function(d) {
       return d.keys;
@@ -52,15 +52,15 @@ export default class KeysPreview {
     keys.enter()
       .append('path')
       .attr('class', 'key--preview')
-      .attr("style", setItemStyle)
+      .attr('style', setItemStyle)
       .attr('d', 'M 0 -4 L 4 0 L 0 4 L -4 0');
 
     keys.attr('transform', function(d) {
-        var dx = self.timeline.x(d.time * 1000);
-        dx = parseInt(dx, 10);
-        var dy = 11;
-        return "translate(" + dx + "," + dy + ")";
-      });
+      let dx = self.timeline.x(d.time * 1000);
+      dx = parseInt(dx, 10);
+      let dy = 11;
+      return 'translate(' + dx + ',' + dy + ')';
+    });
 
     keys.exit().remove();
   }

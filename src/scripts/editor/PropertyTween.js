@@ -35,34 +35,33 @@ export default class PropertyTween {
   render() {
     var self = this;
     if (!this.key_val.ease) {
-      this.key_val.ease = "Quad.easeOut";
+      this.key_val.ease = 'Quad.easeOut';
     }
     var data = {
-      id: this.instance_property.name + "_tween",
+      id: this.instance_property.name + '_tween',
       val: this.key_val.ease,
       time: this.key_val.time.toFixed(3),
       options: ['Linear.easeNone'],
       selected: function() {
         if (this.toString() === self.key_val.ease) {
           return 'selected';
-        } else {
-          return '';
         }
+        return '';
       }
     };
 
-    var tweens = ["Quad", "Cubic", "Quart", "Quint", "Strong"];
+    var tweens = ['Quad', 'Cubic', 'Quart', 'Quint', 'Strong'];
     for (var i = 0; i < tweens.length; i++) {
       var tween = tweens[i];
-      data.options.push(tween + ".easeOut");
-      data.options.push(tween + ".easeIn");
-      data.options.push(tween + ".easeInOut");
+      data.options.push(tween + '.easeOut');
+      data.options.push(tween + '.easeIn');
+      data.options.push(tween + '.easeInOut');
     }
 
     this.$el = $(tpl_property(data));
     this.$time = this.$el.find('.property__key-time strong');
     this.$time.keypress((e) => {
-      if (e.charCode == 13) {
+      if (e.charCode === 13) {
         // Enter
         e.preventDefault();
         this.$time.blur();
@@ -75,12 +74,12 @@ export default class PropertyTween {
   }
 
   updateKeyTime(time) {
-    time = parseFloat(time);
-    if (isNaN(time)) {
-      time = this.key_val.time;
+    let time2 = parseFloat(time);
+    if (isNaN(time2)) {
+      time2 = this.key_val.time;
     }
-    this.$time.text(time);
-    this.key_val.time = time;
+    this.$time.text(time2);
+    this.key_val.time = time2;
     this.onChange();
   }
 

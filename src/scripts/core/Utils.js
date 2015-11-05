@@ -1,16 +1,16 @@
 export default class Utils {
   static formatMinutes(d) {
     // convert milliseconds to seconds
-    d = d / 1000;
-    var hours = Math.floor(d / 3600);
-    var minutes = Math.floor((d - (hours * 3600)) / 60);
-    var seconds = d - (minutes * 60);
-    var output = seconds + "s";
+    let seconds = d / 1000;
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds - hours * 3600) / 60);
+    seconds = seconds - minutes * 60;
+    let output = seconds + 's';
     if (minutes) {
-      output = minutes + "m " + output;
+      output = minutes + 'm ' + output;
     }
     if (hours) {
-      output = hours + "h " + output;
+      output = hours + 'h ' + output;
     }
     return output;
   }
@@ -27,7 +27,7 @@ export default class Utils {
       for (var i = 0; i < data.length; i++) {
         var item = data[i];
         // Don't match item with itself, but allow property to match item start/end.
-        if (item.id != objectId || property_name) {
+        if (item.id !== objectId || property_name) {
           // First check start & end.
           if (Math.abs(item.start - time) <= tolerance) {
             return item.start;
@@ -43,7 +43,7 @@ export default class Utils {
           var prop = item.properties[j];
 
           // Don't match property with itself.
-          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
+          if (prop.keys && (item.id !== objectId || prop.name !== property_name)) {
             for (var k = 0; k < prop.keys.length; k++) {
               var key = prop.keys[k];
               if (Math.abs(key.time - time) <= tolerance) {
@@ -72,7 +72,7 @@ export default class Utils {
   }
 
   static sortKeys(keys) {
-    var compare = function (a, b) {
+    var compare = function(a, b) {
       if (a.time < b.time) {
         return -1;
       }
@@ -88,6 +88,6 @@ export default class Utils {
     var s4 = function() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     };
-    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 }
