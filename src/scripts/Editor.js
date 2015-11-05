@@ -75,15 +75,16 @@ class Editor {
   }
 
   render(time = false, time_changed = false, force = false) {
-    if (time === false) {
-      time = this.timer.time[0];
+    let time2 = time;
+    if (time2 === false) {
+      time2 = this.timer.time[0];
     }
     if (force) {
       this.timeline._isDirty = true;
     }
-    this.timeline.render(time, time_changed);
-    this.controls.render(time, time_changed);
-    this.propertiesEditor.render(time, time_changed);
+    this.timeline.render(time2, time_changed);
+    this.controls.render(time2, time_changed);
+    this.propertiesEditor.render(time2, time_changed);
   }
 
   update() {

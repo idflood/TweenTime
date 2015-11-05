@@ -49,20 +49,22 @@ export default class Property {
 
     // Basic data, loop through properties.
     for (var key in lineData.properties) {
-      var instance_prop = lineData.properties[key];
-      // show all properties or only 1 if we selected a key.
-      if (!property_name || instance_prop.name === property_name) {
-        var $grp_container = this.getGroupContainer(instance_prop, $container);
-        var numberProp = this.addNumberProperty(instance_prop, lineData, key_val, $grp_container);
-        this.items.push(numberProp);
-        if (instance_prop.name === property_name) {
-          $tween_container = $grp_container;
-        }
+      if (lineData.properties.hasOwnProperty(key)) {
+        var instance_prop = lineData.properties[key];
+        // show all properties or only 1 if we selected a key.
+        if (!property_name || instance_prop.name === property_name) {
+          var $grp_container = this.getGroupContainer(instance_prop, $container);
+          var numberProp = this.addNumberProperty(instance_prop, lineData, key_val, $grp_container);
+          this.items.push(numberProp);
+          if (instance_prop.name === property_name) {
+            $tween_container = $grp_container;
+          }
 
-        if (property_name) {
-          // Add tween select if we are editing a key, so only if there is property_name.
-          var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
-          this.items.push(tweenProp);
+          if (property_name) {
+            // Add tween select if we are editing a key, so only if there is property_name.
+            var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
+            this.items.push(tweenProp);
+          }
         }
       }
     }

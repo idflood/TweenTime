@@ -1,5 +1,5 @@
 export default class Exporter {
-  constructor (editor) {
+  constructor(editor) {
     this.editor = editor;
   }
 

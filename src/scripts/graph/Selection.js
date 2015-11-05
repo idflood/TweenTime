@@ -99,7 +99,7 @@ export default class Selection {
           var y = itemBounding.top - containerBounding.top;
           if (state_data.time >= d.timeStart && state_data.time <= d.timeEnd) {
             // use or condition for top and bottom
-            if ((y >= d.y && y <= d.y + d.height) || (y + 10 >= d.y && y + 10 <= d.y + d.height)) {
+            if (y >= d.y && y <= d.y + d.height || y + 10 >= d.y && y + 10 <= d.y + d.height) {
               d3.select(this).classed('key--selected', true);
 
               selection.push(key_data);
