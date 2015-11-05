@@ -55,10 +55,22 @@ export default class SelectionManager {
   }
 
   removeItem(item) {
+    // If we pass an _id then search for the item and remove it.
+    if (typeof item == 'string') {
+      let itemObj = _.find(this.selection, function(el) {
+        return el._id == item;
+      });
+      if (itemObj) {
+        return this.removeItem(itemObj);
+      }
+    }
+
+    // Remove the object if it exists in the selection.
     var index = this.selection.indexOf(item);
     if (index > -1) {
       this.selection.splice(index, 1);
     }
+    this.triggerSelect();
   }
 
   sortSelection() {

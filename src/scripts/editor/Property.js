@@ -167,7 +167,7 @@ export default class Property {
       if (index > -1) {
         propertyData.keys.splice(index, 1);
         if (key_val._dom) {
-          this.editor.propertiesEditor.keyRemoved.dispatch(key_val._dom);
+          this.editor.propertiesEditor.keyRemoved.dispatch(key_val);
         }
         lineData._isDirty = true;
       }
