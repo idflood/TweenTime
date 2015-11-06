@@ -5,9 +5,9 @@ var sass = require('gulp-sass');
 var autoprefixer = require("gulp-autoprefixer");
 var minifyCss = require('gulp-minify-css');
 var sourcemaps = require('gulp-sourcemaps');
-var livereload = require('gulp-livereload');
 var webpack = require("webpack");
 var eslint = require('gulp-eslint');
+var browserSync = require('browser-sync').create();
 
 var getWebpackConfig = function() {
   return {
@@ -149,19 +149,25 @@ gulp.task('styles', function() {
     }))
     .pipe(minifyCss())
     .pipe(sourcemaps.write('./maps'))
-    .pipe(gulp.dest('./dist/styles/'));
+    .pipe(gulp.dest('./dist/styles/'))
+    .pipe(browserSync.stream({match: '**/*.css'}));
 });
 
-gulp.task('livereload', function() {
-  livereload.listen();
+gulp.task('browser-sync', function() {
+  browserSync.init({
+    server: {
+      baseDir: './',
+      directory: true
+    }
+  });
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['examples/*.html'], livereload.changed);
-  gulp.watch(['dist/styles/*.css', 'dist/scripts/*.js'], livereload.changed);
+  gulp.watch(['examples/*.html'], browserSync.reload);
+  gulp.watch(['dist/scripts/*.js'], browserSync.reload);
   gulp.watch('src/styles/**', ['styles']);
   gulp.watch(['src/scripts/**', '!src/scripts/bower_components/**'], ['scripts:dist']);
 });
 
-gulp.task('default', ['watch', 'livereload', 'styles', 'scripts:dist']);
+gulp.task('default', ['watch', 'styles', 'scripts:dist', 'browser-sync']);
 gulp.task('build', ['styles', 'scripts', 'scripts:dist']);
