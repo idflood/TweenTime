@@ -1,6 +1,6 @@
 {
   "name": "TweenTime",
-  "version": "1.7.9",
+  "version": "2.0.0",
   "author": "stimul.ch / David Mignot",
   "devDependencies": {
     "babel": "^6.0.15",

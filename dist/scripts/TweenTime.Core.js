@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("lodash"), require(undefined), require("TweenMax"));
+		module.exports = factory(require(undefined), require("TweenMax"), require("lodash"));
 	else if(typeof define === 'function' && define.amd)
-		define(["lodash", "signals", "TweenMax"], factory);
+		define(["signals", "TweenMax", "lodash"], factory);
 	else if(typeof exports === 'object')
-		exports["Core"] = factory(require("lodash"), require("./signals"), require("TweenMax"));
+		exports["Core"] = factory(require("./signals"), require("TweenMax"), require("lodash"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["_"], root["signals"], root["TweenMax"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_7__) {
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["signals"], root["TweenMax"], root["_"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,114 +54,142 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
-	__webpack_require__(1);
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
-	var _ = __webpack_require__(2);
+	var _Utils = __webpack_require__(1);
 	
-	var Utils = __webpack_require__(3)["default"];
-	var Timer = __webpack_require__(4)["default"];
-	var Orchestrator = __webpack_require__(6)["default"];
+	var _Utils2 = _interopRequireDefault(_Utils);
+	
+	var _Timer = __webpack_require__(2);
+	
+	var _Timer2 = _interopRequireDefault(_Timer);
+	
+	var _Orchestrator = __webpack_require__(4);
+	
+	var _Orchestrator2 = _interopRequireDefault(_Orchestrator);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var _ = __webpack_require__(6);
+	
 	var Core = (function () {
-	  var Core = function Core(data, options) {
-	    if (options === undefined) options = {};
+	  function Core(data) {
+	    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	
+	    _classCallCheck(this, Core);
+	
 	    this.data = data;
 	    this.options = options;
-	    this.timer = new Timer(options);
-	    this.orchestrator = new Orchestrator(this.timer, this.data);
-	  };
+	    this.timer = new _Timer2.default(options);
+	    this.orchestrator = new _Orchestrator2.default(this.timer, this.data);
+	  }
 	
-	  Core.prototype.getItem = function (item_id) {
-	    // In case we passed the item object directly return it.
-	    if (item_id && typeof item_id == "object") {
-	      return item_id;
+	  _createClass(Core, [{
+	    key: 'getItem',
+	    value: function getItem(item_id) {
+	      // In case we passed the item object directly return it.
+	      if (item_id && (typeof item_id === 'undefined' ? 'undefined' : _typeof(item_id)) === 'object') {
+	        return item_id;
+	      }
+	
+	      return _.find(this.data, function (item) {
+	        return item.id === item_id;
+	      });
 	    }
+	  }, {
+	    key: 'getProperty',
+	    value: function getProperty(prop_name, item_id_or_obj) {
+	      // If we passed the item name get the object from it.
+	      var item = this.getItem(item_id_or_obj);
 	
-	    return _.find(this.data, function (item) {
-	      return item.id == item_id;
-	    });
-	  };
+	      // Return false if we have no item
+	      if (!item) {
+	        return false;
+	      }
 	
-	  Core.prototype.getProperty = function (prop_name, item_id_or_obj) {
-	    // If we passed the item name get the object from it.
-	    item_id_or_obj = this.getItem(item_id_or_obj);
-	
-	    // Return false if we have no item
-	    if (!item_id_or_obj) {
-	      return false;
+	      return _.find(item.properties, function (property) {
+	        return property.name === prop_name;
+	      });
 	    }
+	  }, {
+	    key: 'getValues',
+	    value: function getValues(item_id_or_obj) {
+	      // If we passed the item name get the object from it.
+	      var item = this.getItem(item_id_or_obj);
 	
-	    return _.find(item_id_or_obj.properties, function (property) {
-	      return property.name == prop_name;
-	    });
-	  };
+	      // Return false if we have no item
+	      if (!item) {
+	        return undefined;
+	      }
 	
-	  Core.prototype.getValues = function (item_id_or_obj) {
-	    // If we passed the item name get the object from it.
-	    item_id_or_obj = this.getItem(item_id_or_obj);
+	      return item.values;
+	    }
+	  }, {
+	    key: 'getValue',
+	    value: function getValue(prop_name, item_id_or_obj) {
+	      // If we passed the item name get the object from it.
+	      var values = this.getValues(item_id_or_obj);
 	
-	    // Return false if we have no item
-	    if (!item_id_or_obj) {
+	      // Return false if we have no item
+	      if (!values) {
+	        return undefined;
+	      }
+	
+	      if (values[prop_name] !== undefined) {
+	        return values[prop_name];
+	      }
 	      return undefined;
 	    }
-	
-	    return item_id_or_obj.values;
-	  };
-	
-	  Core.prototype.getValue = function (prop_name, item_id_or_obj) {
-	    // If we passed the item name get the object from it.
-	    var values = this.getValues(item_id_or_obj);
-	
-	    // Return false if we have no item
-	    if (!values) {
-	      return undefined;
+	  }, {
+	    key: 'getKeyAt',
+	    value: function getKeyAt(property, time_in_seconds) {
+	      return _.find(property.keys, function (key) {
+	        return key.time === time_in_seconds;
+	      });
 	    }
+	  }, {
+	    key: 'setValue',
+	    value: function setValue(property, new_val) {
+	      var time_in_seconds = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 	
-	    if (values[prop_name] !== undefined) {
-	      return values[prop_name];
-	    } else {
-	      return undefined;
-	    }
-	  };
+	      var time = time_in_seconds;
+	      if (time === false) {
+	        time = this.timer.getCurrentTime() / 1000;
+	      }
+	      var key = this.getKeyAt(property, time);
 	
-	  Core.prototype.getKeyAt = function (property, time_in_seconds) {
-	    return _.find(property.keys, function (key) {
-	      return key.time == time_in_seconds;
-	    });
-	  };
-	
-	  Core.prototype.setValue = function (property, new_val, time_in_seconds) {
-	    if (time_in_seconds === undefined) time_in_seconds = false;
-	    if (time_in_seconds === false) {
-	      time_in_seconds = this.timer.getCurrentTime() / 1000;
-	    }
-	    var key = this.getKeyAt(property, time_in_seconds);
-	
-	    if (key) {
-	      // If we found a key, simply update the value.
-	      key.val = new_val;
-	    } else {
-	      if (property.keys.length === 0) {
-	        // If the property doesn't have any key simply the the value.
-	        property.val = new_val;
+	      if (key) {
+	        // If we found a key, simply update the value.
+	        key.val = new_val;
 	      } else {
-	        // If we are not on a key but the property has other keys,
-	        // create it and add it to the keys array.
-	        key = { val: new_val, time: time_in_seconds, _property: property };
-	        if (this.options.defaultEase) {
-	          key.ease = this.options.defaultEase;
+	        if (property.keys.length === 0) {
+	          // If the property doesn't have any key simply the the value.
+	          property.val = new_val;
+	        } else {
+	          // If we are not on a key but the property has other keys,
+	          // create it and add it to the keys array.
+	          key = { val: new_val, time: time, _property: property };
+	          if (this.options.defaultEase) {
+	            key.ease = this.options.defaultEase;
+	          }
+	          property.keys.push(key);
+	          // Also sort the keys.
+	          property.keys = _Utils2.default.sortKeys(property.keys);
 	        }
-	        property.keys.push(key);
-	        // Also sort the keys.
-	        property.keys = Utils.sortKeys(property.keys);
 	      }
 	    }
-	  };
-	
-	  Core.prototype.getTotalDuration = function () {
-	    return this.orchestrator.getTotalDuration();
-	  };
+	  }, {
+	    key: 'getTotalDuration',
+	    value: function getTotalDuration() {
+	      return this.orchestrator.getTotalDuration();
+	    }
+	  }]);
 	
 	  return Core;
 	})();
@@ -172,136 +200,151 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {(function(global){var to5Runtime=global.to5Runtime={};to5Runtime.extends=function(child,parent){child.prototype=Object.create(parent.prototype,{constructor:{value:child,enumerable:false,writable:true,configurable:true}});child.__proto__=parent};to5Runtime.classProps=function(child,staticProps,instanceProps){if(staticProps)Object.defineProperties(child,staticProps);if(instanceProps)Object.defineProperties(child.prototype,instanceProps)};to5Runtime.applyConstructor=function(Constructor,args){var instance=Object.create(Constructor.prototype);var result=Constructor.apply(instance,args);return result!=null&&(typeof result=="object"||typeof result=="function")?result:instance};to5Runtime.taggedTemplateLiteral=function(strings,raw){return Object.defineProperties(strings,{raw:{value:raw}})};to5Runtime.interopRequire=function(obj){return obj&&(obj["default"]||obj)};to5Runtime.toArray=function(arr){return Array.isArray(arr)?arr:Array.from(arr)};to5Runtime.objectSpread=function(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i]}return target};to5Runtime.hasOwn=Object.prototype.hasOwnProperty;to5Runtime.slice=Array.prototype.slice})(typeof global==="undefined"?self:global);
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
+	'use strict';
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Utils = (function () {
-	  var Utils = function Utils() {};
+	  function Utils() {
+	    _classCallCheck(this, Utils);
+	  }
 	
-	  Utils.formatMinutes = function (d) {
-	    // convert milliseconds to seconds
-	    d = d / 1000;
-	    var hours = Math.floor(d / 3600);
-	    var minutes = Math.floor((d - (hours * 3600)) / 60);
-	    var seconds = d - (minutes * 60);
-	    var output = seconds + "s";
-	    if (minutes) {
-	      output = minutes + "m " + output;
-	    }
-	    if (hours) {
-	      output = hours + "h " + output;
-	    }
-	    return output;
-	  };
-	
-	  Utils.getClosestTime = function (data, time, objectId, property_name, timer, tolerance) {
-	    if (objectId === undefined) objectId = false;
-	    if (property_name === undefined) property_name = false;
-	    if (timer === undefined) timer = false;
-	    if (tolerance === undefined) tolerance = 0.1;
-	    if (timer) {
-	      var timer_time = timer.getCurrentTime() / 1000;
-	      if (Math.abs(timer_time - time) <= tolerance) {
-	        return timer_time;
+	  _createClass(Utils, null, [{
+	    key: 'formatMinutes',
+	    value: function formatMinutes(d) {
+	      // convert milliseconds to seconds
+	      var seconds = d / 1000;
+	      var hours = Math.floor(seconds / 3600);
+	      var minutes = Math.floor((seconds - hours * 3600) / 60);
+	      seconds = seconds - minutes * 60;
+	      var output = seconds + 's';
+	      if (minutes) {
+	        output = minutes + 'm ' + output;
 	      }
+	      if (hours) {
+	        output = hours + 'h ' + output;
+	      }
+	      return output;
 	    }
+	  }, {
+	    key: 'getClosestTime',
+	    value: function getClosestTime(data, time) {
+	      var objectId = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+	      var property_name = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+	      var timer = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
+	      var tolerance = arguments.length <= 5 || arguments[5] === undefined ? 0.1 : arguments[5];
 	
-	    if (objectId || property_name) {
-	      for (var i = 0; i < data.length; i++) {
-	        var item = data[i];
-	        // Don't match item with itself, but allow property to match item start/end.
-	        if (item.id != objectId || property_name) {
-	          // First check start & end.
-	          if (Math.abs(item.start - time) <= tolerance) {
-	            return item.start;
-	          }
-	
-	          if (Math.abs(item.end - time) <= tolerance) {
-	            return item.end;
-	          }
+	      if (timer) {
+	        var timer_time = timer.getCurrentTime() / 1000;
+	        if (Math.abs(timer_time - time) <= tolerance) {
+	          return timer_time;
 	        }
+	      }
 	
-	        // Test properties keys
-	        for (var j = 0; j < item.properties.length; j++) {
-	          var prop = item.properties[j];
+	      if (objectId || property_name) {
+	        for (var i = 0; i < data.length; i++) {
+	          var item = data[i];
+	          // Don't match item with itself, but allow property to match item start/end.
+	          if (item.id !== objectId || property_name) {
+	            // First check start & end.
+	            if (Math.abs(item.start - time) <= tolerance) {
+	              return item.start;
+	            }
 	
-	          // Don't match property with itself.
-	          if (prop.keys && (item.id != objectId || prop.name != property_name)) {
-	            for (var k = 0; k < prop.keys.length; k++) {
-	              var key = prop.keys[k];
-	              if (Math.abs(key.time - time) <= tolerance) {
-	                return key.time;
+	            if (Math.abs(item.end - time) <= tolerance) {
+	              return item.end;
+	            }
+	          }
+	
+	          // Test properties keys
+	          for (var j = 0; j < item.properties.length; j++) {
+	            var prop = item.properties[j];
+	
+	            // Don't match property with itself.
+	            if (prop.keys && (item.id !== objectId || prop.name !== property_name)) {
+	              for (var k = 0; k < prop.keys.length; k++) {
+	                var key = prop.keys[k];
+	                if (Math.abs(key.time - time) <= tolerance) {
+	                  return key.time;
+	                }
 	              }
 	            }
 	          }
 	        }
 	      }
+	      return false;
 	    }
-	    return false;
-	  };
-	
-	  Utils.getPreviousKey = function (keys, time) {
-	    var prevKey = false;
-	    for (var i = 0; i < keys.length; i++) {
-	      var key = keys[i];
-	      if (key.time < time) {
-	        prevKey = key;
-	      } else {
-	        return prevKey;
+	  }, {
+	    key: 'getPreviousKey',
+	    value: function getPreviousKey(keys, time) {
+	      var prevKey = false;
+	      for (var i = 0; i < keys.length; i++) {
+	        var key = keys[i];
+	        if (key.time < time) {
+	          prevKey = key;
+	        } else {
+	          return prevKey;
+	        }
 	      }
+	      return prevKey;
 	    }
-	    return prevKey;
-	  };
-	
-	  Utils.sortKeys = function (keys) {
-	    var compare = function (a, b) {
-	      if (a.time < b.time) {
-	        return -1;
-	      }
-	      if (a.time > b.time) {
-	        return 1;
-	      }
-	      return 0;
-	    };
-	    return keys.sort(compare);
-	  };
-	
-	  Utils.guid = function () {
-	    var s4 = function () {
-	      return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
-	    };
-	    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
-	  };
+	  }, {
+	    key: 'sortKeys',
+	    value: function sortKeys(keys) {
+	      var compare = function compare(a, b) {
+	        if (a.time < b.time) {
+	          return -1;
+	        }
+	        if (a.time > b.time) {
+	          return 1;
+	        }
+	        return 0;
+	      };
+	      return keys.sort(compare);
+	    }
+	  }, {
+	    key: 'guid',
+	    value: function guid() {
+	      var s4 = function s4() {
+	        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+	      };
+	      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+	    }
+	  }]);
 	
 	  return Utils;
 	})();
 	
-	exports["default"] = Utils;
+	exports.default = Utils;
 
 /***/ },
-/* 4 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
-	var Signals = __webpack_require__(5);
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Signals = __webpack_require__(3);
 	
 	var Timer = (function () {
-	  var Timer = function Timer(options) {
-	    var _this = this;
-	    if (options === undefined) options = {};
+	  function Timer() {
+	    _classCallCheck(this, Timer);
+	
+	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
 	    // in millisecond
 	    this.totalDuration = options.totalDuration || 240 * 1000;
 	    // Use an array for the time for easier d3.js integration (used as data for timeseeker).
@@ -313,75 +356,310 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.statusChanged = new Signals.Signal();
 	    this.durationChanged = new Signals.Signal();
 	    this.seeked = new Signals.Signal();
-	    window.requestAnimationFrame(function (timestamp) {
-	      return _this.update(timestamp);
-	    });
-	  };
+	    this.update = this.update.bind(this);
+	    window.requestAnimationFrame(this.update);
+	  }
 	
-	  Timer.prototype.getCurrentTime = function () {
-	    return this.time[0];
-	  };
+	  _createClass(Timer, [{
+	    key: 'getCurrentTime',
+	    value: function getCurrentTime() {
+	      return this.time[0];
+	    }
+	  }, {
+	    key: 'getDuration',
+	    value: function getDuration() {
+	      return this.totalDuration / 1000;
+	    }
+	  }, {
+	    key: 'setDuration',
+	    value: function setDuration(seconds) {
+	      this.totalDuration = seconds * 1000;
+	      this.durationChanged.dispatch(seconds);
+	    }
+	  }, {
+	    key: 'play',
+	    value: function play() {
+	      this.is_playing = true;
+	      this.statusChanged.dispatch(this.is_playing);
+	    }
+	  }, {
+	    key: 'stop',
+	    value: function stop() {
+	      this.is_playing = false;
+	      this.statusChanged.dispatch(this.is_playing);
+	    }
+	  }, {
+	    key: 'toggle',
+	    value: function toggle() {
+	      this.is_playing = !this.is_playing;
+	      this.statusChanged.dispatch(this.is_playing);
+	    }
+	  }, {
+	    key: 'seek',
+	    value: function seek(time) {
+	      this.time[0] = time[0];
+	      this.seeked.dispatch(this.time[0]);
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(timestamp) {
+	      // Init timestamp
+	      if (this.last_timeStamp === -1) {
+	        this.last_timeStamp = timestamp;
+	      }
+	      var elapsed = timestamp - this.last_timeStamp;
 	
-	  Timer.prototype.getDuration = function () {
-	    return this.totalDuration / 1000;
-	  };
+	      if (this.is_playing) {
+	        this.time[0] += elapsed;
+	      }
 	
-	  Timer.prototype.setDuration = function (seconds) {
-	    this.totalDuration = seconds * 1000;
-	    this.durationChanged.dispatch(seconds);
-	  };
+	      if (this.time[0] >= this.totalDuration) {
+	        // Stop timer when reaching the end.
+	        this.time[0] = this.totalDuration;
+	        this.stop();
+	      }
 	
-	  Timer.prototype.play = function () {
-	    this.is_playing = true;
-	    this.statusChanged.dispatch(this.is_playing);
-	  };
+	      this.updated.dispatch(this.time[0]);
 	
-	  Timer.prototype.stop = function () {
-	    this.is_playing = false;
-	    this.statusChanged.dispatch(this.is_playing);
-	  };
-	
-	  Timer.prototype.toggle = function () {
-	    this.is_playing = !this.is_playing;
-	    this.statusChanged.dispatch(this.is_playing);
-	  };
-	
-	  Timer.prototype.seek = function (time) {
-	    this.time[0] = time[0];
-	    this.seeked.dispatch(this.time[0]);
-	  };
-	
-	  Timer.prototype.update = function (timestamp) {
-	    var _this2 = this;
-	    // Init timestamp
-	    if (this.last_timeStamp == -1) {
 	      this.last_timeStamp = timestamp;
+	      this.last_time = this.time[0];
+	      window.requestAnimationFrame(this.update);
 	    }
-	    var elapsed = timestamp - this.last_timeStamp;
-	
-	    if (this.is_playing) {
-	      this.time[0] += elapsed;
-	    }
-	
-	    if (this.time[0] >= this.totalDuration) {
-	      // Stop timer when reaching the end.
-	      this.time[0] = this.totalDuration;
-	      this.stop();
-	    }
-	
-	    this.updated.dispatch(this.time[0]);
-	
-	    this.last_timeStamp = timestamp;
-	    this.last_time = this.time[0];
-	    window.requestAnimationFrame(function (timestamp) {
-	      return _this2.update(timestamp);
-	    });
-	  };
+	  }]);
 	
 	  return Timer;
 	})();
 	
-	exports["default"] = Timer;
+	exports.default = Timer;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Signals = __webpack_require__(3);
+	var TweenMax = __webpack_require__(5);
+	
+	var Orchestrator = (function () {
+	  function Orchestrator(timer, data) {
+	    _classCallCheck(this, Orchestrator);
+	
+	    this.update = this.update.bind(this);
+	    this.timer = timer;
+	    this.data = data;
+	    this.mainTimeline = new TimelineMax({ paused: true });
+	    this.onUpdate = new Signals.Signal();
+	    this.timer.updated.add(this.update);
+	    this.update(0);
+	  }
+	
+	  _createClass(Orchestrator, [{
+	    key: 'getTotalDuration',
+	    value: function getTotalDuration() {
+	      return this.mainTimeline.totalDuration();
+	    }
+	  }, {
+	    key: 'getEasing',
+	    value: function getEasing() {
+	      var key = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+	
+	      if (key && key.ease) {
+	        var ease_index = key.ease.split('.');
+	        if (ease_index.length === 2 && window[ease_index[0]] && window[ease_index[0]][ease_index[1]]) {
+	          return window[ease_index[0]][ease_index[1]];
+	        }
+	      }
+	      return Quad.easeOut;
+	    }
+	  }, {
+	    key: 'initSpecialProperties',
+	    value: function initSpecialProperties(item) {
+	      // Add a dom element for color tweening and other css properties.
+	      item._domHelper = document.createElement('div');
+	      for (var property_key = 0; property_key < item.properties.length; property_key++) {
+	        var property = item.properties[property_key];
+	        // Setup special properties
+	        if (property.type && property.type === 'color') {
+	          // If the property is a color mark it as css
+	          property.css = true;
+	        }
+	
+	        if (property.css) {
+	          // If property is a css or a color value apply it to the domHelper element.
+	          item._domHelper.style[property.name] = property.val;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'initItemValues',
+	    value: function initItemValues(item) {
+	      item.values = {};
+	      // item._isDirty = true
+	      for (var property_key = 0; property_key < item.properties.length; property_key++) {
+	        var property = item.properties[property_key];
+	        if (property.keys.length) {
+	          // Take the value of the first key as initial value.
+	          // this.todo: update this when the value of the first key change. (when rebuilding the timeline, simply delete item.values before item._timeline)
+	          property.val = property.keys[0].val;
+	        }
+	        item.values[property.name] = property.val;
+	      }
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(timestamp) {
+	      var seconds = timestamp / 1000;
+	      var has_dirty_items = false;
+	      var i;
+	      var item;
+	      var property;
+	      var property_key;
+	
+	      for (i = 0; i < this.data.length; i++) {
+	        item = this.data[i];
+	        if (!item._domHelper) {
+	          this.initSpecialProperties(item);
+	        }
+	
+	        // create the values object to contain all properties
+	        if (!item.values) {
+	          this.initItemValues(item);
+	        }
+	
+	        // Create the timeline if needed
+	        if (!item._timeline) {
+	          item._timeline = new TimelineMax();
+	          this.mainTimeline.add(item._timeline, 0);
+	          item._isDirty = true;
+	        }
+	
+	        if (item._isDirty) {
+	          has_dirty_items = true;
+	        }
+	
+	        if (item._timeline && item._isDirty && item.properties) {
+	          item._isDirty = false;
+	          // item._timeline.clear();
+	
+	          for (property_key = 0; property_key < item.properties.length; property_key++) {
+	            property = item.properties[property_key];
+	            if (property._timeline) {
+	              property._timeline.clear();
+	            } else {
+	              property._timeline = new TimelineMax();
+	              item._timeline.add(property._timeline, 0);
+	            }
+	
+	            var propertyTimeline = property._timeline;
+	            var propName = property.name;
+	
+	            // If there is no key stop there and set value to default.
+	            if (!property.keys.length) {
+	              item.values[property.name] = property.val;
+	              continue;
+	            }
+	
+	            // Set the data values target object.
+	            var data_target = item.values;
+	            // Add a inital key, even if there is no animation to set the value from time 0.
+	            var first_key = property.keys[0];
+	
+	            var tween_time = 0;
+	            if (first_key) {
+	              tween_time = Math.min(-1, first_key.time - 0.1);
+	            }
+	
+	            var tween_duration = 0;
+	            var val = {};
+	            var easing = this.getEasing();
+	            val.ease = easing;
+	
+	            if (property.css) {
+	              data_target = item._domHelper;
+	              val.css = {};
+	              val.css[propName] = first_key ? first_key.val : property.val;
+	            } else {
+	              val[propName] = first_key ? first_key.val : property.val;
+	            }
+	
+	            var tween = TweenMax.to(data_target, tween_duration, val);
+	            propertyTimeline.add(tween, tween_time);
+	
+	            for (var key_index = 0; key_index < property.keys.length; key_index++) {
+	              var key = property.keys[key_index];
+	
+	              if (key_index < property.keys.length - 1) {
+	                var next_key = property.keys[key_index + 1];
+	                tween_duration = next_key.time - key.time;
+	
+	                val = {};
+	                easing = this.getEasing(next_key);
+	                val.ease = easing;
+	                if (property.css) {
+	                  val.css = {};
+	                  val.css[propName] = next_key.val;
+	                } else {
+	                  val[propName] = next_key.val;
+	                }
+	
+	                tween = TweenMax.to(data_target, tween_duration, val);
+	                propertyTimeline.add(tween, key.time);
+	              }
+	            }
+	
+	            // Directly seek the property timeline to update the value.
+	            propertyTimeline.seek(seconds);
+	          }
+	          // Force main timeline to refresh but never try to go to < 0
+	          // to prevent glitches when current time is 0.
+	          if (seconds > 0) {
+	            seconds = seconds - 0.0000001;
+	          } else {
+	            seconds = seconds + 0.0000001;
+	          }
+	        }
+	      }
+	
+	      // Finally update the main timeline.
+	      this.mainTimeline.seek(seconds);
+	
+	      // update the css properties.
+	      for (i = 0; i < this.data.length; i++) {
+	        item = this.data[i];
+	        for (property_key = 0; property_key < item.properties.length; property_key++) {
+	          property = item.properties[property_key];
+	          if (property.css && property.keys.length) {
+	            // Only css values.
+	            item.values[property.name] = item._domHelper.style[property.name];
+	          }
+	        }
+	      }
+	
+	      if (has_dirty_items) {
+	        this.onUpdate.dispatch();
+	      }
+	    }
+	  }]);
+	
+	  return Orchestrator;
+	})();
+	
+	exports.default = Orchestrator;
 
 /***/ },
 /* 5 */
@@ -391,211 +669,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Signals = __webpack_require__(5);
-	var TweenMax = __webpack_require__(7);
-	
-	var Orchestrator = (function () {
-	  var Orchestrator = function Orchestrator(timer, data) {
-	    this.update = this.update.bind(this);
-	    this.timer = timer;
-	    this.data = data;
-	    this.mainTimeline = new TimelineMax({ paused: true });
-	    this.onUpdate = new Signals.Signal();
-	    this.timer.updated.add(this.update);
-	    this.update(0);
-	  };
-	
-	  Orchestrator.prototype.getTotalDuration = function () {
-	    return this.mainTimeline.totalDuration();
-	  };
-	
-	  Orchestrator.prototype.getEasing = function (key) {
-	    if (key === undefined) key = false;
-	    if (key && key.ease) {
-	      var ease_index = key.ease.split(".");
-	      if (ease_index.length == 2 && window[ease_index[0]] && window[ease_index[0]][ease_index[1]]) {
-	        return window[ease_index[0]][ease_index[1]];
-	      }
-	    }
-	    return Quad.easeOut;
-	  };
-	
-	  Orchestrator.prototype.initSpecialProperties = function (item) {
-	    // Add a dom element for color tweening and other css properties.
-	    item._domHelper = document.createElement("div");
-	    for (var property_key = 0; property_key < item.properties.length; property_key++) {
-	      var property = item.properties[property_key];
-	      // Setup special properties
-	      if (property.type && property.type == "color") {
-	        // If the property is a color mark it as css
-	        property.css = true;
-	      }
-	
-	      if (property.css) {
-	        // If property is a css or a color value apply it to the domHelper element.
-	        item._domHelper.style[property.name] = property.val;
-	      }
-	    }
-	  };
-	
-	  Orchestrator.prototype.initItemValues = function (item) {
-	    item.values = {};
-	    //item._isDirty = true
-	    for (var property_key = 0; property_key < item.properties.length; property_key++) {
-	      var property = item.properties[property_key];
-	      if (property.keys.length) {
-	        // Take the value of the first key as initial value.
-	        // this.todo: update this when the value of the first key change. (when rebuilding the timeline, simply delete item.values before item._timeline)
-	        property.val = property.keys[0].val;
-	      }
-	      item.values[property.name] = property.val;
-	    }
-	  };
-	
-	  Orchestrator.prototype.update = function (timestamp) {
-	    var seconds = timestamp / 1000;
-	    var has_dirty_items = false;
-	    var i, item, property, property_key;
-	
-	    for (i = 0; i < this.data.length; i++) {
-	      item = this.data[i];
-	      if (!item._domHelper) {
-	        this.initSpecialProperties(item);
-	      }
-	
-	      // create the values object to contain all properties
-	      if (!item.values) {
-	        this.initItemValues(item);
-	      }
-	
-	      // Create the timeline if needed
-	      if (!item._timeline) {
-	        item._timeline = new TimelineMax();
-	        this.mainTimeline.add(item._timeline, 0);
-	        item._isDirty = true;
-	      }
-	
-	      if (item._isDirty) {
-	        has_dirty_items = true;
-	      }
-	
-	      if (item._timeline && item._isDirty && item.properties) {
-	        item._isDirty = false;
-	        //item._timeline.clear();
-	
-	        for (property_key = 0; property_key < item.properties.length; property_key++) {
-	          property = item.properties[property_key];
-	          if (property._timeline) {
-	            property._timeline.clear();
-	          } else {
-	            property._timeline = new TimelineMax();
-	            item._timeline.add(property._timeline, 0);
-	          }
-	
-	          var propertyTimeline = property._timeline;
-	          var propName = property.name;
-	
-	          // If there is no key stop there and set value to default.
-	          if (!property.keys.length) {
-	            item.values[property.name] = property.val;
-	            continue;
-	          }
-	
-	          // Set the data values target object.
-	          var data_target = item.values;
-	          // Add a inital key, even if there is no animation to set the value from time 0.
-	          var first_key = property.keys[0];
-	
-	          var tween_time = 0;
-	          if (first_key) {
-	            tween_time = Math.min(-1, first_key.time - 0.1);
-	          }
-	
-	          var tween_duration = 0;
-	          var val = {};
-	          var easing = this.getEasing();
-	          val.ease = easing;
-	
-	          if (property.css) {
-	            data_target = item._domHelper;
-	            val.css = {};
-	            val.css[propName] = first_key ? first_key.val : property.val;
-	          } else {
-	            val[propName] = first_key ? first_key.val : property.val;
-	          }
-	
-	          var tween = TweenMax.to(data_target, tween_duration, val);
-	          propertyTimeline.add(tween, tween_time);
-	
-	          for (var key_index = 0; key_index < property.keys.length; key_index++) {
-	            var key = property.keys[key_index];
-	
-	            if (key_index < property.keys.length - 1) {
-	              var next_key = property.keys[key_index + 1];
-	              tween_duration = next_key.time - key.time;
-	
-	              val = {};
-	              easing = this.getEasing(next_key);
-	              val.ease = easing;
-	              if (property.css) {
-	                val.css = {};
-	                val.css[propName] = next_key.val;
-	              } else {
-	                val[propName] = next_key.val;
-	              }
-	
-	              tween = TweenMax.to(data_target, tween_duration, val);
-	              propertyTimeline.add(tween, key.time);
-	            }
-	          }
-	
-	          // Directly seek the property timeline to update the value.
-	          propertyTimeline.seek(seconds);
-	        }
-	        // Force main timeline to refresh but never try to go to < 0
-	        // to prevent glitches when current time is 0.
-	        if (seconds > 0) {
-	          seconds = seconds - 1e-7;
-	        } else {
-	          seconds = seconds + 1e-7;
-	        }
-	      }
-	    }
-	
-	    // Finally update the main timeline.
-	    this.mainTimeline.seek(seconds);
-	
-	    // update the css properties.
-	    for (i = 0; i < this.data.length; i++) {
-	      item = this.data[i];
-	      for (property_key = 0; property_key < item.properties.length; property_key++) {
-	        property = item.properties[property_key];
-	        if (property.css && property.keys.length) {
-	          // Only css values.
-	          item.values[property.name] = item._domHelper.style[property.name];
-	        }
-	      }
-	    }
-	
-	    if (has_dirty_items) {
-	      this.onUpdate.dispatch();
-	    }
-	  };
-	
-	  return Orchestrator;
-	})();
-	
-	exports["default"] = Orchestrator;
-
-/***/ },
-/* 7 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
 
 /***/ }
 /******/ ])
