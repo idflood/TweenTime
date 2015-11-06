@@ -3339,7 +3339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      };
 	
-	      var tweens = ['Quad', 'Cubic', 'Quart', 'Quint', 'Strong'];
+	      var tweens = ['Quad', 'Cubic', 'Quart', 'Quint'];
 	      for (var i = 0; i < tweens.length; i++) {
 	        var tween = tweens[i];
 	        data.options.push(tween + '.easeOut');
