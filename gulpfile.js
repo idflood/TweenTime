@@ -19,23 +19,30 @@ var getWebpackConfig = function() {
     devtool: "source-map",
     externals: [
       'd3',
-      'spectrum',
+      'file-saver',
       {
+        'spectrum': {
+          root: 'spectrum',
+          commonjs: 'spectrum-colorpicker',
+          commonjs2: 'spectrum-colorpicker',
+          amd: 'spectrum',
+        },
         'js-signals': {
           root: 'signals',
-          commonjs: './signals',
+          commonjs: 'signals',
+          commonjs2: 'signals',
           amd: 'signals'
         },
         'draggable-number.js': {
           root: 'DraggableNumber',
-          commonjs: 'DraggableNumber',
-          commonjs2: 'DraggableNumber',
+          commonjs: 'draggable-number.js',
+          commonjs2: 'draggable-number.js',
           amd: 'DraggableNumber'
         },
         'gsap': {
           root: 'TweenMax',
-          commonjs: 'TweenMax',
-          commonjs2: 'TweenMax',
+          commonjs: 'gsap',
+          commonjs2: 'gsap',
           amd: 'TweenMax'
         },
         'jquery': {

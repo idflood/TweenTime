@@ -1,6 +1,6 @@
 {
   "name": "TweenTime",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "dependencies": {
     "js-signals": "~1.0.0",
     "d3": "~3.5.2",
@@ -8,7 +8,7 @@
     "jquery": "~2.1.1",
     "draggable-number.js": "~0.4.3",
     "gsap": "~1.18.0",
-    "FileSaver": "*",
+    "file-saver": "*",
     "spectrum": "~1.5.2"
   }
 }
