@@ -1,7 +1,17 @@
 {
   "name": "TweenTime",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": "stimul.ch / David Mignot",
+  "dependencies": {
+    "file-saver": "*",
+    "d3": "^3.5.2",
+    "draggable-number.js": "git@github.com:idflood/draggable-number.js.git",
+    "gsap": "^1.18.0",
+    "jquery": "^2.1.1",
+    "lodash": "^3.8.0",
+    "signals": "^1.0.0",
+    "spectrum-colorpicker": "^1.5.2"
+  },
   "devDependencies": {
     "babel": "^6.0.15",
     "babel-core": "^6.1.2",

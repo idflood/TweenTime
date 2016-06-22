@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require(undefined), require("lodash"), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
+		module.exports = factory(require("signals"), require("lodash"), require("d3"), require("jquery"), require("draggable-number.js"), require("spectrum-colorpicker"), require("file-saver"));
 	else if(typeof define === 'function' && define.amd)
-		define(["signals", "lodash", "d3", "jquery", "DraggableNumber", "spectrum"], factory);
+		define(["signals", "lodash", "d3", "jquery", "DraggableNumber", "spectrum", "file-saver"], factory);
 	else if(typeof exports === 'object')
-		exports["Editor"] = factory(require("./signals"), require("lodash"), require("d3"), require("jquery"), require("DraggableNumber"), require("spectrum"));
+		exports["Editor"] = factory(require("signals"), require("lodash"), require("d3"), require("jquery"), require("draggable-number.js"), require("spectrum-colorpicker"), require("file-saver"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["signals"], root["_"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_28__) {
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["signals"], root["_"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"], root["saveAs"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_28__, __WEBPACK_EXTERNAL_MODULE_34__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,7 +56,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Timeline = __webpack_require__(7);
 	
@@ -70,19 +70,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _EditorMenu2 = _interopRequireDefault(_EditorMenu);
 	
-	var _EditorControls = __webpack_require__(37);
+	var _EditorControls = __webpack_require__(35);
 	
 	var _EditorControls2 = _interopRequireDefault(_EditorControls);
 	
-	var _SelectionManager = __webpack_require__(38);
+	var _SelectionManager = __webpack_require__(36);
 	
 	var _SelectionManager2 = _interopRequireDefault(_SelectionManager);
 	
-	var _Exporter = __webpack_require__(39);
+	var _Exporter = __webpack_require__(37);
 	
 	var _Exporter2 = _interopRequireDefault(_Exporter);
 	
-	var _UndoManager = __webpack_require__(40);
+	var _UndoManager = __webpack_require__(38);
 	
 	var _UndoManager2 = _interopRequireDefault(_UndoManager);
 	
@@ -90,11 +90,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var tpl_timeline = __webpack_require__(41);
+	var tpl_timeline = __webpack_require__(39);
 	
 	var Signals = __webpack_require__(3);
 	
-	var Editor = (function () {
+	var Editor = function () {
 	  function Editor(tweenTime) {
 	    var _this = this;
 	
@@ -211,7 +211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Editor;
-	})();
+	}();
 	
 	module.exports = Editor;
 
@@ -221,15 +221,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Utils = (function () {
+	var Utils = function () {
 	  function Utils() {
 	    _classCallCheck(this, Utils);
 	  }
@@ -338,7 +338,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Utils;
-	})();
+	}();
 	
 	exports.default = Utils;
 
@@ -363,11 +363,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Utils = __webpack_require__(1);
 	
@@ -411,7 +411,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var d3 = __webpack_require__(9);
 	
-	var Timeline = (function () {
+	var Timeline = function () {
 	  function Timeline(editor, options) {
 	    var _this = this;
 	
@@ -566,7 +566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Timeline;
-	})();
+	}();
 	
 	exports.default = Timeline;
 
@@ -576,11 +576,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Utils = __webpack_require__(1);
 	
@@ -594,7 +594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Signals = __webpack_require__(3);
 	
-	var Header = (function () {
+	var Header = function () {
 	  function Header(editor, timer, initialDomain, tweenTime, width, margin) {
 	    _classCallCheck(this, Header);
 	
@@ -749,7 +749,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Header;
-	})();
+	}();
 	
 	exports.default = Header;
 
@@ -765,15 +765,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var TimeIndicator = (function () {
+	var TimeIndicator = function () {
 	  function TimeIndicator(timeline, container) {
 	    _classCallCheck(this, TimeIndicator);
 	
@@ -801,7 +801,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return TimeIndicator;
-	})();
+	}();
 	
 	exports.default = TimeIndicator;
 
@@ -811,11 +811,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Utils = __webpack_require__(1);
 	
@@ -829,7 +829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Signals = __webpack_require__(3);
 	var _ = __webpack_require__(6);
 	
-	var Items = (function () {
+	var Items = function () {
 	  function Items(timeline, container) {
 	    _classCallCheck(this, Items);
 	
@@ -1015,7 +1015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Items;
-	})();
+	}();
 	
 	exports.default = Items;
 
@@ -1025,17 +1025,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var d3 = __webpack_require__(9);
 	
-	var KeysPreview = (function () {
+	var KeysPreview = function () {
 	  function KeysPreview(timeline, container) {
 	    _classCallCheck(this, KeysPreview);
 	
@@ -1097,7 +1097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return KeysPreview;
-	})();
+	}();
 	
 	exports.default = KeysPreview;
 
@@ -1107,11 +1107,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Utils = __webpack_require__(1);
 	
@@ -1124,7 +1124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var d3 = __webpack_require__(9);
 	var Signals = __webpack_require__(3);
 	
-	var Properties = (function () {
+	var Properties = function () {
 	  function Properties(timeline) {
 	    _classCallCheck(this, Properties);
 	
@@ -1220,7 +1220,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Properties;
-	})();
+	}();
 	
 	exports.default = Properties;
 
@@ -1230,11 +1230,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Utils = __webpack_require__(1);
 	
@@ -1249,7 +1249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _ = __webpack_require__(6);
 	
-	var Keys = (function () {
+	var Keys = function () {
 	  function Keys(timeline) {
 	    _classCallCheck(this, Keys);
 	
@@ -1454,7 +1454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Keys;
-	})();
+	}();
 	
 	exports.default = Keys;
 
@@ -1464,15 +1464,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Errors = (function () {
+	var Errors = function () {
 	  function Errors(timeline) {
 	    _classCallCheck(this, Errors);
 	
@@ -1512,7 +1512,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Errors;
-	})();
+	}();
 	
 	exports.default = Errors;
 
@@ -1522,15 +1522,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Selection = (function () {
+	var Selection = function () {
 	  function Selection(timeline, svg, margin) {
 	    _classCallCheck(this, Selection);
 	
@@ -1650,7 +1650,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Selection;
-	})();
+	}();
 	
 	exports.default = Selection;
 
@@ -1660,11 +1660,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	__webpack_require__(18);
 	
@@ -1678,9 +1678,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Signals = __webpack_require__(3);
 	
+	
 	var tpl_propertiesEditor = __webpack_require__(32);
 	
-	var PropertiesEditor = (function () {
+	var PropertiesEditor = function () {
 	  function PropertiesEditor(editor) {
 	    _classCallCheck(this, PropertiesEditor);
 	
@@ -1764,7 +1765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return PropertiesEditor;
-	})();
+	}();
 	
 	exports.default = PropertiesEditor;
 
@@ -1780,11 +1781,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _PropertyNumber = __webpack_require__(20);
 	
@@ -1804,7 +1805,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Signals = __webpack_require__(3);
 	
-	var Property = (function () {
+	var Property = function () {
 	  function Property(editor, $el, data) {
 	    _classCallCheck(this, Property);
 	
@@ -2004,7 +2005,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Property;
-	})();
+	}();
 	
 	exports.default = Property;
 
@@ -2014,13 +2015,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
 	__webpack_require__(18);
 	
@@ -2040,22 +2041,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var tpl_property = __webpack_require__(23);
 	
-	var PropertyNumber = (function (_PropertyBase) {
+	var PropertyNumber = function (_PropertyBase) {
 	  _inherits(PropertyNumber, _PropertyBase);
 	
 	  // instance_property: The current property on the data object.
 	  // lineData: The line data object.
 	
 	  function PropertyNumber(instance_property, lineData, editor) {
-	    _classCallCheck(this, PropertyNumber);
-	
 	    var key_val = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 	
-	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(PropertyNumber).call(this, instance_property, lineData, editor, key_val));
+	    _classCallCheck(this, PropertyNumber);
 	
-	    _this2.onInputChange = _this2.onInputChange.bind(_this2);
-	    _this2.$input = _this2.$el.find('input');
-	    return _this2;
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PropertyNumber).call(this, instance_property, lineData, editor, key_val));
+	
+	    _this.onInputChange = _this.onInputChange.bind(_this);
+	    _this.$input = _this.$el.find('input');
+	    return _this;
 	  }
 	
 	  _createClass(PropertyNumber, [{
@@ -2066,7 +2067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this = this;
+	      var _this2 = this;
 	
 	      _get(Object.getPrototypeOf(PropertyNumber.prototype), 'render', this).call(this);
 	      // By default assign the property default value
@@ -2085,12 +2086,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var $input = this.$el.find('input');
 	
 	      var onChangeEnd = function onChangeEnd() {
-	        _this.editor.undoManager.addState();
+	        _this2.editor.undoManager.addState();
 	      };
 	
 	      var draggableOptions = {
 	        changeCallback: function changeCallback() {
-	          return _this.onInputChange();
+	          return _this2.onInputChange();
 	        },
 	        endCallback: function endCallback() {
 	          return onChangeEnd();
@@ -2135,7 +2136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return PropertyNumber;
-	})(_PropertyBase3.default);
+	}(_PropertyBase3.default);
 	
 	exports.default = PropertyNumber;
 
@@ -2145,11 +2146,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Utils = __webpack_require__(1);
 	
@@ -2162,14 +2163,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Signals = __webpack_require__(3);
 	var _ = __webpack_require__(6);
 	
-	var PropertyBase = (function () {
+	var PropertyBase = function () {
 	  // @instance_property: The current property on the data object.
 	  // @lineData: The line data object.
 	
 	  function PropertyBase(instance_property, lineData, editor) {
-	    _classCallCheck(this, PropertyBase);
-	
 	    var key_val = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+	
+	    _classCallCheck(this, PropertyBase);
 	
 	    this.instance_property = instance_property;
 	    this.lineData = lineData;
@@ -2319,7 +2320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return PropertyBase;
-	})();
+	}();
 	
 	exports.default = PropertyBase;
 
@@ -3145,13 +3146,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
 	__webpack_require__(18);
 	
@@ -3169,27 +3170,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
+	
 	var tpl_property = __webpack_require__(29);
 	
-	var PropertyColor = (function (_PropertyBase) {
+	var PropertyColor = function (_PropertyBase) {
 	  _inherits(PropertyColor, _PropertyBase);
 	
 	  function PropertyColor(instance_property, lineData, editor) {
-	    _classCallCheck(this, PropertyColor);
-	
 	    var key_val = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 	
-	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(PropertyColor).call(this, instance_property, lineData, editor, key_val));
+	    _classCallCheck(this, PropertyColor);
 	
-	    _this2.onInputChange = _this2.onInputChange.bind(_this2);
-	    _this2.$input = _this2.$el.find('input');
-	    return _this2;
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PropertyColor).call(this, instance_property, lineData, editor, key_val));
+	
+	    _this.onInputChange = _this.onInputChange.bind(_this);
+	    _this.$input = _this.$el.find('input');
+	    return _this;
 	  }
 	
 	  _createClass(PropertyColor, [{
 	    key: 'render',
 	    value: function render() {
-	      var _this = this;
+	      var _this2 = this;
 	
 	      _get(Object.getPrototypeOf(PropertyColor.prototype), 'render', this).call(this);
 	      // By default assign the property default value
@@ -3213,7 +3215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        clickoutFiresChange: false,
 	        preferredFormat: 'rgb',
 	        change: function change() {
-	          _this.editor.undoManager.addState();
+	          _this2.editor.undoManager.addState();
 	        },
 	        move: function move(color) {
 	          if (color._a === 1) {
@@ -3222,7 +3224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            $input.val(color.toRgbString());
 	          }
 	
-	          _this.onInputChange();
+	          _this2.onInputChange();
 	        }
 	      });
 	
@@ -3247,7 +3249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return PropertyColor;
-	})(_PropertyBase3.default);
+	}(_PropertyBase3.default);
 	
 	exports.default = PropertyColor;
 
@@ -3270,11 +3272,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	__webpack_require__(18);
 	
@@ -3282,16 +3284,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var tpl_property = __webpack_require__(31);
 	
-	var PropertyTween = (function () {
+	var PropertyTween = function () {
 	  // instance_property: The current property on the data object.
 	  // lineData: The line data object.
 	
 	  function PropertyTween(instance_property, lineData, editor) {
 	    var key_val = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+	    var timeline = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
 	
 	    _classCallCheck(this, PropertyTween);
-	
-	    var timeline = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
 	
 	    this.instance_property = instance_property;
 	    this.lineData = lineData;
@@ -3395,7 +3396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return PropertyTween;
-	})();
+	}();
 	
 	exports.default = PropertyTween;
 
@@ -3419,17 +3420,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var saveAs = __webpack_require__(34);
 	
-	var EditorMenu = (function () {
+	var EditorMenu = function () {
 	  function EditorMenu(tweenTime, $timeline, editor) {
 	    _classCallCheck(this, EditorMenu);
 	
@@ -3479,316 +3480,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return EditorMenu;
-	})();
+	}();
 	
 	exports.default = EditorMenu;
 
 /***/ },
 /* 34 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
-	 * A saveAs() FileSaver implementation.
-	 * 1.1.20151003
-	 *
-	 * By Eli Grey, http://eligrey.com
-	 * License: MIT
-	 *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
-	 */
-	
-	/*global self */
-	/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
-	
-	/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
-	
-	var saveAs = saveAs || (function(view) {
-		"use strict";
-		// IE <10 is explicitly unsupported
-		if (typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
-			return;
-		}
-		var
-			  doc = view.document
-			  // only get URL when necessary in case Blob.js hasn't overridden it yet
-			, get_URL = function() {
-				return view.URL || view.webkitURL || view;
-			}
-			, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
-			, can_use_save_link = "download" in save_link
-			, click = function(node) {
-				var event = new MouseEvent("click");
-				node.dispatchEvent(event);
-			}
-			, is_safari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
-			, webkit_req_fs = view.webkitRequestFileSystem
-			, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
-			, throw_outside = function(ex) {
-				(view.setImmediate || view.setTimeout)(function() {
-					throw ex;
-				}, 0);
-			}
-			, force_saveable_type = "application/octet-stream"
-			, fs_min_size = 0
-			// See https://code.google.com/p/chromium/issues/detail?id=375297#c7 and
-			// https://github.com/eligrey/FileSaver.js/commit/485930a#commitcomment-8768047
-			// for the reasoning behind the timeout and revocation flow
-			, arbitrary_revoke_timeout = 500 // in ms
-			, revoke = function(file) {
-				var revoker = function() {
-					if (typeof file === "string") { // file is an object URL
-						get_URL().revokeObjectURL(file);
-					} else { // file is a File
-						file.remove();
-					}
-				};
-				if (view.chrome) {
-					revoker();
-				} else {
-					setTimeout(revoker, arbitrary_revoke_timeout);
-				}
-			}
-			, dispatch = function(filesaver, event_types, event) {
-				event_types = [].concat(event_types);
-				var i = event_types.length;
-				while (i--) {
-					var listener = filesaver["on" + event_types[i]];
-					if (typeof listener === "function") {
-						try {
-							listener.call(filesaver, event || filesaver);
-						} catch (ex) {
-							throw_outside(ex);
-						}
-					}
-				}
-			}
-			, auto_bom = function(blob) {
-				// prepend BOM for UTF-8 XML and text/* types (including HTML)
-				if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
-					return new Blob(["\ufeff", blob], {type: blob.type});
-				}
-				return blob;
-			}
-			, FileSaver = function(blob, name, no_auto_bom) {
-				if (!no_auto_bom) {
-					blob = auto_bom(blob);
-				}
-				// First try a.download, then web filesystem, then object URLs
-				var
-					  filesaver = this
-					, type = blob.type
-					, blob_changed = false
-					, object_url
-					, target_view
-					, dispatch_all = function() {
-						dispatch(filesaver, "writestart progress write writeend".split(" "));
-					}
-					// on any filesys errors revert to saving with object URLs
-					, fs_error = function() {
-						if (target_view && is_safari && typeof FileReader !== "undefined") {
-							// Safari doesn't allow downloading of blob urls
-							var reader = new FileReader();
-							reader.onloadend = function() {
-								var base64Data = reader.result;
-								target_view.location.href = "data:attachment/file" + base64Data.slice(base64Data.search(/[,;]/));
-								filesaver.readyState = filesaver.DONE;
-								dispatch_all();
-							};
-							reader.readAsDataURL(blob);
-							filesaver.readyState = filesaver.INIT;
-							return;
-						}
-						// don't create more object URLs than needed
-						if (blob_changed || !object_url) {
-							object_url = get_URL().createObjectURL(blob);
-						}
-						if (target_view) {
-							target_view.location.href = object_url;
-						} else {
-							var new_tab = view.open(object_url, "_blank");
-							if (new_tab == undefined && is_safari) {
-								//Apple do not allow window.open, see http://bit.ly/1kZffRI
-								view.location.href = object_url
-							}
-						}
-						filesaver.readyState = filesaver.DONE;
-						dispatch_all();
-						revoke(object_url);
-					}
-					, abortable = function(func) {
-						return function() {
-							if (filesaver.readyState !== filesaver.DONE) {
-								return func.apply(this, arguments);
-							}
-						};
-					}
-					, create_if_not_found = {create: true, exclusive: false}
-					, slice
-				;
-				filesaver.readyState = filesaver.INIT;
-				if (!name) {
-					name = "download";
-				}
-				if (can_use_save_link) {
-					object_url = get_URL().createObjectURL(blob);
-					save_link.href = object_url;
-					save_link.download = name;
-					setTimeout(function() {
-						click(save_link);
-						dispatch_all();
-						revoke(object_url);
-						filesaver.readyState = filesaver.DONE;
-					});
-					return;
-				}
-				// Object and web filesystem URLs have a problem saving in Google Chrome when
-				// viewed in a tab, so I force save with application/octet-stream
-				// http://code.google.com/p/chromium/issues/detail?id=91158
-				// Update: Google errantly closed 91158, I submitted it again:
-				// https://code.google.com/p/chromium/issues/detail?id=389642
-				if (view.chrome && type && type !== force_saveable_type) {
-					slice = blob.slice || blob.webkitSlice;
-					blob = slice.call(blob, 0, blob.size, force_saveable_type);
-					blob_changed = true;
-				}
-				// Since I can't be sure that the guessed media type will trigger a download
-				// in WebKit, I append .download to the filename.
-				// https://bugs.webkit.org/show_bug.cgi?id=65440
-				if (webkit_req_fs && name !== "download") {
-					name += ".download";
-				}
-				if (type === force_saveable_type || webkit_req_fs) {
-					target_view = view;
-				}
-				if (!req_fs) {
-					fs_error();
-					return;
-				}
-				fs_min_size += blob.size;
-				req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
-					fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
-						var save = function() {
-							dir.getFile(name, create_if_not_found, abortable(function(file) {
-								file.createWriter(abortable(function(writer) {
-									writer.onwriteend = function(event) {
-										target_view.location.href = file.toURL();
-										filesaver.readyState = filesaver.DONE;
-										dispatch(filesaver, "writeend", event);
-										revoke(file);
-									};
-									writer.onerror = function() {
-										var error = writer.error;
-										if (error.code !== error.ABORT_ERR) {
-											fs_error();
-										}
-									};
-									"writestart progress write abort".split(" ").forEach(function(event) {
-										writer["on" + event] = filesaver["on" + event];
-									});
-									writer.write(blob);
-									filesaver.abort = function() {
-										writer.abort();
-										filesaver.readyState = filesaver.DONE;
-									};
-									filesaver.readyState = filesaver.WRITING;
-								}), fs_error);
-							}), fs_error);
-						};
-						dir.getFile(name, {create: false}, abortable(function(file) {
-							// delete file if it already exists
-							file.remove();
-							save();
-						}), abortable(function(ex) {
-							if (ex.code === ex.NOT_FOUND_ERR) {
-								save();
-							} else {
-								fs_error();
-							}
-						}));
-					}), fs_error);
-				}), fs_error);
-			}
-			, FS_proto = FileSaver.prototype
-			, saveAs = function(blob, name, no_auto_bom) {
-				return new FileSaver(blob, name, no_auto_bom);
-			}
-		;
-		// IE 10+ (native saveAs)
-		if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
-			return function(blob, name, no_auto_bom) {
-				if (!no_auto_bom) {
-					blob = auto_bom(blob);
-				}
-				return navigator.msSaveOrOpenBlob(blob, name || "download");
-			};
-		}
-	
-		FS_proto.abort = function() {
-			var filesaver = this;
-			filesaver.readyState = filesaver.DONE;
-			dispatch(filesaver, "abort");
-		};
-		FS_proto.readyState = FS_proto.INIT = 0;
-		FS_proto.WRITING = 1;
-		FS_proto.DONE = 2;
-	
-		FS_proto.error =
-		FS_proto.onwritestart =
-		FS_proto.onprogress =
-		FS_proto.onwrite =
-		FS_proto.onabort =
-		FS_proto.onerror =
-		FS_proto.onwriteend =
-			null;
-	
-		return saveAs;
-	}(
-		   typeof self !== "undefined" && self
-		|| typeof window !== "undefined" && window
-		|| this.content
-	));
-	// `self` is undefined in Firefox for Android content script context
-	// while `this` is nsIContentFrameMessageManager
-	// with an attribute `content` that corresponds to the window
-	
-	if (typeof module !== "undefined" && module.exports) {
-	  module.exports.saveAs = saveAs;
-	} else if (("function" !== "undefined" && __webpack_require__(35) !== null) && (__webpack_require__(36) != null)) {
-	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
-	    return saveAs;
-	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	}
-
+	module.exports = __WEBPACK_EXTERNAL_MODULE_34__;
 
 /***/ },
 /* 35 */
 /***/ function(module, exports) {
 
-	module.exports = function() { throw new Error("define cannot be used indirect"); };
-
-
-/***/ },
-/* 36 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ },
-/* 37 */
-/***/ function(module, exports) {
-
 	'use strict';
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var EditorControls = (function () {
+	var EditorControls = function () {
 	  function EditorControls(tweenTime, $timeline) {
 	    var _this = this;
 	
@@ -3860,21 +3576,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return EditorControls;
-	})();
+	}();
 	
 	exports.default = EditorControls;
 
 /***/ },
-/* 38 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -3882,7 +3598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Signals = __webpack_require__(3);
 	var _ = __webpack_require__(6);
 	
-	var SelectionManager = (function () {
+	var SelectionManager = function () {
 	  function SelectionManager(tweenTime) {
 	    _classCallCheck(this, SelectionManager);
 	
@@ -4029,25 +3745,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return SelectionManager;
-	})();
+	}();
 	
 	exports.default = SelectionManager;
 
 /***/ },
-/* 39 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Exporter = (function () {
+	var Exporter = function () {
 	  function Exporter(editor) {
 	    _classCallCheck(this, Exporter);
 	
@@ -4091,27 +3807,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return Exporter;
-	})();
+	}();
 	
 	exports.default = Exporter;
 
 /***/ },
-/* 40 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	__webpack_require__(18);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var UndoManager = (function () {
+	var UndoManager = function () {
 	  function UndoManager(editor) {
 	    var _this = this;
 	
@@ -4224,12 +3940,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return UndoManager;
-	})();
+	}();
 	
 	exports.default = UndoManager;
 
 /***/ },
-/* 41 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var H = __webpack_require__(24);

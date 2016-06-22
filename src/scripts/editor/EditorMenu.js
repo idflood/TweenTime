@@ -1,4 +1,4 @@
-let saveAs = require('../bower_components/FileSaver/FileSaver.js');
+let saveAs = require('file-saver');
 
 export default class EditorMenu {
   constructor(tweenTime, $timeline, editor) {
