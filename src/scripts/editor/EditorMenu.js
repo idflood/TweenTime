@@ -1,4 +1,4 @@
-let saveAs = require('file-saver');
+let saveAs = require('file-saver').saveAs || require('file-saver');
 
 export default class EditorMenu {
   constructor(tweenTime, $timeline, editor) {
