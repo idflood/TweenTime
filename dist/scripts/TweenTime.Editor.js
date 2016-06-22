@@ -3428,7 +3428,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var saveAs = __webpack_require__(34);
+	var saveAs = __webpack_require__(34).saveAs || __webpack_require__(34);
 	
 	var EditorMenu = function () {
 	  function EditorMenu(tweenTime, $timeline, editor) {
