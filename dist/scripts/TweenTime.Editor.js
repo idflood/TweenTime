@@ -6,7 +6,7 @@
 	else if(typeof exports === 'object')
 		exports["Editor"] = factory(require("signals"), require("lodash"), require("d3"), require("jquery"), require("draggable-number.js"), require("spectrum-colorpicker"), require("file-saver"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["signals"], root["_"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"], root["file-saver"]);
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["signals"], root["_"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"], root["saveAs"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_28__, __WEBPACK_EXTERNAL_MODULE_34__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache

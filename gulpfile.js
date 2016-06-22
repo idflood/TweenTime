@@ -19,8 +19,13 @@ var getWebpackConfig = function() {
     devtool: "source-map",
     externals: [
       'd3',
-      'file-saver',
       {
+        'file-saver': {
+          root: 'saveAs',
+          commonjs: 'file-saver',
+          commonjs2: 'file-saver',
+          amd: 'file-saver'
+        },
         'spectrum': {
           root: 'spectrum',
           commonjs: 'spectrum-colorpicker',
