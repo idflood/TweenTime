@@ -1,3 +1,5 @@
+let d3 = require('d3');
+
 export default class Selection {
   constructor(timeline, svg, margin) {
     this.timeline = timeline;
