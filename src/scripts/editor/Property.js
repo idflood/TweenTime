@@ -2,6 +2,8 @@ let Signals = require('js-signals');
 import PropertyNumber from './PropertyNumber';
 import PropertyColor from './PropertyColor';
 import PropertyTween from './PropertyTween';
+import PropertyEvent from './PropertyEvent';
+import PropertyFooter from './PropertyFooter';
 
 export default class Property {
   constructor(editor, $el, data) {
@@ -61,9 +63,13 @@ export default class Property {
           }
 
           if (property_name) {
-            // Add tween select if we are editing a key, so only if there is property_name.
-            var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container, propertyData);
-            this.items.push(tweenProp);
+            if (instance_prop.type !== 'event') {
+              // Add tween select if we are editing a key, so only if there is property_name.
+              var tweenProp = this.addTweenProperty(instance_prop, lineData, key_val, $tween_container);
+              this.items.push(tweenProp);
+            }
+            let footerProp = this.addFooter(instance_prop, lineData, key_val, $tween_container, propertyData);
+            this.items.push(footerProp);
           }
         }
       }
@@ -149,8 +155,11 @@ export default class Property {
 
   addNumberProperty(instance_prop, lineData, key_val, $container) {
     var PropClass = PropertyNumber;
-    if (instance_prop.type && instance_prop.type === 'color') {
+    if (instance_prop.type === 'color') {
       PropClass = PropertyColor;
+    }
+    else if (instance_prop.type === 'event') {
+      PropClass = PropertyEvent;
     }
     var prop = new PropClass(instance_prop, lineData, this.editor, key_val);
     prop.keyAdded.add(this.onKeyAdded);
@@ -158,12 +167,18 @@ export default class Property {
     return prop;
   }
 
-  addTweenProperty(instance_prop, lineData, key_val, $container, propertyData) {
+  addTweenProperty(instance_prop, lineData, key_val, $container) {
     var tween = new PropertyTween(instance_prop, lineData, this.editor, key_val, this.timeline);
     $container.append(tween.$el);
+    return tween;
+  }
+
+  addFooter(instance_prop, lineData, key_val, $container, propertyData) {
+    let footer = new PropertyFooter(instance_prop, lineData, this.editor, key_val, this.timeline);
+    $container.append(footer.$el);
 
     // Add a remove key button
-    tween.$el.find('[data-action-remove]').click((e) => {
+    footer.$el.find('[data-action-remove]').click((e) => {
       e.preventDefault();
       var index = propertyData.keys.indexOf(key_val);
       if (index > -1) {
@@ -174,7 +189,7 @@ export default class Property {
         lineData._isDirty = true;
       }
     });
-    return tween;
+    return footer;
   }
 
   update() {
