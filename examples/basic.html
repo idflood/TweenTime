@@ -125,8 +125,8 @@
 
       var box_values = tweenTime.getValues('box');
 
-      tweenTime.addOnEventListener((val) => {
-        console.log('onEvent callback', val);
+      tweenTime.addOnEventListener((name, val) => {
+        console.log('onEvent callback', name, val);
       });
 
       function animate() {

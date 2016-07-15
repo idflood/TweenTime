@@ -188,7 +188,7 @@ export default class Orchestrator {
         for (let key_index = 0; key_index < property.keys.length; key_index++) {
           let key = property.keys[key_index];
           if (seconds_elapsed > 0 && key.time <= seconds && key.time > seconds - seconds_elapsed) {
-            this.onEvent.dispatch(key.val);
+            this.onEvent.dispatch(property.name, key.val);
           }
         }
       }
