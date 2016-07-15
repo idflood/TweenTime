@@ -105,6 +105,16 @@
               "val": 1,
               "min": 0,
               "max": 1
+            },
+            {
+              "name": "event",
+              "type": "event",
+              "keys": [
+                {
+                  "time": 1.214,
+                  "val": "event type key frame is fired!"
+                }
+              ]
             }
           ]
         }
@@ -114,6 +124,10 @@
       var editor = new TweenTime.Editor(tweenTime);
 
       var box_values = tweenTime.getValues('box');
+
+      tweenTime.addOnEventListener((val) => {
+        console.log('onEvent callback', val);
+      });
 
       function animate() {
         $('.box').css({
