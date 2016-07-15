@@ -184,6 +184,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getTotalDuration() {
 	      return this.orchestrator.getTotalDuration();
 	    }
+	  }, {
+	    key: 'addOnEventListener',
+	    value: function addOnEventListener(callback) {
+	      this.orchestrator.onEvent.add(callback);
+	    }
+	  }, {
+	    key: 'removeOnEventListener',
+	    value: function removeOnEventListener(callback) {
+	      this.orchestrator.onEvent.remove(callback);
+	    }
 	  }]);
 	
 	  return Core;
@@ -414,7 +424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.stop();
 	      }
 	
-	      this.updated.dispatch(this.time[0]);
+	      this.updated.dispatch(this.time[0], this.is_playing ? elapsed : 0);
 	
 	      this.last_timeStamp = timestamp;
 	      this.last_time = this.time[0];
@@ -461,6 +471,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.onUpdate = new Signals.Signal();
 	    this.timer.updated.add(this.update);
 	    this.update(0);
+	    this.onEvent = new Signals.Signal();
 	  }
 	
 	  _createClass(Orchestrator, [{
@@ -517,16 +528,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: 'update',
-	    value: function update(timestamp) {
+	    value: function update(timestamp, elapsed) {
 	      var seconds = timestamp / 1000;
-	      var has_dirty_items = false;
-	      var i;
-	      var item;
-	      var property;
-	      var property_key;
+	      var seconds_elapsed = elapsed / 1000;
 	
-	      for (i = 0; i < this.data.length; i++) {
-	        item = this.data[i];
+	      var has_dirty_items = false;
+	
+	      for (var i = 0; i < this.data.length; i++) {
+	        var item = this.data[i];
 	        if (!item._domHelper) {
 	          this.initSpecialProperties(item);
 	        }
@@ -551,8 +560,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          item._isDirty = false;
 	          // item._timeline.clear();
 	
-	          for (property_key = 0; property_key < item.properties.length; property_key++) {
-	            property = item.properties[property_key];
+	          for (var property_key = 0; property_key < item.properties.length; property_key++) {
+	            var property = item.properties[property_key];
 	            if (property._timeline) {
 	              property._timeline.clear();
 	            } else {
@@ -633,14 +642,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Finally update the main timeline.
 	      this.mainTimeline.seek(seconds);
 	
+	      // check if event type property to be fired
+	      for (var _i = 0; _i < this.data.length; _i++) {
+	        var _item = this.data[_i];
+	        for (var _property_key = 0; _property_key < _item.properties.length; _property_key++) {
+	          var _property = _item.properties[_property_key];
+	          if (_property.type !== 'event') {
+	            continue;
+	          }
+	          for (var _key_index = 0; _key_index < _property.keys.length; _key_index++) {
+	            var _key = _property.keys[_key_index];
+	            if (seconds_elapsed > 0 && _key.time <= seconds && _key.time > seconds - seconds_elapsed) {
+	              this.onEvent.dispatch(_property.name, _key.val);
+	            }
+	          }
+	        }
+	      }
+	
 	      // update the css properties.
-	      for (i = 0; i < this.data.length; i++) {
-	        item = this.data[i];
-	        for (property_key = 0; property_key < item.properties.length; property_key++) {
-	          property = item.properties[property_key];
-	          if (property.css && property.keys.length) {
+	      for (var _i2 = 0; _i2 < this.data.length; _i2++) {
+	        var _item2 = this.data[_i2];
+	        for (var _property_key2 = 0; _property_key2 < _item2.properties.length; _property_key2++) {
+	          var _property2 = _item2.properties[_property_key2];
+	          if (_property2.css && _property2.keys.length) {
 	            // Only css values.
-	            item.values[property.name] = item._domHelper.style[property.name];
+	            _item2.values[_property2.name] = _item2._domHelper.style[_property2.name];
 	          }
 	        }
 	      }
