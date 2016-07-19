@@ -33,7 +33,7 @@ export default class Timer {
 
   play() {
     this.preStatusChanged.dispatch(true);
-    setImmediate(() => {
+    window.requestAnimationFrame(() => {
       this.is_playing = true;
       this.statusChanged.dispatch(this.is_playing);
     });
@@ -41,7 +41,7 @@ export default class Timer {
 
   stop() {
     this.preStatusChanged.dispatch(false);
-    setImmediate(() => {
+    window.requestAnimationFrame(() => {
       this.is_playing = false;
       this.statusChanged.dispatch(this.is_playing);
     });
@@ -49,7 +49,7 @@ export default class Timer {
 
   toggle() {
     this.preStatusChanged.dispatch(!this.is_playing);
-    setImmediate(() => {
+    window.requestAnimationFrame(() => {
       this.is_playing = !this.is_playing;
       this.statusChanged.dispatch(this.is_playing);
     });
