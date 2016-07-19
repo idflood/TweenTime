@@ -3387,6 +3387,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.lineData._isDirty = true;
 	      this.timeline._isDirty = true;
 	    }
+	  }, {
+	    key: 'update',
+	    value: function update() {
+	      console.log('PropertyTween\'s upload method is not yet implemented.');
+	    }
 	  }]);
 	
 	  return PropertyTween;

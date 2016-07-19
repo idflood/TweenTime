@@ -66,4 +66,8 @@ export default class PropertyTween {
     this.lineData._isDirty = true;
     this.timeline._isDirty = true;
   }
+
+  update() {
+    console.log('PropertyTween\'s upload method is not yet implemented.');
+  }
 }
