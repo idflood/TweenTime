@@ -10,6 +10,7 @@ export default class Timer {
     this.last_timeStamp = -1;
     this.last_time = -1;
     this.updated = new Signals.Signal();
+    this.preStatusChanged = new Signals.Signal();
     this.statusChanged = new Signals.Signal();
     this.durationChanged = new Signals.Signal();
     this.seeked = new Signals.Signal();
@@ -32,17 +33,26 @@ export default class Timer {
 
   play() {
     this.is_playing = true;
-    this.statusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(this.is_playing);
+    setImmediate(() => {
+      this.statusChanged.dispatch(this.is_playing);
+    });
   }
 
   stop() {
     this.is_playing = false;
-    this.statusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(this.is_playing);
+    setImmediate(() => {
+      this.statusChanged.dispatch(this.is_playing);
+    });
   }
 
   toggle() {
     this.is_playing = !this.is_playing;
-    this.statusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(this.is_playing);
+    setImmediate(() => {
+      this.statusChanged.dispatch(this.is_playing);
+    });
   }
 
   seek(time) {
