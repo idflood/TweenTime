@@ -387,9 +387,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function play() {
 	      var _this = this;
 	
-	      this.is_playing = true;
-	      this.preStatusChanged.dispatch(this.is_playing);
+	      this.preStatusChanged.dispatch(true);
 	      setImmediate(function () {
+	        _this.is_playing = true;
 	        _this.statusChanged.dispatch(_this.is_playing);
 	      });
 	    }
@@ -398,9 +398,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function stop() {
 	      var _this2 = this;
 	
-	      this.is_playing = false;
-	      this.preStatusChanged.dispatch(this.is_playing);
+	      this.preStatusChanged.dispatch(false);
 	      setImmediate(function () {
+	        _this2.is_playing = false;
 	        _this2.statusChanged.dispatch(_this2.is_playing);
 	      });
 	    }
@@ -409,9 +409,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function toggle() {
 	      var _this3 = this;
 	
-	      this.is_playing = !this.is_playing;
-	      this.preStatusChanged.dispatch(this.is_playing);
+	      this.preStatusChanged.dispatch(!this.is_playing);
 	      setImmediate(function () {
+	        _this3.is_playing = !_this3.is_playing;
 	        _this3.statusChanged.dispatch(_this3.is_playing);
 	      });
 	    }

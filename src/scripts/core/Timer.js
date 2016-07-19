@@ -32,25 +32,25 @@ export default class Timer {
   }
 
   play() {
-    this.is_playing = true;
-    this.preStatusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(true);
     setImmediate(() => {
+      this.is_playing = true;
       this.statusChanged.dispatch(this.is_playing);
     });
   }
 
   stop() {
-    this.is_playing = false;
-    this.preStatusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(false);
     setImmediate(() => {
+      this.is_playing = false;
       this.statusChanged.dispatch(this.is_playing);
     });
   }
 
   toggle() {
-    this.is_playing = !this.is_playing;
-    this.preStatusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(!this.is_playing);
     setImmediate(() => {
+      this.is_playing = !this.is_playing;
       this.statusChanged.dispatch(this.is_playing);
     });
   }
