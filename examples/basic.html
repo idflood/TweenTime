@@ -128,6 +128,9 @@
       tweenTime.addOnEventListener((name, val) => {
         console.log('onEvent callback', name, val);
       });
+      tweenTime.timer.preStatusChanged.add(() => {
+        console.log('pre status changed');
+      });
 
       function animate() {
         $('.box').css({

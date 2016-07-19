@@ -33,7 +33,7 @@ export default class Timer {
 
   play() {
     this.preStatusChanged.dispatch(true);
-    window.requestAnimationFrame(() => {
+    setImmediate(() => {
       this.is_playing = true;
       this.statusChanged.dispatch(this.is_playing);
     });
@@ -41,7 +41,7 @@ export default class Timer {
 
   stop() {
     this.preStatusChanged.dispatch(false);
-    window.requestAnimationFrame(() => {
+    setImmediate(() => {
       this.is_playing = false;
       this.statusChanged.dispatch(this.is_playing);
     });
@@ -49,7 +49,7 @@ export default class Timer {
 
   toggle() {
     this.preStatusChanged.dispatch(!this.is_playing);
-    window.requestAnimationFrame(() => {
+    setImmediate(() => {
       this.is_playing = !this.is_playing;
       this.statusChanged.dispatch(this.is_playing);
     });
@@ -60,8 +60,12 @@ export default class Timer {
     this.seeked.dispatch(this.time[0]);
   }
 
-  update(timestamp) {
+  update() {
     // Init timestamp
+
+    // the argument timestamp is too old, if we have a long time task on click on
+    // play button's click handler. so re-fetch the current timestamp here again.
+    let timestamp = performance.now();
     if (this.last_timeStamp === -1) {
       this.last_timeStamp = timestamp;
     }
