@@ -7,7 +7,7 @@
 		exports["Editor"] = factory(require("signals"), require("lodash"), require("d3"), require("jquery"), require("draggable-number.js"), require("spectrum-colorpicker"), require("file-saver"));
 	else
 		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Editor"] = factory(root["signals"], root["_"], root["d3"], root["$"], root["DraggableNumber"], root["spectrum"], root["saveAs"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_21__, __WEBPACK_EXTERNAL_MODULE_25__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_41__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_10__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_26__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_42__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -58,31 +58,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _Timeline = __webpack_require__(10);
+	var _Timeline = __webpack_require__(11);
 	
 	var _Timeline2 = _interopRequireDefault(_Timeline);
 	
-	var _PropertiesEditor = __webpack_require__(20);
+	var _PropertiesEditor = __webpack_require__(21);
 	
 	var _PropertiesEditor2 = _interopRequireDefault(_PropertiesEditor);
 	
-	var _EditorMenu = __webpack_require__(40);
+	var _EditorMenu = __webpack_require__(41);
 	
 	var _EditorMenu2 = _interopRequireDefault(_EditorMenu);
 	
-	var _EditorControls = __webpack_require__(42);
+	var _EditorControls = __webpack_require__(43);
 	
 	var _EditorControls2 = _interopRequireDefault(_EditorControls);
 	
-	var _SelectionManager = __webpack_require__(43);
+	var _SelectionManager = __webpack_require__(44);
 	
 	var _SelectionManager2 = _interopRequireDefault(_SelectionManager);
 	
-	var _Exporter = __webpack_require__(44);
+	var _Exporter = __webpack_require__(45);
 	
 	var _Exporter2 = _interopRequireDefault(_Exporter);
 	
-	var _UndoManager = __webpack_require__(45);
+	var _UndoManager = __webpack_require__(46);
 	
 	var _UndoManager2 = _interopRequireDefault(_UndoManager);
 	
@@ -90,7 +90,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var tpl_timeline = __webpack_require__(46);
+	var tpl_timeline = __webpack_require__(47);
 	
 	var Signals = __webpack_require__(5);
 	
@@ -355,13 +355,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 6 */,
 /* 7 */,
 /* 8 */,
-/* 9 */
+/* 9 */,
+/* 10 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_9__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -376,35 +377,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Utils2 = _interopRequireDefault(_Utils);
 	
-	var _Header = __webpack_require__(11);
+	var _Header = __webpack_require__(12);
 	
 	var _Header2 = _interopRequireDefault(_Header);
 	
-	var _TimeIndicator = __webpack_require__(13);
+	var _TimeIndicator = __webpack_require__(14);
 	
 	var _TimeIndicator2 = _interopRequireDefault(_TimeIndicator);
 	
-	var _Items = __webpack_require__(14);
+	var _Items = __webpack_require__(15);
 	
 	var _Items2 = _interopRequireDefault(_Items);
 	
-	var _KeysPreview = __webpack_require__(15);
+	var _KeysPreview = __webpack_require__(16);
 	
 	var _KeysPreview2 = _interopRequireDefault(_KeysPreview);
 	
-	var _Properties = __webpack_require__(16);
+	var _Properties = __webpack_require__(17);
 	
 	var _Properties2 = _interopRequireDefault(_Properties);
 	
-	var _Keys = __webpack_require__(17);
+	var _Keys = __webpack_require__(18);
 	
 	var _Keys2 = _interopRequireDefault(_Keys);
 	
-	var _Errors = __webpack_require__(18);
+	var _Errors = __webpack_require__(19);
 	
 	var _Errors2 = _interopRequireDefault(_Errors);
 	
-	var _Selection = __webpack_require__(19);
+	var _Selection = __webpack_require__(20);
 	
 	var _Selection2 = _interopRequireDefault(_Selection);
 	
@@ -412,7 +413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	
 	var Timeline = function () {
 	  function Timeline(editor, options) {
@@ -574,7 +575,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Timeline;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -593,7 +594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	
 	var Signals = __webpack_require__(5);
 	
@@ -757,13 +758,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Header;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -809,7 +810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = TimeIndicator;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -828,9 +829,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	var Signals = __webpack_require__(5);
-	var _ = __webpack_require__(9);
+	var _ = __webpack_require__(10);
 	
 	var Items = function () {
 	  function Items(timeline, container) {
@@ -1023,7 +1024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Items;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1036,7 +1037,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	
 	var KeysPreview = function () {
 	  function KeysPreview(timeline, container) {
@@ -1105,7 +1106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = KeysPreview;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1124,7 +1125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	var Signals = __webpack_require__(5);
 	
 	var Properties = function () {
@@ -1232,7 +1233,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Properties;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1251,10 +1252,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	var Signals = __webpack_require__(5);
 	
-	var _ = __webpack_require__(9);
+	var _ = __webpack_require__(10);
 	
 	var Keys = function () {
 	  function Keys(timeline) {
@@ -1466,7 +1467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Keys;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1524,7 +1525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Errors;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1537,7 +1538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	
 	var Selection = function () {
 	  function Selection(timeline, svg, margin) {
@@ -1664,7 +1665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Selection;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1675,9 +1676,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
-	var _Property = __webpack_require__(22);
+	var _Property = __webpack_require__(23);
 	
 	var _Property2 = _interopRequireDefault(_Property);
 	
@@ -1688,7 +1689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Signals = __webpack_require__(5);
 	
 	
-	var tpl_propertiesEditor = __webpack_require__(39);
+	var tpl_propertiesEditor = __webpack_require__(40);
 	
 	var PropertiesEditor = function () {
 	  function PropertiesEditor(editor) {
@@ -1779,13 +1780,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PropertiesEditor;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_21__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_22__;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1796,23 +1797,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _PropertyNumber = __webpack_require__(23);
+	var _PropertyNumber = __webpack_require__(24);
 	
 	var _PropertyNumber2 = _interopRequireDefault(_PropertyNumber);
 	
-	var _PropertyColor = __webpack_require__(30);
+	var _PropertyColor = __webpack_require__(31);
 	
 	var _PropertyColor2 = _interopRequireDefault(_PropertyColor);
 	
-	var _PropertyTween = __webpack_require__(33);
+	var _PropertyTween = __webpack_require__(34);
 	
 	var _PropertyTween2 = _interopRequireDefault(_PropertyTween);
 	
-	var _PropertyEvent = __webpack_require__(35);
+	var _PropertyEvent = __webpack_require__(36);
 	
 	var _PropertyEvent2 = _interopRequireDefault(_PropertyEvent);
 	
-	var _PropertyFooter = __webpack_require__(37);
+	var _PropertyFooter = __webpack_require__(38);
 	
 	var _PropertyFooter2 = _interopRequireDefault(_PropertyFooter);
 	
@@ -2040,7 +2041,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Property;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2053,9 +2054,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
-	var _PropertyBase2 = __webpack_require__(24);
+	var _PropertyBase2 = __webpack_require__(25);
 	
 	var _PropertyBase3 = _interopRequireDefault(_PropertyBase2);
 	
@@ -2067,9 +2068,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var DraggableNumber = __webpack_require__(25);
+	var DraggableNumber = __webpack_require__(26);
 	
-	var tpl_property = __webpack_require__(26);
+	var tpl_property = __webpack_require__(27);
 	
 	var PropertyNumber = function (_PropertyBase) {
 	  _inherits(PropertyNumber, _PropertyBase);
@@ -2171,7 +2172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PropertyNumber;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2191,7 +2192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Signals = __webpack_require__(5);
-	var _ = __webpack_require__(9);
+	var _ = __webpack_require__(10);
 	
 	var PropertyBase = function () {
 	  // @instance_property: The current property on the data object.
@@ -2355,20 +2356,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PropertyBase;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_25__;
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var H = __webpack_require__(27);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input type=\"number\" id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input type=\"number\" id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
+	module.exports = __WEBPACK_EXTERNAL_MODULE_26__;
 
 /***/ },
 /* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var H = __webpack_require__(28);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input type=\"number\" id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input type=\"number\" id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
+
+/***/ },
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2388,14 +2389,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// This file is for use with Node.js. See dist/ for browser files.
 	
-	var Hogan = __webpack_require__(28);
-	Hogan.Template = __webpack_require__(29).Template;
+	var Hogan = __webpack_require__(29);
+	Hogan.Template = __webpack_require__(30).Template;
 	Hogan.template = Hogan.Template;
 	module.exports = Hogan;
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2824,7 +2825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -3171,7 +3172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3184,9 +3185,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
-	var _PropertyBase2 = __webpack_require__(24);
+	var _PropertyBase2 = __webpack_require__(25);
 	
 	var _PropertyBase3 = _interopRequireDefault(_PropertyBase2);
 	
@@ -3198,10 +3199,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	__webpack_require__(31);
+	__webpack_require__(32);
 	
 	
-	var tpl_property = __webpack_require__(32);
+	var tpl_property = __webpack_require__(33);
 	
 	var PropertyColor = function (_PropertyBase) {
 	  _inherits(PropertyColor, _PropertyBase);
@@ -3284,20 +3285,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PropertyColor;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_31__;
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var H = __webpack_require__(27);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
+	module.exports = __WEBPACK_EXTERNAL_MODULE_32__;
 
 /***/ },
 /* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var H = __webpack_require__(28);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
+
+/***/ },
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3308,11 +3309,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var tpl_property = __webpack_require__(34);
+	var tpl_property = __webpack_require__(35);
 	
 	var PropertyTween = function () {
 	  // instance_property: The current property on the data object.
@@ -3401,14 +3402,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PropertyTween;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(27);
+	var H = __webpack_require__(28);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--tween\">");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">easing</label>");t.b("\n" + i);t.b("  <div class=\"property__select\">");t.b("\n" + i);t.b("    <div class=\"custom-select\">");t.b("\n" + i);t.b("      <select id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\">");t.b("\n" + i);if(t.s(t.f("options",c,p,1),c,p,0,212,279,"{{ }}")){t.rs(c,p,function(c,p,t){t.b("        <option value=\"");t.b(t.v(t.d(".",c,p,0)));t.b("\" ");t.b(t.v(t.f("selected",c,p,0)));t.b(">");t.b(t.v(t.d(".",c,p,0)));t.b("</option>");t.b("\n" + i);});c.pop();}t.b("      </select>");t.b("\n" + i);t.b("    </div>");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--tween\">\n  <label for=\"{{id}}\" class=\"property__label\">easing</label>\n  <div class=\"property__select\">\n    <div class=\"custom-select\">\n      <select id=\"{{id}}\">\n        {{#options}}\n        <option value=\"{{.}}\" {{selected}}>{{.}}</option>\n        {{/options}}\n      </select>\n    </div>\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3421,9 +3422,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
-	var _PropertyBase2 = __webpack_require__(24);
+	var _PropertyBase2 = __webpack_require__(25);
 	
 	var _PropertyBase3 = _interopRequireDefault(_PropertyBase2);
 	
@@ -3435,7 +3436,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var tpl_property = __webpack_require__(36);
+	var tpl_property = __webpack_require__(37);
 	
 	var PropertyEvent = function (_PropertyBase) {
 	  _inherits(PropertyEvent, _PropertyBase);
@@ -3495,14 +3496,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PropertyEvent;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(27);
+	var H = __webpack_require__(28);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"property property--number\">");t.b("\n" + i);t.b("  <button class=\"property__key\"></button>");t.b("\n" + i);t.b("  <label for=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__label\">");t.b(t.v(t.f("label",c,p,0)));t.b("</label>");t.b("\n" + i);t.b("  <input type=\"text\" id=\"");t.b(t.v(t.f("id",c,p,0)));t.b("\" class=\"property__input\" value=\"");t.b(t.v(t.f("val",c,p,0)));t.b("\" />");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"property property--number\">\n  <button class=\"property__key\"></button>\n  <label for=\"{{id}}\" class=\"property__label\">{{label}}</label>\n  <input type=\"text\" id=\"{{id}}\" class=\"property__input\" value=\"{{val}}\" />\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3513,11 +3514,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var tpl_property = __webpack_require__(38);
+	var tpl_property = __webpack_require__(39);
 	
 	var PropertyFooter = function () {
 	  // instance_property: The current property on the data object.
@@ -3602,21 +3603,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PropertyFooter;
 
 /***/ },
-/* 38 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var H = __webpack_require__(27);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"properties-editor__actions actions\">");t.b("\n" + i);t.b("  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">");t.b(t.v(t.f("time",c,p,0)));t.b("</strong> seconds</span>");t.b("\n" + i);t.b("  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"properties-editor__actions actions\">\n  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">{{time}}</strong> seconds</span>\n  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>\n</div>\n", H); return T.render.apply(T, arguments); };
-
-/***/ },
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(27);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"properties-editor\">");t.b("\n" + i);t.b("  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  <div class=\"properties-editor__main\"></div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"properties-editor\">\n  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  <div class=\"properties-editor__main\"></div>\n</div>\n", H); return T.render.apply(T, arguments); };
+	var H = __webpack_require__(28);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"properties-editor__actions actions\">");t.b("\n" + i);t.b("  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">");t.b(t.v(t.f("time",c,p,0)));t.b("</strong> seconds</span>");t.b("\n" + i);t.b("  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"properties-editor__actions actions\">\n  <span class=\"property__key-time\">key at <strong class=\"property__key-input\" contenteditable=\"true\">{{time}}</strong> seconds</span>\n  <a href=\"#\" class=\"actions__item\" data-action-remove>Remove key</a>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ },
 /* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var H = __webpack_require__(28);
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"properties-editor\">");t.b("\n" + i);t.b("  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  <div class=\"properties-editor__main\"></div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"properties-editor\">\n  <a href=\"#\" class=\"menu-item menu-item--toggle-side\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  <div class=\"properties-editor__main\"></div>\n</div>\n", H); return T.render.apply(T, arguments); };
+
+/***/ },
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3629,7 +3630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var saveAs = __webpack_require__(41).saveAs || __webpack_require__(41);
+	var saveAs = __webpack_require__(42).saveAs || __webpack_require__(42);
 	
 	var EditorMenu = function () {
 	  function EditorMenu(tweenTime, $timeline, editor) {
@@ -3686,13 +3687,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EditorMenu;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_41__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_42__;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3782,7 +3783,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EditorControls;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3795,9 +3796,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var d3 = __webpack_require__(12);
+	var d3 = __webpack_require__(13);
 	var Signals = __webpack_require__(5);
-	var _ = __webpack_require__(9);
+	var _ = __webpack_require__(10);
 	
 	var SelectionManager = function () {
 	  function SelectionManager(tweenTime) {
@@ -3951,7 +3952,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SelectionManager;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4013,7 +4014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Exporter;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4024,7 +4025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -4146,10 +4147,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = UndoManager;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var H = __webpack_require__(27);
+	var H = __webpack_require__(28);
 	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-first\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-last\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-first\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-last\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ }

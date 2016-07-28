@@ -56,6 +56,12 @@ var getWebpackConfig = function() {
           commonjs2: ['gsap', 'TimelineMax'],
           amd: 'TimelineMax'
         },
+        'Quad': {
+          root: 'Quad',
+          commonjs: ['gsap', 'Quad'],
+          commonjs2: ['gsap', 'Quad'],
+          amd: 'Quad'
+        },
         'jquery': {
           root: '$',
           commonjs: 'jquery',

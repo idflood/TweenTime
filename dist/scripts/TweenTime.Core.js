@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("signals"), require("gsap")["TweenMax"], require("gsap")["TimelineMax"], require("lodash"));
+		module.exports = factory(require("signals"), require("gsap")["TweenMax"], require("gsap")["TimelineMax"], require("gsap")["Quad"], require("lodash"));
 	else if(typeof define === 'function' && define.amd)
-		define(["signals", "TweenMax", "TimelineMax", "lodash"], factory);
+		define(["signals", "TweenMax", "TimelineMax", "Quad", "lodash"], factory);
 	else if(typeof exports === 'object')
-		exports["Core"] = factory(require("signals"), require("gsap")["TweenMax"], require("gsap")["TimelineMax"], require("lodash"));
+		exports["Core"] = factory(require("signals"), require("gsap")["TweenMax"], require("gsap")["TimelineMax"], require("gsap")["Quad"], require("lodash"));
 	else
-		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["signals"], root["TweenMax"], root["TimelineMax"], root["_"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_7__, __WEBPACK_EXTERNAL_MODULE_8__, __WEBPACK_EXTERNAL_MODULE_9__) {
+		root["TweenTime"] = root["TweenTime"] || {}, root["TweenTime"]["Core"] = factory(root["signals"], root["TweenMax"], root["TimelineMax"], root["Quad"], root["_"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_7__, __WEBPACK_EXTERNAL_MODULE_8__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_10__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var _ = __webpack_require__(9);
+	var _ = __webpack_require__(10);
 	
 	var Core = function () {
 	  function Core(data) {
@@ -660,6 +660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Signals = __webpack_require__(5);
 	var TweenMax = __webpack_require__(7);
 	var TimelineMax = __webpack_require__(8);
+	var Quad = __webpack_require__(9);
 	
 	var Orchestrator = function () {
 	  function Orchestrator(timer, data) {
@@ -900,6 +901,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_9__;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
 
 /***/ }
 /******/ ])

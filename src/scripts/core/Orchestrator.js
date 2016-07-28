@@ -1,6 +1,7 @@
 let Signals = require('js-signals');
 let TweenMax = require('TweenMax');
 let TimelineMax = require('TimelineMax');
+let Quad = require('Quad');
 
 export default class Orchestrator {
   constructor(timer, data) {
