@@ -44,11 +44,17 @@ var getWebpackConfig = function() {
           commonjs2: 'draggable-number.js',
           amd: 'DraggableNumber'
         },
-        'gsap': {
+        'TweenMax': {
           root: 'TweenMax',
-          commonjs: 'gsap',
-          commonjs2: 'gsap',
+          commonjs: ['gsap', 'TweenMax'],
+          commonjs2: ['gsap', 'TweenMax'],
           amd: 'TweenMax'
+        },
+        'TimelineMax': {
+          root: 'TimelineMax',
+          commonjs: ['gsap', 'TimelineMax'],
+          commonjs2: ['gsap', 'TimelineMax'],
+          amd: 'TimelineMax'
         },
         'jquery': {
           root: '$',

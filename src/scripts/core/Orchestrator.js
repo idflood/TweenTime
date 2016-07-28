@@ -1,5 +1,6 @@
 let Signals = require('js-signals');
-let TweenMax = require('gsap');
+let TweenMax = require('TweenMax');
+let TimelineMax = require('TimelineMax');
 
 export default class Orchestrator {
   constructor(timer, data) {
