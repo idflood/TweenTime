@@ -32,7 +32,7 @@ export default class PropertyFooter {
 
   render() {
     var data = {
-      time: this.key_val.time.toFixed(3),
+      time: this.key_val.time.toFixed(3)
     };
 
     this.$el = $(tpl_property(data));

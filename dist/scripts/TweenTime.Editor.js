@@ -626,7 +626,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.createBrushHandle();
 	    this.createTimeHandle();
-	    this.timer.durationChanged.add(this.onDurationChanged);
+	    this.timer.durationChanged.add(this.onDurationChanged.bind(this));
 	  }
 	
 	  _createClass(Header, [{
