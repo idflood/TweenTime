@@ -2048,13 +2048,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  // instance_property: The current property on the data object.
 	  // lineData: The line data object.
-	
 	  function PropertyNumber(instance_property, lineData, editor) {
 	    var key_val = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 	
 	    _classCallCheck(this, PropertyNumber);
 	
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PropertyNumber).call(this, instance_property, lineData, editor, key_val));
+	    var _this = _possibleConstructorReturn(this, (PropertyNumber.__proto__ || Object.getPrototypeOf(PropertyNumber)).call(this, instance_property, lineData, editor, key_val));
 	
 	    _this.onInputChange = _this.onInputChange.bind(_this);
 	    _this.$input = _this.$el.find('input');
@@ -2071,7 +2070,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this2 = this;
 	
-	      _get(Object.getPrototypeOf(PropertyNumber.prototype), 'render', this).call(this);
+	      _get(PropertyNumber.prototype.__proto__ || Object.getPrototypeOf(PropertyNumber.prototype), 'render', this).call(this);
 	      // By default assign the property default value
 	      var val = this.getCurrentVal();
 	
@@ -2114,7 +2113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'remove',
 	    value: function remove() {
-	      _get(Object.getPrototypeOf(PropertyNumber.prototype), 'render', this).call(this);
+	      _get(PropertyNumber.prototype.__proto__ || Object.getPrototypeOf(PropertyNumber.prototype), 'render', this).call(this);
 	      if (this.$input.data('draggable')) {
 	        this.$input.data('draggable').destroy();
 	      }
@@ -2125,7 +2124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'update',
 	    value: function update() {
-	      _get(Object.getPrototypeOf(PropertyNumber.prototype), 'render', this).call(this);
+	      _get(PropertyNumber.prototype.__proto__ || Object.getPrototypeOf(PropertyNumber.prototype), 'render', this).call(this);
 	      var val = this.getCurrentVal();
 	      var draggable = this.$input.data('draggable');
 	
@@ -2168,7 +2167,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var PropertyBase = function () {
 	  // @instance_property: The current property on the data object.
 	  // @lineData: The line data object.
-	
 	  function PropertyBase(instance_property, lineData, editor) {
 	    var key_val = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 	
@@ -3183,7 +3181,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _classCallCheck(this, PropertyColor);
 	
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PropertyColor).call(this, instance_property, lineData, editor, key_val));
+	    var _this = _possibleConstructorReturn(this, (PropertyColor.__proto__ || Object.getPrototypeOf(PropertyColor)).call(this, instance_property, lineData, editor, key_val));
 	
 	    _this.onInputChange = _this.onInputChange.bind(_this);
 	    _this.$input = _this.$el.find('input');
@@ -3195,7 +3193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this2 = this;
 	
-	      _get(Object.getPrototypeOf(PropertyColor.prototype), 'render', this).call(this);
+	      _get(PropertyColor.prototype.__proto__ || Object.getPrototypeOf(PropertyColor.prototype), 'render', this).call(this);
 	      // By default assign the property default value
 	      var val = this.getCurrentVal();
 	
@@ -3235,7 +3233,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'remove',
 	    value: function remove() {
-	      _get(Object.getPrototypeOf(PropertyColor.prototype), 'remove', this).call(this);
+	      _get(PropertyColor.prototype.__proto__ || Object.getPrototypeOf(PropertyColor.prototype), 'remove', this).call(this);
 	      this.$el.find('input').spectrum('destroy');
 	      delete this.$el;
 	      delete this.$input;
@@ -3243,7 +3241,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'update',
 	    value: function update() {
-	      _get(Object.getPrototypeOf(PropertyColor.prototype), 'update', this).call(this);
+	      _get(PropertyColor.prototype.__proto__ || Object.getPrototypeOf(PropertyColor.prototype), 'update', this).call(this);
 	      var val = this.getCurrentVal();
 	      this.$input.val(val);
 	      this.$input.spectrum('set', val);
@@ -3289,7 +3287,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var PropertyTween = function () {
 	  // instance_property: The current property on the data object.
 	  // lineData: The line data object.
-	
 	  function PropertyTween(instance_property, lineData, editor) {
 	    var key_val = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 	    var timeline = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
@@ -3951,7 +3948,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var H = __webpack_require__(24);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-first\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-last\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-first\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-last\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<div class=\"timeline\">");t.b("\n" + i);t.b("  <nav class=\"timeline__menu\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>");t.b("\n" + i);t.b("  </nav>");t.b("\n" + i);t.b("  <div class=\"timeline__controls controls\">");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--first icon-backwards\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>");t.b("\n" + i);t.b("    <a href=\"#\" class=\"control control--last icon-forward\"></a>");t.b("\n" + i);t.b("    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__header\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("  <div class=\"timeline__main\">");t.b("\n");t.b("\n" + i);t.b("  </div>");t.b("\n" + i);t.b("</div>");t.b("\n");return t.fl(); },partials: {}, subs: {  }}, "<div class=\"timeline\">\n  <nav class=\"timeline__menu\">\n    <a href=\"#\" class=\"menu-item\" data-action=\"export\">Export</a>\n    <a href=\"#\" class=\"menu-item menu-item--toggle\" data-action=\"toggle\"><i class=\"icon-toggle\"></i></a>\n  </nav>\n  <div class=\"timeline__controls controls\">\n    <a href=\"#\" class=\"control control--first icon-backwards\"></a>\n    <a href=\"#\" class=\"control control--play-pause icon-play\"></a>\n    <a href=\"#\" class=\"control control--last icon-forward\"></a>\n    <input type=\"text\" class=\"control control--input control--time\" /> <span class=\"control__time-separator\">/</span> <input type=\"text\" class=\"control control--input control--time-end\" />\n  </div>\n  <div class=\"timeline__header\">\n\n  </div>\n  <div class=\"timeline__main\">\n\n  </div>\n</div>\n", H); return T.render.apply(T, arguments); };
 
 /***/ }
 /******/ ])
