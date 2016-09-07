@@ -27,6 +27,7 @@
     <div class="content-wrapper">
       <div class="box"></div>
     </div>
+    <div id="timeline-container"></div>
 
     <!-- TweenTime dependencies -->
     <script src="../src/scripts/bower_components/gsap/src/uncompressed/TweenMax.js"></script>
@@ -112,7 +113,9 @@
       ];
 
       var tweenTime = new TweenTime.Core(data);
-      var editor = new TweenTime.Editor(tweenTime);
+      var editor = new TweenTime.Editor(tweenTime, {
+        el: $('#timeline-container')
+      });
 
       var box_values = tweenTime.getValues('box');
 
