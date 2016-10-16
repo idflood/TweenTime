@@ -12,6 +12,10 @@ export default class Orchestrator {
     this.update(0);
   }
 
+  setData(data) {
+    this.data = data;
+  }
+
   getTotalDuration() {
     return this.mainTimeline.totalDuration();
   }

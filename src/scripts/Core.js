@@ -12,6 +12,11 @@ class Core {
     this.orchestrator = new Orchestrator(this.timer, this.data);
   }
 
+  setData(data) {
+    this.data = data;
+    this.orchestrator.setData(data);
+  }
+
   getItem(item_id) {
     // In case we passed the item object directly return it.
     if (item_id && typeof item_id === 'object') {
