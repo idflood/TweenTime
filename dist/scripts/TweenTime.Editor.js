@@ -110,6 +110,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.onKeyAdded = this.onKeyAdded.bind(this);
 	    this.onKeyRemoved = this.onKeyRemoved.bind(this);
 	
+	    this.forceItemsRender = this.forceItemsRender.bind(this);
+	
 	    var el = options.el || $('body');
 	    this.el = el;
 	    this.$timeline = $(tpl_timeline());
@@ -149,6 +151,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(Editor, [{
+	    key: 'forceItemsRender',
+	    value: function forceItemsRender() {
+	      this.timeline._isDirty = true;
+	    }
+	  }, {
 	    key: 'select',
 	    value: function select(item) {
 	      var addToSelection = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];

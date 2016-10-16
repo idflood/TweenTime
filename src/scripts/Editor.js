@@ -18,6 +18,8 @@ class Editor {
     this.onKeyAdded = this.onKeyAdded.bind(this);
     this.onKeyRemoved = this.onKeyRemoved.bind(this);
 
+    this.forceItemsRender = this.forceItemsRender.bind(this);
+
     var el = options.el || $('body');
     this.el = el;
     this.$timeline = $(tpl_timeline());
@@ -52,6 +54,10 @@ class Editor {
     window.editorEnabled = true;
     window.dispatchEvent(new Event('resize'));
     window.requestAnimationFrame(() => this.update());
+  }
+
+  forceItemsRender() {
+    this.timeline._isDirty = true;
   }
 
   select(item, addToSelection = false) {
