@@ -91,6 +91,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(Core, [{
+	    key: 'setData',
+	    value: function setData(data) {
+	      this.data = data;
+	      this.orchestrator.setData(data);
+	    }
+	  }, {
 	    key: 'getItem',
 	    value: function getItem(item_id) {
 	      // In case we passed the item object directly return it.
@@ -469,6 +475,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(Orchestrator, [{
+	    key: 'setData',
+	    value: function setData(data) {
+	      this.data = data;
+	    }
+	  }, {
 	    key: 'getTotalDuration',
 	    value: function getTotalDuration() {
 	      return this.mainTimeline.totalDuration();
