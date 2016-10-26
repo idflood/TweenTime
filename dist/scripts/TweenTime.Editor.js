@@ -1556,9 +1556,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function onMouseUp() {
 	      this.svg.selectAll('.selection').remove();
 	      // Enable again the default browser text selection.
-	      $('body').css({
-	        'user-select': 'all'
-	      });
+	      // Disabled this because is was causing problems with text higlhlighting
+	      // $('body').css({
+	      //   'user-select': 'all'
+	      // });
 	    }
 	  }, {
 	    key: 'init',
