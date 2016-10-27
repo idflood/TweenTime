@@ -109,6 +109,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	    }
 	  }, {
+	    key: 'getCurrentTime',
+	    value: function getCurrentTime() {
+	      return this.timer.getCurrentTime();
+	    }
+	  }, {
 	    key: 'getProperty',
 	    value: function getProperty(prop_name, item_id_or_obj) {
 	      // If we passed the item name get the object from it.

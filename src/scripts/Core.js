@@ -26,6 +26,10 @@ class Core {
     return _.find(this.data, (item) => item.id === item_id);
   }
 
+  getCurrentTime() {
+    return this.timer.getCurrentTime();
+  }
+
   getProperty(prop_name, item_id_or_obj) {
     // If we passed the item name get the object from it.
     let item = this.getItem(item_id_or_obj);
