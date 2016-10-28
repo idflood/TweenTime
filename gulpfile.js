@@ -16,7 +16,7 @@ var getWebpackConfig = function() {
       Core: "./Core",
       Editor: "./Editor",
     },
-    devtool: "source-map",
+    devtool: "eval-source-map",
     externals: [
       'd3',
       {
