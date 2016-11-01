@@ -12,6 +12,14 @@ class Core {
     this.orchestrator = new Orchestrator(this.timer, this.data);
   }
 
+  addUpdateListener(listener) {
+    this.orchestrator.addUpdateListener(listener);
+  }
+
+  removeUpdateListener(listener) {
+    this.orchestrator.removeUpdateListener(listener);
+  }
+
   setData(data) {
     this.data = data;
     this.orchestrator.setData(data);

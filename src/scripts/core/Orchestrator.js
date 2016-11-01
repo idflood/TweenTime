@@ -12,6 +12,15 @@ export default class Orchestrator {
     this.update(0);
   }
 
+
+  addUpdateListener(listener) {
+    this.onUpdate.add(listener);
+  }
+
+  removeUpdateListener(listener) {
+    this.onUpdate.remove(listener);
+  }
+
   setData(data) {
     this.data = data;
   }

@@ -117,6 +117,10 @@
         el: $('#timeline-container')
       });
 
+      tweenTime.addUpdateListener(function() {
+        console.log('data was updated');
+      });
+
       var box_values = tweenTime.getValues('box');
 
       function animate() {
@@ -125,7 +129,7 @@
           'transform': 'translate(' + box_values.x + 'px, ' + box_values.y + 'px)'
         });
         // console.log(tweenTime.getCurrentTime());
-        console.log(tweenTime.getData());
+        // console.log(tweenTime.getData());
         window.requestAnimationFrame(animate);
       }
 
