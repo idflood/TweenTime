@@ -1142,9 +1142,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var propVal = function propVal(d) {
 	        if (d.properties) {
-	          return d.properties.filter(function (prop) {
-	            return prop.keys.length;
-	          });
+	          if (editor.options.showEmptyProperties) {
+	            return d.properties;
+	          } else {
+	            return d.properties.filter(function (prop) {
+	              return prop.keys.length;
+	            });
+	          }
 	        }
 	        return [];
 	      };
