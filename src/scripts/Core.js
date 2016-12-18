@@ -97,26 +97,28 @@ class Core {
       key.val = new_val;
     }
     else {
-      if (property.keys.length === 0) {
-        // If the property doesn't have any key simply the the value.
-        property.val = new_val;
+      // If we are not on a key but the property has other keys,
+      // create it and add it to the keys array.
+      key = {val: new_val, time: time, _property: property};
+      if (this.options.defaultEase) {
+        key.ease = this.options.defaultEase;
       }
-      else {
-        // If we are not on a key but the property has other keys,
-        // create it and add it to the keys array.
-        key = {val: new_val, time: time, _property: property};
-        if (this.options.defaultEase) {
-          key.ease = this.options.defaultEase;
-        }
-        property.keys.push(key);
-        // Also sort the keys.
-        property.keys = Utils.sortKeys(property.keys);
-      }
+      property.keys.push(key);
+      // Also sort the keys.
+      property.keys = Utils.sortKeys(property.keys);
     }
   }
 
   getTotalDuration() {
     return this.orchestrator.getTotalDuration();
+  }
+
+  addOnEventListener(callback) {
+    this.orchestrator.onEvent.add(callback);
+  }
+
+  removeOnEventListener(callback) {
+    this.orchestrator.onEvent.remove(callback);
   }
 }
 
