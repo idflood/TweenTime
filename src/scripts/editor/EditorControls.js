@@ -20,8 +20,8 @@ export default class EditorControls {
     var $play_pause;
     this.timer.toggle();
     $play_pause = this.$timeline.find('.control--play-pause');
-    $play_pause.toggleClass('icon-pause', this.timer.is_playing);
-    $play_pause.toggleClass('icon-play', !this.timer.is_playing);
+    $play_pause.toggleClass('icon-pause', !this.timer.is_playing);
+    $play_pause.toggleClass('icon-play', this.timer.is_playing);
   }
 
   initControls() {
