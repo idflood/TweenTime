@@ -10,6 +10,7 @@ export default class Timer {
     this.last_timeStamp = -1;
     this.last_time = -1;
     this.updated = new Signals.Signal();
+    this.preStatusChanged = new Signals.Signal();
     this.statusChanged = new Signals.Signal();
     this.durationChanged = new Signals.Signal();
     this.seeked = new Signals.Signal();
@@ -31,18 +32,27 @@ export default class Timer {
   }
 
   play() {
-    this.is_playing = true;
-    this.statusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(true);
+    setImmediate(() => {
+      this.is_playing = true;
+      this.statusChanged.dispatch(this.is_playing);
+    });
   }
 
   stop() {
-    this.is_playing = false;
-    this.statusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(false);
+    setImmediate(() => {
+      this.is_playing = false;
+      this.statusChanged.dispatch(this.is_playing);
+    });
   }
 
   toggle() {
-    this.is_playing = !this.is_playing;
-    this.statusChanged.dispatch(this.is_playing);
+    this.preStatusChanged.dispatch(!this.is_playing);
+    setImmediate(() => {
+      this.is_playing = !this.is_playing;
+      this.statusChanged.dispatch(this.is_playing);
+    });
   }
 
   seek(time) {
@@ -50,8 +60,12 @@ export default class Timer {
     this.seeked.dispatch(this.time[0]);
   }
 
-  update(timestamp) {
+  update() {
     // Init timestamp
+
+    // the argument timestamp is too old, if we have a long time task on click on
+    // play button's click handler. so re-fetch the current timestamp here again.
+    let timestamp = performance.now();
     if (this.last_timeStamp === -1) {
       this.last_timeStamp = timestamp;
     }
@@ -67,7 +81,7 @@ export default class Timer {
       this.stop();
     }
 
-    this.updated.dispatch(this.time[0]);
+    this.updated.dispatch(this.time[0], this.is_playing ? elapsed : 0);
 
     this.last_timeStamp = timestamp;
     this.last_time = this.time[0];

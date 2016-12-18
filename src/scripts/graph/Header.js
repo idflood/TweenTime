@@ -36,7 +36,7 @@ export default class Header {
 
     this.createBrushHandle();
     this.createTimeHandle();
-    this.timer.durationChanged.add(this.onDurationChanged);
+    this.timer.durationChanged.add(this.onDurationChanged.bind(this));
   }
 
   adaptDomainToDuration(domain, seconds) {

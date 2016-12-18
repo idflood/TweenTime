@@ -15,7 +15,6 @@ export default class PropertyTween {
     this.onChange = this.onChange.bind(this);
 
     this.timer = this.editor.timer;
-    this.$time = false;
     this.$el = false;
     this.render();
   }
@@ -29,7 +28,6 @@ export default class PropertyTween {
     delete this.timeline;
 
     delete this.timer;
-    delete this.$time;
   }
 
   render() {
@@ -40,7 +38,6 @@ export default class PropertyTween {
     var data = {
       id: this.instance_property.name + '_tween',
       val: this.key_val.ease,
-      time: this.key_val.time.toFixed(3),
       options: ['Linear.easeNone'],
       selected: function() {
         if (this.toString() === self.key_val.ease) {
@@ -59,28 +56,7 @@ export default class PropertyTween {
     }
 
     this.$el = $(tpl_property(data));
-    this.$time = this.$el.find('.property__key-time strong');
-    this.$time.keypress((e) => {
-      if (e.charCode === 13) {
-        // Enter
-        e.preventDefault();
-        this.$time.blur();
-        this.updateKeyTime(this.$time.text());
-      }
-    });
-
-    this.$time.on('click', () => document.execCommand('selectAll', false, null));
     this.$el.find('select').change(this.onChange);
-  }
-
-  updateKeyTime(time) {
-    let time2 = parseFloat(time);
-    if (isNaN(time2)) {
-      time2 = this.key_val.time;
-    }
-    this.$time.text(time2);
-    this.key_val.time = time2;
-    this.onChange();
   }
 
   onChange() {
@@ -92,7 +68,6 @@ export default class PropertyTween {
   }
 
   update() {
-    // todo: use mustache instead...
-    this.$time.html(this.key_val.time.toFixed(3));
+    console.log('PropertyTween\'s upload method is not yet implemented.');
   }
 }

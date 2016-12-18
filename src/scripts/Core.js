@@ -91,6 +91,14 @@ class Core {
   getTotalDuration() {
     return this.orchestrator.getTotalDuration();
   }
+
+  addOnEventListener(callback) {
+    this.orchestrator.onEvent.add(callback);
+  }
+
+  removeOnEventListener(callback) {
+    this.orchestrator.onEvent.remove(callback);
+  }
 }
 
 module.exports = Core;

@@ -1,5 +1,7 @@
 let Signals = require('js-signals');
-let TweenMax = require('gsap');
+let TweenMax = require('TweenMax');
+let TimelineMax = require('TimelineMax');
+let Quad = require('Quad');
 
 export default class Orchestrator {
   constructor(timer, data) {
@@ -10,6 +12,7 @@ export default class Orchestrator {
     this.onUpdate = new Signals.Signal();
     this.timer.updated.add(this.update);
     this.update(0);
+    this.onEvent = new Signals.Signal();
   }
 
   getTotalDuration() {
@@ -58,16 +61,14 @@ export default class Orchestrator {
     }
   }
 
-  update(timestamp) {
+  update(timestamp, elapsed) {
     var seconds = timestamp / 1000;
-    var has_dirty_items = false;
-    var i;
-    var item;
-    var property;
-    var property_key;
+    var seconds_elapsed = elapsed / 1000;
 
-    for (i = 0; i < this.data.length; i++) {
-      item = this.data[i];
+    var has_dirty_items = false;
+
+    for (let i = 0; i < this.data.length; i++) {
+      let item = this.data[i];
       if (!item._domHelper) {
         this.initSpecialProperties(item);
       }
@@ -92,8 +93,8 @@ export default class Orchestrator {
         item._isDirty = false;
         // item._timeline.clear();
 
-        for (property_key = 0; property_key < item.properties.length; property_key++) {
-          property = item.properties[property_key];
+        for (let property_key = 0; property_key < item.properties.length; property_key++) {
+          let property = item.properties[property_key];
           if (property._timeline) {
             property._timeline.clear();
           }
@@ -138,8 +139,8 @@ export default class Orchestrator {
           var tween = TweenMax.to(data_target, tween_duration, val);
           propertyTimeline.add(tween, tween_time);
 
-          for (var key_index = 0; key_index < property.keys.length; key_index++) {
-            var key = property.keys[key_index];
+          for (let key_index = 0; key_index < property.keys.length; key_index++) {
+            let key = property.keys[key_index];
 
             if (key_index < property.keys.length - 1) {
               var next_key = property.keys[key_index + 1];
@@ -178,11 +179,28 @@ export default class Orchestrator {
     // Finally update the main timeline.
     this.mainTimeline.seek(seconds);
 
+    // check if event type property to be fired
+    for (let i = 0; i < this.data.length; i++) {
+      let item = this.data[i];
+      for (let property_key = 0; property_key < item.properties.length; property_key++) {
+        let property = item.properties[property_key];
+        if (property.type !== 'event') {
+          continue;
+        }
+        for (let key_index = 0; key_index < property.keys.length; key_index++) {
+          let key = property.keys[key_index];
+          if (seconds_elapsed > 0 && key.time <= seconds && key.time > seconds - seconds_elapsed) {
+            this.onEvent.dispatch(property.name, key.val);
+          }
+        }
+      }
+    }
+
     // update the css properties.
-    for (i = 0; i < this.data.length; i++) {
-      item = this.data[i];
-      for (property_key = 0; property_key < item.properties.length; property_key++) {
-        property = item.properties[property_key];
+    for (let i = 0; i < this.data.length; i++) {
+      let item = this.data[i];
+      for (let property_key = 0; property_key < item.properties.length; property_key++) {
+        let property = item.properties[property_key];
         if (property.css && property.keys.length) {
           // Only css values.
           item.values[property.name] = item._domHelper.style[property.name];

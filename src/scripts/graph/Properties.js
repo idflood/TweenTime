@@ -18,7 +18,8 @@ export default class Properties {
       if (d.properties) {
         if (editor.options.showEmptyProperties) {
           return d.properties;
-        } else {
+        }
+        else {
           return d.properties.filter((prop) => {return prop.keys.length;});
         }
       }
