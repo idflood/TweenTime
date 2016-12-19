@@ -6,6 +6,7 @@ import TimeIndicator from './TimeIndicator';
 import Items from './Items';
 import KeysPreview from './KeysPreview';
 import Properties from './Properties';
+import PropertyCurveEdit from './PropertyCurveEdit';
 import Keys from './Keys';
 import Errors from './Errors';
 import Selection from './Selection';
@@ -87,6 +88,8 @@ export default class Timeline {
       this.onUpdate();
     });
 
+    this.curves = new PropertyCurveEdit(this);
+
     this.xAxisGrid = d3.svg.axis()
       .scale(this.x)
       .ticks(100)
@@ -164,6 +167,7 @@ export default class Timeline {
       var properties = this.properties.render(bar);
       this.errors.render(properties);
       this.keys.render(properties);
+      this.curves.render(properties);
       this._isDirty = false;
 
       // Adapt the timeline height.

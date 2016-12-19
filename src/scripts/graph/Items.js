@@ -14,6 +14,7 @@ export default class Items {
   render() {
     var self = this;
     var tweenTime = self.timeline.tweenTime;
+    var editor = self.timeline.editor;
 
     var selectBar = function() {
       var data = d3.select(this).datum();
@@ -213,9 +214,17 @@ export default class Items {
     barEnter.append('line')
       .attr('class', 'line-separator')
       .attr('x1', -self.timeline.margin.left)
-      .attr('x2', self.timeline.x(self.timeline.timer.totalDuration + 100))
       .attr('y1', self.timeline.lineHeight)
       .attr('y2', self.timeline.lineHeight);
+
+    // Hide property line separator if curve editor is enabled.
+    bar.selectAll('.line-separator')
+      .attr('x2', function() {
+        if (editor.curveEditEnabled) {
+          return 0;
+        }
+        return self.timeline.x(self.timeline.timer.totalDuration + 100);
+      });
 
     bar.exit().remove();
 

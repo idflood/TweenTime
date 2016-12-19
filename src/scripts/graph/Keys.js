@@ -117,6 +117,14 @@ export default class Keys {
     };
     var keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey);
 
+    // Hide keys if curve editor mode.
+    properties.select('.line-item__keys').attr('display', function() {
+      if (!self.timeline.editor.curveEditEnabled) {
+        return 'block';
+      }
+      return 'none';
+    });
+
     // selectKey is triggered by dragstart event
     var selectKey = function() {
       var event = d3.event;

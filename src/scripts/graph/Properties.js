@@ -98,14 +98,30 @@ export default class Properties {
     subGrp.append('line')
       .attr('class', 'line-separator--secondary')
       .attr('x1', -self.timeline.margin.left)
-      .attr('x2', self.timeline.x(self.timeline.timer.totalDuration + 100))
       .attr('y1', self.timeline.lineHeight)
       .attr('y2', self.timeline.lineHeight);
+
+    // Hide property line separator if curve editor is enabled.
+    bar.selectAll('.line-separator--secondary')
+      .attr('x2', function() {
+        if (editor.curveEditEnabled) {
+          return 0;
+        }
+        return self.timeline.x(self.timeline.timer.totalDuration + 100);
+      });
 
     bar.selectAll('.line-item').attr('display', function() {
       var lineObject = this.parentNode;
       var lineValue = d3.select(lineObject).datum();
       if (!lineValue.collapsed) {
+        return 'block';
+      }
+      return 'none';
+    });
+
+    // Hide click handler if curve editor mode.
+    bar.selectAll('.click-handler').attr('display', function() {
+      if (!editor.curveEditEnabled) {
         return 'block';
       }
       return 'none';
