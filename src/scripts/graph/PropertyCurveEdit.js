@@ -63,6 +63,8 @@ export default class PropertyCurveEdit {
       d._curvePoints.push({x, y, ease: key.ease, id: i});
     });
 
+    // Control points, grouped by point + handle.
+    d._controlPoints = [];
     // Add all points, with controls bezier. (p1, bezier1, bezier2, p2, …).
     d._curvePointsBezier = [];
     d._curvePoints.forEach((pt, i) => {
@@ -74,6 +76,9 @@ export default class PropertyCurveEdit {
         const p2 = this.bezierPoint({x: easing[2], y: easing[3]}, pt, next);
         d._curvePointsBezier.push(p1);
         d._curvePointsBezier.push(p2);
+
+        d._controlPoints.push({point: pt, handle: p1, id: `${i}-a`});
+        d._controlPoints.push({point: next, handle: p2, id: `${i}-b`});
       }
     });
 
@@ -124,12 +129,16 @@ export default class PropertyCurveEdit {
 
     curves.exit().remove();
 
-    const pointVal = (d) => {
-      return d._curvePoints || [];
-    };
-    const pointKey = (d) => {
-      return d.id;
-    };
+    const pointVal = (d) => d._curvePoints || [];
+    const pointKey = (d) => d.id;
+    const handleVal = (d) => d._controlPoints || [];
+    const handleKey = (d) => d.id;
+
+    const handle = properties.selectAll('.curve__handle')
+      .data(handleVal, handleKey);
+
+    const handleLine = properties.selectAll('.curve__handle-line')
+      .data(handleVal, handleKey);
 
     const points = properties.selectAll('.curve__point')
       .data(pointVal, pointKey);
@@ -139,12 +148,45 @@ export default class PropertyCurveEdit {
       .attr({
         class: 'curve__point',
         fill: '#fff',
-        r: 4,
+        r: 4
       });
 
     points.attr({
       cx: (d) => d.x,
       cy: (d) => d.y
     });
+
+    // Handle point.
+    handle.enter()
+      .append('circle')
+      .attr({
+        class: 'curve__handle',
+        fill: '#aaa',
+        r: 4
+      });
+
+    handle.attr({
+      cx: (d) => d.handle.x,
+      cy: (d) => d.handle.y
+    });
+
+    handle.exit().remove();
+
+    // Handle line.
+    handleLine.enter()
+      .append('line')
+      .attr({
+        class: 'curve__handle-line',
+        fill: 'none'
+      });
+
+    handleLine.attr({
+      x1: (d) => d.point.x,
+      y1: (d) => d.point.y,
+      x2: (d) => d.handle.x,
+      y2: (d) => d.handle.y
+    });
+
+    handleLine.exit().remove();
   }
 }
