@@ -108,6 +108,9 @@ export default class Utils {
   }
 
   static getEasingPoints(ease) {
-    return EASE_POINTS[ease];
+    if (EASE_POINTS[ease]) {
+      return EASE_POINTS[ease];
+    }
+    return EASE_POINTS['Quad.easeInOut'];
   }
 }

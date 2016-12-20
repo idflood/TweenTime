@@ -14,9 +14,29 @@ export default class PropertyCurveEdit {
     this.dy = 10 + this.timeline.margin.top;
   }
 
-  render(bar) {
+  normalizeVal(val, min, max, min2, max2) {
+    const diff = max - min;
+    const diff2 = max2 - min2;
+    const t = (val - min) / diff;
+    return min2 + t * diff2;
+  }
+
+  // Get bezier point from easing (0 to 1) and previous and next point.
+  bezierPoint(pt, prev, next) {
+    const x = this.normalizeVal(pt.x, 0, 1, prev.x, next.x);
+    const y = this.normalizeVal(pt.y, 0, 1, prev.y, next.y);
+    return {x, y};
+  }
+
+  render() {
     const self = this;
     const tweenTime = self.timeline.tweenTime;
+
+    var bar = this.container.selectAll('.curve-grp')
+      .data(this.timeline.tweenTime.data, (d) => {return d.id;});
+
+    var barEnter = bar.enter()
+      .append('g').attr('class', 'curve-grp');
 
     var propVal1 = function(d) {
       if (d.properties) {
@@ -37,18 +57,6 @@ export default class PropertyCurveEdit {
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', 300);
 
-    const normalizeVal = function(val, min, max, min2, max2) {
-      const t = (val - min) / max;
-      return min2 + t * (max2 - min2);
-    };
-
-    // Get bezier point from easing (0 to 1) and previous and next point.
-    const bezierPoint = function(pt, prev, next) {
-      const x = normalizeVal(pt.x, 0, 1, prev.x, next.x);
-      const y = normalizeVal(pt.y, 0, 1, prev.y, next.y);
-      return {x, y};
-    };
-
     // Transform an array of points to a SVG bezier path.
     const getPath = function(points) {
       // Path first start by Move command (absolute);
@@ -67,7 +75,9 @@ export default class PropertyCurveEdit {
       return p;
     };
 
-    var keyValue = function(d) {
+    const MAX_HEIGHT = 120;
+
+    var keyValue = (d) => {
       if (d.keys.length <= 1) {
         return [];
       }
@@ -79,7 +89,7 @@ export default class PropertyCurveEdit {
       // set raw points, without bezier control yet.
       d.keys.forEach((key) => {
         const x = self.timeline.x(key.time * 1000);
-        const y = normalizeVal(key.val, d._min, d._max, 0, 40);
+        const y = this.normalizeVal(key.val, d._min, d._max, 0, MAX_HEIGHT);
         d._curvePoints.push({x, y, ease: key.ease});
       });
 
@@ -90,8 +100,8 @@ export default class PropertyCurveEdit {
         d._curvePointsBezier.push({x: pt.x, y: pt.y, ease: pt.ease});
         if (next) {
           const easing = Utils.getEasingPoints(next.ease)
-          const p1 = bezierPoint({x: easing[0], y: easing[1]}, pt, next);
-          const p2 = bezierPoint({x: easing[2], y: easing[3]}, pt, next);
+          const p1 = this.bezierPoint({x: easing[0], y: easing[1]}, pt, next);
+          const p2 = this.bezierPoint({x: easing[2], y: easing[3]}, pt, next);
           d._curvePointsBezier.push(p1);
           d._curvePointsBezier.push(p2);
         }
@@ -100,7 +110,7 @@ export default class PropertyCurveEdit {
       let path = getPath(d._curvePointsBezier);
       return [{points: d._curvePointsBezier, path, name: d.name}];
     };
-    var keyKey = function(d) {
+    var keyKey = (d) => {
       return d.name;
     };
     var keys = properties.selectAll('.curve').data(keyValue, keyKey);
