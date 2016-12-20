@@ -57,10 +57,10 @@ export default class PropertyCurveEdit {
 
     d._curvePoints = [];
     // set raw points, without bezier control yet.
-    d.keys.forEach((key) => {
+    d.keys.forEach((key, i) => {
       const x = this.timeline.x(key.time * 1000);
       const y = this.normalizeVal(key.val, d._min, d._max, 0, MAX_HEIGHT);
-      d._curvePoints.push({x, y, ease: key.ease});
+      d._curvePoints.push({x, y, ease: key.ease, id: i});
     });
 
     // Add all points, with controls bezier. (p1, bezier1, bezier2, p2, …).
@@ -92,11 +92,7 @@ export default class PropertyCurveEdit {
       .append('g').attr('class', 'curve-grp');
 
     var propVal1 = function(d) {
-      if (d.properties) {
-        return d.properties;
-      }
-
-      return [];
+      return d.properties || [];
     };
     var propKey1 = function(d) {
       return d.name;
@@ -121,11 +117,34 @@ export default class PropertyCurveEdit {
       .attr({
         class: 'curve',
         fill: 'none',
-        stroke: '#fff'
+        stroke: '#aaa'
       });
 
     curves.attr('d', (d) => d.path);
 
     curves.exit().remove();
+
+    const pointVal = (d) => {
+      return d._curvePoints || [];
+    };
+    const pointKey = (d) => {
+      return d.id;
+    };
+
+    const points = properties.selectAll('.curve__point')
+      .data(pointVal, pointKey);
+
+    points.enter()
+      .append('circle')
+      .attr({
+        class: 'curve__point',
+        fill: '#fff',
+        r: 4,
+      });
+
+    points.attr({
+      cx: (d) => d.x,
+      cy: (d) => d.y
+    });
   }
 }
