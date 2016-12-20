@@ -28,6 +28,59 @@ export default class PropertyCurveEdit {
     return {x, y};
   }
 
+  // Transform an array of points to a SVG bezier path.
+  getPath(points) {
+    // Path first start by Move command (absolute);
+    let p = `M ${points[0].x} ${points[0].y}`;
+    // Then it's C a.x a.y, b.x b.y, c.x x.y
+    points.forEach((pt, i) => {
+      // Drop first one since already in 'M' command above.
+      if (i > 0) {
+        p += ', ';
+        if ((i - 1) % 3 === 0) {
+          p += 'C ';
+        }
+        p += `${pt.x} ${pt.y}`;
+      }
+    });
+    return p;
+  }
+
+  processCurveValues(d) {
+    const MAX_HEIGHT = 120;
+    if (d.keys.length <= 1) {
+      return [];
+    }
+    // preprocess min and max for keys.
+    d._min = d3.min(d.keys, (k) => k.val);
+    d._max = d3.max(d.keys, (k) => k.val);
+
+    d._curvePoints = [];
+    // set raw points, without bezier control yet.
+    d.keys.forEach((key) => {
+      const x = this.timeline.x(key.time * 1000);
+      const y = this.normalizeVal(key.val, d._min, d._max, 0, MAX_HEIGHT);
+      d._curvePoints.push({x, y, ease: key.ease});
+    });
+
+    // Add all points, with controls bezier. (p1, bezier1, bezier2, p2, …).
+    d._curvePointsBezier = [];
+    d._curvePoints.forEach((pt, i) => {
+      const next = d._curvePoints[i + 1];
+      d._curvePointsBezier.push({x: pt.x, y: pt.y, ease: pt.ease});
+      if (next) {
+        const easing = Utils.getEasingPoints(next.ease);
+        const p1 = this.bezierPoint({x: easing[0], y: easing[1]}, pt, next);
+        const p2 = this.bezierPoint({x: easing[2], y: easing[3]}, pt, next);
+        d._curvePointsBezier.push(p1);
+        d._curvePointsBezier.push(p2);
+      }
+    });
+
+    const path = this.getPath(d._curvePointsBezier);
+    return [{points: d._curvePoints, path, name: d.name}];
+  }
+
   render() {
     const self = this;
     const tweenTime = self.timeline.tweenTime;
@@ -57,65 +110,13 @@ export default class PropertyCurveEdit {
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', 300);
 
-    // Transform an array of points to a SVG bezier path.
-    const getPath = function(points) {
-      // Path first start by Move command (absolute);
-      let p = `M ${points[0].x} ${points[0].y}`;
-      // Then it's C a.x a.y, b.x b.y, c.x x.y
-      points.forEach((pt, i) => {
-        // Drop first one since already in 'M' command above.
-        if (i > 0) {
-          p += ', ';
-          if ((i - 1) % 3 === 0) {
-            p += 'C ';
-          }
-          p += `${pt.x} ${pt.y}`;
-        }
-      });
-      return p;
-    };
-
-    const MAX_HEIGHT = 120;
-
-    var keyValue = (d) => {
-      if (d.keys.length <= 1) {
-        return [];
-      }
-      // preprocess min and max for keys.
-      d._min = d3.min(d.keys, (k) => k.val);
-      d._max = d3.max(d.keys, (k) => k.val);
-
-      d._curvePoints = [];
-      // set raw points, without bezier control yet.
-      d.keys.forEach((key) => {
-        const x = self.timeline.x(key.time * 1000);
-        const y = this.normalizeVal(key.val, d._min, d._max, 0, MAX_HEIGHT);
-        d._curvePoints.push({x, y, ease: key.ease});
-      });
-
-      // Add all points, with controls bezier. (p1, bezier1, bezier2, p2, …).
-      d._curvePointsBezier = [];
-      d._curvePoints.forEach((pt, i) => {
-        const next = d._curvePoints[i + 1];
-        d._curvePointsBezier.push({x: pt.x, y: pt.y, ease: pt.ease});
-        if (next) {
-          const easing = Utils.getEasingPoints(next.ease)
-          const p1 = this.bezierPoint({x: easing[0], y: easing[1]}, pt, next);
-          const p2 = this.bezierPoint({x: easing[2], y: easing[3]}, pt, next);
-          d._curvePointsBezier.push(p1);
-          d._curvePointsBezier.push(p2);
-        }
-      });
-
-      let path = getPath(d._curvePointsBezier);
-      return [{points: d._curvePointsBezier, path, name: d.name}];
-    };
-    var keyKey = (d) => {
+    var curveKey = (d) => {
       return d.name;
     };
-    var keys = properties.selectAll('.curve').data(keyValue, keyKey);
+    var curves = properties.selectAll('.curve')
+      .data((d) => this.processCurveValues(d), curveKey);
 
-    keys.enter()
+    curves.enter()
       .append('path')
       .attr({
         class: 'curve',
@@ -123,8 +124,8 @@ export default class PropertyCurveEdit {
         stroke: '#fff'
       });
 
-    keys.attr('d', (d) => d.path);
+    curves.attr('d', (d) => d.path);
 
-    keys.exit().remove();
+    curves.exit().remove();
   }
 }
