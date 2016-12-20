@@ -90,20 +90,25 @@ export default class PropertyCurveEdit {
     const self = this;
     const tweenTime = self.timeline.tweenTime;
 
-    var bar = this.container.selectAll('.curve-grp')
+    const bar = this.container.selectAll('.curve-grp')
       .data(this.timeline.tweenTime.data, (d) => {return d.id;});
 
-    var barEnter = bar.enter()
+    const barEnter = bar.enter()
       .append('g').attr('class', 'curve-grp');
 
-    var propVal1 = function(d) {
-      return d.properties || [];
-    };
-    var propKey1 = function(d) {
-      return d.name;
-    };
+    // Show curves onl if curve editor mode.
+    bar.attr('display', () => {
+      if (this.timeline.editor.curveEditEnabled) {
+        return 'block';
+      }
+      return 'none';
+    });
 
-    var properties = bar.selectAll('.curves-preview').data(propVal1, propKey1);
+    const propVal1 = (d) => d.properties || [];
+    const propKey1 = (d) => d.name;
+
+    const properties = bar.selectAll('.curves-preview')
+      .data(propVal1, propKey1);
 
     properties.enter()
       .append('svg')
@@ -111,9 +116,7 @@ export default class PropertyCurveEdit {
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', 300);
 
-    var curveKey = (d) => {
-      return d.name;
-    };
+    const curveKey = (d) => d.name;
     var curves = properties.selectAll('.curve')
       .data((d) => this.processCurveValues(d), curveKey);
 
