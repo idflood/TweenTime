@@ -88,7 +88,7 @@ export default class Timeline {
       this.onUpdate();
     });
 
-    this.curves = new PropertyCurveEdit(this);
+    this.curves = new PropertyCurveEdit(this, this.linesContainer);
 
     this.xAxisGrid = d3.svg.axis()
       .scale(this.x)
@@ -167,7 +167,7 @@ export default class Timeline {
       var properties = this.properties.render(bar);
       this.errors.render(properties);
       this.keys.render(properties);
-      this.curves.render(properties);
+      this.curves.render(bar);
       this._isDirty = false;
 
       // Adapt the timeline height.

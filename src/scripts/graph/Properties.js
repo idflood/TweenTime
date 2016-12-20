@@ -87,6 +87,7 @@ export default class Properties {
       .attr('height', self.timeline.lineHeight)
       .attr('fill', '#f00');
 
+
     subGrp.append('text')
       .attr('class', 'line-label line-label--small')
       .attr('x', self.timeline.label_position_x + 10)
