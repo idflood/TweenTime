@@ -143,6 +143,24 @@ export default class PropertyCurveEdit {
     const points = properties.selectAll('.curve__point')
       .data(pointVal, pointKey);
 
+    // Handle line.
+    handleLine.enter()
+      .append('line')
+      .attr({
+        class: 'curve__handle-line',
+        fill: 'none'
+      });
+
+    handleLine.attr({
+      x1: (d) => d.point.x,
+      y1: (d) => d.point.y,
+      x2: (d) => d.handle.x,
+      y2: (d) => d.handle.y
+    });
+
+    handleLine.exit().remove();
+
+    // The key point.
     points.enter()
       .append('circle')
       .attr({
@@ -171,22 +189,5 @@ export default class PropertyCurveEdit {
     });
 
     handle.exit().remove();
-
-    // Handle line.
-    handleLine.enter()
-      .append('line')
-      .attr({
-        class: 'curve__handle-line',
-        fill: 'none'
-      });
-
-    handleLine.attr({
-      x1: (d) => d.point.x,
-      y1: (d) => d.point.y,
-      x2: (d) => d.handle.x,
-      y2: (d) => d.handle.y
-    });
-
-    handleLine.exit().remove();
   }
 }
