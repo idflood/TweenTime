@@ -214,6 +214,8 @@ export default class PropertyCurveEdit {
       propertyData._isDirty = true;
       itemData._isDirty = true;
       self.onCurveUpdated.dispatch();
+
+      self.timeline.selectionManager.select(d);
     };
 
     const dragHandleEnd = (d) => {
