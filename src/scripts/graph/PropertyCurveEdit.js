@@ -6,12 +6,14 @@ import Utils from '../core/Utils';
 // http://greensock.com/forums/topic/7921-translating-css-cubic-bezier-easing-to-gsap/
 // https://github.com/gre/bezier-easing
 // https://matthewlein.com/ceaser/
+const MAX_HEIGHT = 120;
 
 export default class PropertyCurveEdit {
   constructor(timeline, container) {
     this.timeline = timeline;
     this.container = container;
     this.dy = 10 + this.timeline.margin.top;
+    this.onCurveUpdated = new Signals.Signal();
   }
 
   normalizeVal(val, min, max, min2, max2) {
@@ -47,7 +49,7 @@ export default class PropertyCurveEdit {
   }
 
   processCurveValues(d) {
-    const MAX_HEIGHT = 120;
+
     if (d.keys.length <= 1) {
       return [];
     }
@@ -60,7 +62,7 @@ export default class PropertyCurveEdit {
     d.keys.forEach((key, i) => {
       const x = this.timeline.x(key.time * 1000);
       const y = this.normalizeVal(key.val, d._min, d._max, 0, MAX_HEIGHT);
-      d._curvePoints.push({x, y, ease: key.ease, id: i});
+      d._curvePoints.push({x, y, ease: key.ease, id: i, _key: key});
     });
 
     // Control points, grouped by point + handle.
@@ -69,11 +71,22 @@ export default class PropertyCurveEdit {
     d._curvePointsBezier = [];
     d._curvePoints.forEach((pt, i) => {
       const next = d._curvePoints[i + 1];
-      d._curvePointsBezier.push({x: pt.x, y: pt.y, ease: pt.ease});
+      d._curvePointsBezier.push({x: pt.x, y: pt.y, ease: pt.ease, _key: pt._key});
       if (next) {
         const easing = Utils.getEasingPoints(next.ease);
         const p1 = this.bezierPoint({x: easing[0], y: easing[1]}, pt, next);
         const p2 = this.bezierPoint({x: easing[2], y: easing[3]}, pt, next);
+
+        // Save prev point for time calculation on drag move.
+        p1._next = next;
+        p2._next = next;
+        p1._prev = pt;
+        p2._prev = pt;
+        // The index of the handles in the easing.
+        p1._Xindex = 0;
+        p1._Yindex = 1;
+        p2._Xindex = 2;
+        p2._Yindex = 3;
         d._curvePointsBezier.push(p1);
         d._curvePointsBezier.push(p2);
 
@@ -147,6 +160,66 @@ export default class PropertyCurveEdit {
       .data(pointVal, pointKey);
 
     // Handle line.
+    const dragHandleStart = function(d) {
+      var event = d3.event;
+      // with dragstart event the mousevent is is inside the event.sourcEvent
+      if (event.sourceEvent) {
+        event = event.sourceEvent;
+      }
+      var pointData = d3.select(this).datum();
+
+      // Also keep a reference to the key dom element.
+      pointData._dom = this;
+    };
+
+    const dragHandleMove = function(d) {
+      var sourceEvent = d3.event.sourceEvent;
+
+      const point = d.handle._next;
+      const prev = d.handle._prev;
+      const handle = d.handle;
+      const key = point._key;
+
+      const handleData = d3.select(this).datum();
+      const propertyData = d3.select(this.parentNode).datum();
+      const itemData = d3.select(this.parentNode.parentNode).datum();
+
+      // Get ease array.
+      const ease = Utils.getEasingPoints(point.ease);
+      const timeBetweenPrevNext = key.time - prev._key.time;
+
+      var currentDomainStart = self.timeline.x.domain()[0];
+      var mouse = d3.mouse(this);
+      var old_time = key.time;
+      var dx = self.timeline.x.invert(mouse[0]);
+      dx = dx.getTime() / 1000;
+      dx = (dx - prev._key.time) / timeBetweenPrevNext;
+
+      var dy = mouse[1] / MAX_HEIGHT;
+      // Need to reverse if next.value is lower than prev.
+      if (point._key.val < prev._key.val) {
+        dy = 1 - dy;
+      }
+
+      ease[handle._Xindex] = dx;
+      ease[handle._Yindex] = dy;
+      point.ease = ease;
+
+      propertyData._isDirty = true;
+      itemData._isDirty = true;
+      self.onCurveUpdated.dispatch();
+    };
+
+    const dragHandleEnd = (d) => {
+
+    };
+
+    const dragHandle = d3.behavior.drag()
+      .origin((d) => {return d;})
+      .on('drag', dragHandleMove)
+      .on('dragstart', dragHandleStart)
+      .on('dragend', dragHandleEnd);
+
     handleLine.enter()
       .append('line')
       .attr({
@@ -184,7 +257,8 @@ export default class PropertyCurveEdit {
         class: 'curve__handle',
         fill: '#aaa',
         r: 4
-      });
+      })
+      .call(dragHandle);
 
     handle.attr({
       cx: (d) => d.handle.x,

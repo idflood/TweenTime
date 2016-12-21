@@ -108,6 +108,10 @@ export default class Utils {
   }
 
   static getEasingPoints(ease) {
+    // If already an array then return it directly.
+    if (Array.isArray(ease)) {
+      return ease;
+    }
     if (EASE_POINTS[ease]) {
       return EASE_POINTS[ease];
     }

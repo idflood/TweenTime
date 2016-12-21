@@ -89,6 +89,12 @@ export default class Timeline {
     });
 
     this.curves = new PropertyCurveEdit(this, this.linesContainer);
+    this.curves.onCurveUpdated.add(() => {
+      this._isDirty = true;
+      // render the timeline directly so that we can directly select
+      // the new key with it's domElement.
+      this.render(0, false);
+    });
 
     this.xAxisGrid = d3.svg.axis()
       .scale(this.x)
