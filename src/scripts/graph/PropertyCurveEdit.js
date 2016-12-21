@@ -196,11 +196,13 @@ export default class PropertyCurveEdit {
       dx = dx.getTime() / 1000;
       dx = (dx - prev._key.time) / timeBetweenPrevNext;
 
-      var dy = mouse[1] / MAX_HEIGHT;
-      // Need to reverse if next.value is lower than prev.
-      if (point._key.val < prev._key.val) {
-        dy = 1 - dy;
-      }
+
+      // Get point A value top in px.
+      const valueApx = self.normalizeVal(prev._key.val, propertyData._min, propertyData._max, 0, MAX_HEIGHT);
+      // Same for B key value
+      const valueBpx = self.normalizeVal(point._key.val, propertyData._min, propertyData._max, 0, MAX_HEIGHT);
+
+      var dy = (mouse[1] - valueApx) / (valueBpx - valueApx);
 
       // dx is restricted to 0 - 1.
       dx = Math.min(1, Math.max(0, dx));
