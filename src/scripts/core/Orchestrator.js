@@ -161,8 +161,7 @@ export default class Orchestrator {
 
               val = {};
               easing = this.getEasing(next_key);
-              console.log('easing', easing, ...easing, next_key);
-              console.log(this.data);
+
               // Use spread to convert array to multiple arguments.
               val.ease = BezierEasing(...easing);
               if (property.css) {

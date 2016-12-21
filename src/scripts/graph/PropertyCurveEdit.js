@@ -49,9 +49,11 @@ export default class PropertyCurveEdit {
   }
 
   processCurveValues(d) {
-
     if (d.keys.length <= 1) {
-      return [];
+      d._curvePoints = [];
+      d._curvePointsBezier = [];
+      d._controlPoints = [];
+      return [{points: [], name: d.name}];
     }
     // preprocess min and max for keys.
     d._min = d3.min(d.keys, (k) => k.val);
@@ -106,7 +108,7 @@ export default class PropertyCurveEdit {
     const bar = this.container.selectAll('.curve-grp')
       .data(this.timeline.tweenTime.data, (d) => {return d.id;});
 
-    const barEnter = bar.enter()
+    bar.enter()
       .append('g').attr('class', 'curve-grp');
 
     // Show curves onl if curve editor mode.
@@ -116,6 +118,8 @@ export default class PropertyCurveEdit {
       }
       return 'none';
     });
+
+    bar.exit().remove();
 
     const propVal1 = (d) => d.properties || [];
     const propKey1 = (d) => d.name;
@@ -209,7 +213,6 @@ export default class PropertyCurveEdit {
       ease[handle._Xindex] = dx;
       ease[handle._Yindex] = dy;
       point._key.ease = ease;
-      console.log('new ease', point);
 
       propertyData._isDirty = true;
       itemData._isDirty = true;
@@ -255,6 +258,8 @@ export default class PropertyCurveEdit {
       cx: (d) => d.x,
       cy: (d) => d.y
     });
+
+    points.exit().remove();
 
     // Handle point.
     handle.enter()
