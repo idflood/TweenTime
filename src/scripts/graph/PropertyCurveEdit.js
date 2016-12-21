@@ -203,6 +203,9 @@ export default class PropertyCurveEdit {
         dy = 1 - dy;
       }
 
+      // dx is restricted to 0 - 1.
+      dx = Math.min(1, Math.max(0, dx));
+
       ease[handle._Xindex] = dx;
       ease[handle._Yindex] = dy;
       point._key.ease = ease;
