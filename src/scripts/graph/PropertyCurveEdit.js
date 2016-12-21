@@ -2,10 +2,6 @@ let d3 = require('d3');
 let Signals = require('js-signals');
 import Utils from '../core/Utils';
 
-// https://github.com/hnakamur/d3.js-drag-bezier-curves-example/blob/master/app/index.js
-// http://greensock.com/forums/topic/7921-translating-css-cubic-bezier-easing-to-gsap/
-// https://github.com/gre/bezier-easing
-// https://matthewlein.com/ceaser/
 const MAX_HEIGHT = 120;
 
 export default class PropertyCurveEdit {
