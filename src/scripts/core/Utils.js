@@ -112,9 +112,10 @@ export default class Utils {
     if (Array.isArray(ease)) {
       return ease;
     }
+    // Return the points but clone the array first ; )
     if (EASE_POINTS[ease]) {
-      return EASE_POINTS[ease];
+      return EASE_POINTS[ease].slice(0);
     }
-    return EASE_POINTS['Quad.easeInOut'];
+    return EASE_POINTS['Quad.easeInOut'].slice(0);
   }
 }

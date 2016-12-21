@@ -61,10 +61,10 @@ export default class PropertyCurveEdit {
 
     d._curvePoints = [];
     // set raw points, without bezier control yet.
-    d.keys.forEach((key, i) => {
+    d.keys.forEach((key) => {
       const x = this.timeline.x(key.time * 1000);
       const y = this.normalizeVal(key.val, d._min, d._max, 0, MAX_HEIGHT);
-      d._curvePoints.push({x, y, ease: key.ease, id: i, _key: key});
+      d._curvePoints.push({x, y, ease: key.ease, id: `curve1-${key._id}`, _key: key});
     });
 
     // Control points, grouped by point + handle.
@@ -92,11 +92,10 @@ export default class PropertyCurveEdit {
         d._curvePointsBezier.push(p1);
         d._curvePointsBezier.push(p2);
 
-        d._controlPoints.push({point: pt, handle: p1, id: `${i}-a`});
-        d._controlPoints.push({point: next, handle: p2, id: `${i}-b`});
+        d._controlPoints.push({point: pt, handle: p1, id: `${pt._key._id}-a`});
+        d._controlPoints.push({point: next, handle: p2, id: `${pt._key._id}-b`});
       }
     });
-
     const path = this.getPath(d._curvePointsBezier);
     return [{points: d._curvePoints, path, name: d.name}];
   }
