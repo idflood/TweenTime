@@ -179,10 +179,16 @@ export default class Keys {
           cls += ' key--selected';
         }
         if (d.ease) {
-          var ease = d.ease.split('.');
-          if (ease.length === 2) {
-            cls += ' ' + ease[1];
+          if (Array.isArray(d.ease)) {
+            cls += ' easeCustom'
           }
+          else {
+            var ease = d.ease.split('.');
+            if (ease.length === 2) {
+              cls += ' ' + ease[1];
+            }
+          }
+
         }
         else {
           // If no easing specified, the it's the default Quad.easeOut
@@ -224,6 +230,24 @@ export default class Keys {
       .attr('cx', 0)
       .attr('cy', 0)
       .attr('r', 5);
+
+    var grp_custom = key_grp.append('g')
+      .attr('class', 'ease-custom');
+    grp_custom.append('path')
+      .attr('class', 'key__shape-arrow')
+      .attr('d', 'M 0 -6 L 6 0 L 0 6')
+      .attr({
+        transform: 'translate(-5, 0)'
+      });
+
+    var g2 = grp_custom.append('g')
+      .attr({
+        transform: 'scale(-1, 1) translate(-5, 0)'
+      });
+
+    g2.append('path')
+      .attr('class', 'key__shape-arrow')
+      .attr('d', 'M 0 -6 L 6 0 L 0 6');
 
     keys.attr('transform', function(d) {
       var dx = self.timeline.x(d.time * 1000);

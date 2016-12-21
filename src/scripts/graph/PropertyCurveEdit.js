@@ -129,6 +129,8 @@ export default class PropertyCurveEdit {
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', 300);
 
+    properties.exit().remove();
+
     const curveKey = (d) => d.name;
     var curves = properties.selectAll('.curve')
       .data((d) => this.processCurveValues(d), curveKey);
@@ -203,7 +205,8 @@ export default class PropertyCurveEdit {
 
       ease[handle._Xindex] = dx;
       ease[handle._Yindex] = dy;
-      point.ease = ease;
+      point._key.ease = ease;
+      console.log('new ease', point);
 
       propertyData._isDirty = true;
       itemData._isDirty = true;

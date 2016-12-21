@@ -21,8 +21,12 @@ $ease-color: #6ECEDF
 .ease-in,
 .ease-out,
 .ease-inout,
-.ease-linear
+.ease-linear,
+.ease-custom
   display: none
+
+.key .ease-custom circle
+  fill: #aaa
 
 .easeNone
   .ease-linear
@@ -35,6 +39,10 @@ $ease-color: #6ECEDF
     display: block
 .easeInOut
   .ease-inout
+    display: block
+
+.easeCustom
+  .ease-custom
     display: block
 
 .key--preview
