@@ -20,13 +20,11 @@ export default class KeysPreview {
       return d.name;
     };
 
-    var properties = bar.selectAll('.keys-preview').data(propVal, propKey);
+    var properties = bar.select('.timeline__right-mask').selectAll('.keys-preview').data(propVal, propKey);
 
     properties.enter()
-      .append('svg')
-      .attr('class', 'keys-preview timeline__right-mask')
-      .attr('width', window.innerWidth - self.timeline.label_position_x)
-      .attr('height', self.timeline.lineHeight);
+      .append('g')
+      .attr('class', 'keys-preview');
 
     var setItemStyle = function(d) {
       const lineData = d._property._line;

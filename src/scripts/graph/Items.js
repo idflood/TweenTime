@@ -101,9 +101,16 @@ export default class Items {
       .append('g').attr('class', 'line-grp');
 
     const barContainerRight = barEnter.append('svg')
-      .attr('class', 'timeline__right-mask')
-      .attr('width', window.innerWidth - self.timeline.label_position_x)
-      .attr('height', self.timeline.lineHeight);
+      .attr({
+        class: 'timeline__right-mask',
+        width: window.innerWidth - self.timeline.label_position_x
+      });
+
+    bar.select('.timeline__right-mask')
+      .attr({
+        display: () => self.timeline.editor.curveEditEnabled ? 'none' : 'block',
+        height: (d) => (d.properties.length + 1) * self.timeline.lineHeight
+      });
 
     barContainerRight.append('rect')
       .attr('class', 'bar')
