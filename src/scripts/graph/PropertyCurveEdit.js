@@ -147,9 +147,7 @@ export default class PropertyCurveEdit {
             return 'block';
           }
         }
-        console.log(d);
         return 'none';
-
       });
 
     properties.enter()
@@ -212,10 +210,8 @@ export default class PropertyCurveEdit {
       const prev = d.handle._prev;
       const handle = d.handle;
       const key = point._key;
-
-      const handleData = d3.select(this).datum();
-      const propertyData = d3.select(this.parentNode).datum();
-      const itemData = d3.select(this.parentNode.parentNode).datum();
+      const propertyData = prev._key._property;
+      const itemData = propertyData._line;
 
       // Get ease array.
       const ease = Utils.getEasingPoints(point.ease);

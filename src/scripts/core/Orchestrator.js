@@ -115,6 +115,11 @@ export default class Orchestrator {
             item._timeline.add(property._timeline, 0);
           }
 
+          // Add a reference to the parent item for easier reference.
+          if (!property._line) {
+            property._line = item;
+          }
+
           var propertyTimeline = property._timeline;
           var propName = property.name;
 
@@ -154,6 +159,11 @@ export default class Orchestrator {
 
           for (let key_index = 0; key_index < property.keys.length; key_index++) {
             let key = property.keys[key_index];
+            // Add a reference to the parent property, allow easier access
+            // without relying on dom order.
+            if (!key._property) {
+              key._property = property;
+            }
 
             if (key_index < property.keys.length - 1) {
               var next_key = property.keys[key_index + 1];

@@ -28,10 +28,9 @@ export default class KeysPreview {
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight);
 
-    var setItemStyle = function() {
-      var item = d3.select(this.parentNode.parentNode);
-      var bar_data = item.datum();
-      if (bar_data.collapsed === true) {
+    var setItemStyle = function(d) {
+      const lineData = d._property._line;
+      if (lineData.collapsed === true) {
         return '';
       }
       // Show only when item is collapsed

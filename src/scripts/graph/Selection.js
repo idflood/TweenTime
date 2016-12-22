@@ -90,9 +90,8 @@ export default class Selection {
       d3.selectAll('.key--selected').classed('key--selected', false);
       self.timeline.selectionManager.reset();
       var selection = [];
-      d3.selectAll('.key').each( function(state_data) {
-        var item_data = d3.select(this.parentNode.parentNode.parentNode).datum();
-        var key_data = d3.select(this).datum();
+      d3.selectAll('.key').each( function(key_data) {
+        const item_data = key_data._property._line;
 
         // Also keep a reference to the key dom element.
         key_data._dom = this;
@@ -100,7 +99,7 @@ export default class Selection {
         if (item_data.collapsed !== true) {
           var itemBounding = d3.select(this)[0][0].getBoundingClientRect();
           var y = itemBounding.top - containerBounding.top;
-          if (state_data.time >= d.timeStart && state_data.time <= d.timeEnd) {
+          if (key_data.time >= d.timeStart && key_data.time <= d.timeEnd) {
             // use or condition for top and bottom
             if (y >= d.y && y <= d.y + d.height || y + 10 >= d.y && y + 10 <= d.y + d.height) {
               d3.select(this).classed('key--selected', true);

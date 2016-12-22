@@ -49,19 +49,18 @@ export default class Properties {
       .attr('width', self.timeline.x(self.timeline.timer.totalDuration + 100))
       .attr('height', self.timeline.lineHeight)
       .on('dblclick', function(d) {
-        var lineObject = this.parentNode.parentNode;
-        var lineValue = d3.select(lineObject).datum();
-        var def = d.default ? d.default : 0;
-        var mouse = d3.mouse(this);
-        var dx = self.timeline.x.invert(mouse[0]);
+        const lineValue = d._line;
+        let def = d.default ? d.default : 0;
+        const mouse = d3.mouse(this);
+        let dx = self.timeline.x.invert(mouse[0]);
         dx = dx.getTime() / 1000;
-        var prevKey = Utils.getPreviousKey(d.keys, dx);
+        const prevKey = Utils.getPreviousKey(d.keys, dx);
         // set the value to match the previous key if we found one
         if (prevKey) {
           def = prevKey.val;
         }
-        d._line = lineValue;
-        var newKey = {
+        //d._line = lineValue;
+        const newKey = {
           time: dx,
           val: def,
           _property: d
@@ -76,8 +75,7 @@ export default class Properties {
         lineValue._isDirty = true;
 
         lineValue._isDirty = true;
-        var keyContainer = this.parentNode;
-        self.onKeyAdded.dispatch(newKey, keyContainer);
+        self.onKeyAdded.dispatch(newKey);
       });
 
     // Mask
@@ -114,10 +112,8 @@ export default class Properties {
         return self.timeline.x(self.timeline.timer.totalDuration + 100);
       });
 
-    bar.selectAll('.line-item').attr('display', function() {
-      var lineObject = this.parentNode;
-      var lineValue = d3.select(lineObject).datum();
-      if (!lineValue.collapsed) {
+    bar.selectAll('.line-item').attr('display', function(property) {
+      if (!property._line.collapsed) {
         return 'block';
       }
       return 'none';

@@ -80,12 +80,12 @@ export default class Timeline {
     this.keysPreview = new KeysPreview(this, this.linesContainer);
 
     this.properties = new Properties(this);
-    this.properties.onKeyAdded.add((newKey, keyContainer) => {
+    this.properties.onKeyAdded.add((newKey) => {
       this._isDirty = true;
       // render the timeline directly so that we can directly select
       // the new key with it's domElement.
       this.render(0, false);
-      this.keys.selectNewKey(newKey, keyContainer);
+      this.keys.selectNewKey(newKey);
     });
     this.errors = new Errors(this);
     this.keys = new Keys(this);
