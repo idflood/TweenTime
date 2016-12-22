@@ -269,6 +269,11 @@ export default class PropertyCurveEdit {
         fill: '#aaa',
         r: 4
       })
+      .on('mousedown', function() {
+        // Don't trigger mousedown on handler else
+        // it create the selection rectangle
+        d3.event.stopPropagation();
+      })
       .call(dragHandle);
 
     handle.attr({
