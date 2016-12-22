@@ -101,15 +101,26 @@ export default class PropertyCurveEdit {
     const tweenTime = self.timeline.tweenTime;
 
     const bar = this.container.selectAll('.curve-grp')
-      .data(this.timeline.tweenTime.data, (d) => {return d.id;});
+      .data(this.timeline.tweenTime.data, (d) => d.id);
 
     bar.enter()
       .append('svg').attr('class', 'curve-grp timeline__right-mask');
 
     // Show curves only if curve editor mode.
-    bar.attr('display', () => {
+    bar.attr('display', (d) => {
+      const selection = self.timeline.selectionManager.getSelection();
+
       if (this.timeline.editor.curveEditEnabled) {
-        return 'block';
+        // Check if this item is in selection.
+        for (let i = 0; i < selection.length; i++) {
+          if (selection[i].id === d.id) {
+            return 'block';
+          }
+          // If we selected a property inside the item.
+          if (selection[i]._line && selection[i]._line.id === d.id) {
+            return 'block';
+          }
+        }
       }
       return 'none';
     });
@@ -120,7 +131,26 @@ export default class PropertyCurveEdit {
     const propKey1 = (d) => d.name;
 
     const properties = bar.selectAll('.curves-preview')
-      .data(propVal1, propKey1);
+      .data(propVal1, propKey1)
+      .attr('display', (d) => {
+        const selection = self.timeline.selectionManager.getSelection();
+        for (let i = 0; i < selection.length; i++) {
+          const selectedItem = selection[i];
+          if (selectedItem.name && selectedItem.name === d.name) {
+            // Also check that it is from the same item.
+            if (selectedItem._line.id === d._line.id) {
+              return 'block';
+            }
+          }
+          // If we have selected the whole item show the curve too.
+          if (selectedItem.id && selectedItem.id === d._line.id) {
+            return 'block';
+          }
+        }
+        console.log(d);
+        return 'none';
+
+      });
 
     properties.enter()
       .append('g')

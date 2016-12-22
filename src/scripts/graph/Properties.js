@@ -94,6 +94,9 @@ export default class Properties {
       .attr('y', 15)
       .text(function(d) {
         return d.name;
+      })
+      .on('click', (d) => {
+        self.timeline.selectionManager.select(d);
       });
 
     subGrp.append('line')

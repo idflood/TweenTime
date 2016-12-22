@@ -17,6 +17,11 @@ export default class Timeline {
     this.tweenTime = this.editor.tweenTime;
     this.timer = this.tweenTime.timer;
     this.selectionManager = this.editor.selectionManager;
+    this.selectionManager.onSelect.add(() => {
+      // Needed to apply selection of properties/item to curves.
+      this._isDirty = true;
+      this.render();
+    });
 
     this._isDirty = true;
     this.timer = this.tweenTime.timer;
