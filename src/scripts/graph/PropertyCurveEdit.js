@@ -104,7 +104,7 @@ export default class PropertyCurveEdit {
       .data(this.timeline.tweenTime.data, (d) => {return d.id;});
 
     bar.enter()
-      .append('g').attr('class', 'curve-grp');
+      .append('g').attr('class', 'curve-grp timeline__right-mask');
 
     // Show curves onl if curve editor mode.
     bar.attr('display', () => {
@@ -123,10 +123,13 @@ export default class PropertyCurveEdit {
       .data(propVal1, propKey1);
 
     properties.enter()
-      .append('svg')
-      .attr('class', 'curves-preview timeline__right-mask')
-      .attr('width', window.innerWidth - self.timeline.label_position_x)
-      .attr('height', 300);
+      .append('g')
+      .attr({
+        class: 'curves-preview',
+        transform: 'translate(0,10)',
+        width: window.innerWidth - self.timeline.label_position_x,
+        height: 300
+      });
 
     properties.exit().remove();
 
