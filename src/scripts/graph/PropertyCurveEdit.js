@@ -170,10 +170,9 @@ export default class PropertyCurveEdit {
       if (event.sourceEvent) {
         event = event.sourceEvent;
       }
-      var pointData = d3.select(this).datum();
 
       // Also keep a reference to the key dom element.
-      pointData._dom = this;
+      d._dom = this;
     };
 
     const dragHandleMove = function(d) {
@@ -192,10 +191,9 @@ export default class PropertyCurveEdit {
       const ease = Utils.getEasingPoints(point.ease);
       const timeBetweenPrevNext = key.time - prev._key.time;
 
-      var currentDomainStart = self.timeline.x.domain()[0];
-      var mouse = d3.mouse(this);
-      var old_time = key.time;
-      var dx = self.timeline.x.invert(mouse[0]);
+      const mouse = d3.mouse(this);
+      const old_time = key.time;
+      let dx = self.timeline.x.invert(mouse[0]);
       dx = dx.getTime() / 1000;
       dx = (dx - prev._key.time) / timeBetweenPrevNext;
 

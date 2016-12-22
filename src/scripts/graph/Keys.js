@@ -126,7 +126,7 @@ export default class Keys {
     });
 
     // selectKey is triggered by dragstart event
-    var selectKey = function() {
+    var selectKey = function(key_data) {
       var event = d3.event;
       // with dragstart event the mousevent is is inside the event.sourcEvent
       if (event.sourceEvent) {
@@ -141,7 +141,6 @@ export default class Keys {
           return;
         }
       }
-      var key_data = d3.select(this).datum();
 
       // Also keep a reference to the key dom element.
       key_data._dom = this;
