@@ -12,18 +12,17 @@ export default class Items {
   }
 
   render() {
-    var self = this;
-    var tweenTime = self.timeline.tweenTime;
-    var editor = self.timeline.editor;
+    const self = this;
+    const tweenTime = self.timeline.tweenTime;
+    const editor = self.timeline.editor;
 
-    var selectBar = function() {
-      var data = d3.select(this).datum();
+    const selectBar = function(data) {
       self.timeline.selectionManager.select(data);
     };
 
-    var dragmove = function(d) {
-      var dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
-      var diff = dx - d.start;
+    const dragmove = function(d) {
+      const dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
+      const diff = dx - d.start;
       d.start += diff;
       d.end += diff;
       if (d.properties) {
@@ -39,7 +38,7 @@ export default class Items {
       self.onUpdate.dispatch();
     };
 
-    var dragmoveLeft = function(d) {
+    const dragmoveLeft = function(d) {
       d3.event.sourceEvent.stopPropagation();
       var sourceEvent = d3.event.sourceEvent;
       var dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
@@ -56,7 +55,7 @@ export default class Items {
       self.onUpdate.dispatch();
     };
 
-    var dragmoveRight = function(d) {
+    const dragmoveRight = function(d) {
       d3.event.sourceEvent.stopPropagation();
       var sourceEvent = d3.event.sourceEvent;
       var dx = self.timeline.x.invert(d3.event.x).getTime() / 1000;
@@ -73,35 +72,35 @@ export default class Items {
       self.onUpdate.dispatch();
     };
 
-    var dragLeft = d3.behavior.drag()
+    const dragLeft = d3.behavior.drag()
       .origin(function() {
         var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on('drag', dragmoveLeft);
 
-    var dragRight = d3.behavior.drag()
+    const dragRight = d3.behavior.drag()
       .origin(function() {
         var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on('drag', dragmoveRight);
 
-    var drag = d3.behavior.drag()
+    const drag = d3.behavior.drag()
       .origin(function() {
         var t = d3.select(this);
         return {x: t.attr('x'), y: t.attr('y')};
       })
       .on('drag', dragmove);
 
-    var bar_border = 1;
-    var bar = this.container.selectAll('.line-grp')
+    const bar_border = 1;
+    const bar = this.container.selectAll('.line-grp')
       .data(this.timeline.tweenTime.data, (d) => {return d.id;});
 
-    var barEnter = bar.enter()
+    const barEnter = bar.enter()
       .append('g').attr('class', 'line-grp');
 
-    var barContainerRight = barEnter.append('svg')
+    const barContainerRight = barEnter.append('svg')
       .attr('class', 'timeline__right-mask')
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight);
@@ -144,7 +143,7 @@ export default class Items {
       return 'translate(0,' + y + ')';
     });
 
-    var barWithStartAndEnd = function(d) {
+    const barWithStartAndEnd = function(d) {
       if (d.start !== undefined && d.end !== undefined) {
         return true;
       }

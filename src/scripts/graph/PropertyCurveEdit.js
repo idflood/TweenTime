@@ -2,7 +2,7 @@ let d3 = require('d3');
 let Signals = require('js-signals');
 import Utils from '../core/Utils';
 
-const MAX_HEIGHT = 120;
+const MAX_HEIGHT = 190;
 
 export default class PropertyCurveEdit {
   constructor(timeline, container) {
@@ -215,8 +215,6 @@ export default class PropertyCurveEdit {
       propertyData._isDirty = true;
       itemData._isDirty = true;
       self.onCurveUpdated.dispatch();
-
-      self.timeline.selectionManager.select(d);
     };
 
     const dragHandleEnd = (d) => {
