@@ -104,9 +104,9 @@ export default class PropertyCurveEdit {
       .data(this.timeline.tweenTime.data, (d) => {return d.id;});
 
     bar.enter()
-      .append('g').attr('class', 'curve-grp timeline__right-mask');
+      .append('svg').attr('class', 'curve-grp timeline__right-mask');
 
-    // Show curves onl if curve editor mode.
+    // Show curves only if curve editor mode.
     bar.attr('display', () => {
       if (this.timeline.editor.curveEditEnabled) {
         return 'block';
