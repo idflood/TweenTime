@@ -13,6 +13,9 @@ export default class PropertyCurveEdit {
   }
 
   normalizeVal(val, min, max, min2, max2) {
+    if (min === min2 && max === max2) {
+      return val;
+    }
     const diff = max - min;
     const diff2 = max2 - min2;
     const t = (val - min) / diff;
@@ -38,6 +41,9 @@ export default class PropertyCurveEdit {
         if ((i - 1) % 3 === 0) {
           p += 'C ';
         }
+        if (isNaN(pt.x) || isNaN(pt.y)) {
+          return false;
+        }
         p += `${pt.x} ${pt.y}`;
       }
     });
@@ -45,6 +51,7 @@ export default class PropertyCurveEdit {
   }
 
   processCurveValues(d) {
+    let invalid = false;
     if (d.keys.length <= 1) {
       d._curvePoints = [];
       d._curvePointsBezier = [];
@@ -69,6 +76,10 @@ export default class PropertyCurveEdit {
     d._curvePointsBezier = [];
     d._curvePoints.forEach((pt, i) => {
       const next = d._curvePoints[i + 1];
+      // If non number points return an empty path.
+      if (isNaN(pt.x) || isNaN(pt.y)) {
+        invalid = true;
+      }
       d._curvePointsBezier.push({x: pt.x, y: pt.y, ease: pt.ease, _key: pt._key});
       if (next) {
         const easing = Utils.getEasingPoints(next.ease);
@@ -87,12 +98,24 @@ export default class PropertyCurveEdit {
         p2._Yindex = 3;
         d._curvePointsBezier.push(p1);
         d._curvePointsBezier.push(p2);
-
+        // If non number points return an empty path.
+        if (isNaN(next.x) || isNaN(next.y) ||
+            isNaN(p1.x) || isNaN(p1.y) ||
+            isNaN(p2.x) || isNaN(p2.y)) {
+          invalid = true;
+        }
         d._controlPoints.push({point: pt, handle: p1, id: `${pt._key._id}-a`});
         d._controlPoints.push({point: next, handle: p2, id: `${pt._key._id}-b`});
       }
     });
     const path = this.getPath(d._curvePointsBezier);
+    // If invalid path (non number points) return an empty path.
+    if (!path || invalid) {
+      d._curvePoints = [];
+      d._curvePointsBezier = [];
+      d._controlPoints = [];
+      return [{points: [], name: d.name}];
+    }
     return [{points: d._curvePoints, path, name: d.name}];
   }
 

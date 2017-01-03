@@ -27,6 +27,9 @@ export default class KeysPreview {
       .attr('class', 'keys-preview');
 
     var setItemStyle = function(d) {
+      if (!d._property || !d._property._line) {
+        return 'display: none;';
+      }
       const lineData = d._property._line;
       if (lineData.collapsed === true) {
         return '';
