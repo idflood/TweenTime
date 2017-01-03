@@ -30,6 +30,11 @@ export default class PropertyTween {
     delete this.timer;
   }
 
+  customLabel(easeArray) {
+    const arrayFixed = easeArray.map((x) => parseFloat(x.toFixed(3)));
+    return `[${arrayFixed.join(', ')}]`;
+  }
+
   render() {
     var self = this;
     if (!this.key_val.ease) {
@@ -43,6 +48,11 @@ export default class PropertyTween {
         if (this.toString() === self.key_val.ease) {
           return 'selected';
         }
+        if (Array.isArray(self.key_val.ease)) {
+          if (this === self.customLabel(self.key_val.ease)) {
+            return 'selected';
+          }
+        }
         return '';
       }
     };
@@ -53,6 +63,11 @@ export default class PropertyTween {
       data.options.push(tween + '.easeOut');
       data.options.push(tween + '.easeIn');
       data.options.push(tween + '.easeInOut');
+    }
+
+    if (Array.isArray(this.key_val.ease)) {
+      const label = this.customLabel(this.key_val.ease);
+      data.options.push(label);
     }
 
     this.$el = $(tpl_property(data));
@@ -68,6 +83,6 @@ export default class PropertyTween {
   }
 
   update() {
-    console.log('PropertyTween\'s upload method is not yet implemented.');
+    console.log('PropertyTween\'s update method is not yet implemented.');
   }
 }

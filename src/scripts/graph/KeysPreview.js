@@ -20,18 +20,15 @@ export default class KeysPreview {
       return d.name;
     };
 
-    var properties = bar.selectAll('.keys-preview').data(propVal, propKey);
+    var properties = bar.select('.timeline__right-mask').selectAll('.keys-preview').data(propVal, propKey);
 
     properties.enter()
-      .append('svg')
-      .attr('class', 'keys-preview timeline__right-mask')
-      .attr('width', window.innerWidth - self.timeline.label_position_x)
-      .attr('height', self.timeline.lineHeight);
+      .append('g')
+      .attr('class', 'keys-preview');
 
-    var setItemStyle = function() {
-      var item = d3.select(this.parentNode.parentNode);
-      var bar_data = item.datum();
-      if (bar_data.collapsed === true) {
+    var setItemStyle = function(d) {
+      const lineData = d._property._line;
+      if (lineData.collapsed === true) {
         return '';
       }
       // Show only when item is collapsed

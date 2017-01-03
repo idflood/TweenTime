@@ -14,6 +14,7 @@ class Editor {
     this.options = options;
     this.timer = this.tweenTime.timer;
     this.lastTime = -1;
+    this.curveEditEnabled = false;
 
     this.onKeyAdded = this.onKeyAdded.bind(this);
     this.onKeyRemoved = this.onKeyRemoved.bind(this);

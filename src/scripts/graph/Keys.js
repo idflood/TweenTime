@@ -9,10 +9,10 @@ export default class Keys {
     this.onKeyUpdated = new Signals.Signal();
   }
 
-  selectNewKey(data, container) {
+  selectNewKey(data) {
     var self = this;
-    var key = d3.select(container).selectAll('.key').filter(function(item) {
-      return item.time === data.time;
+    var key = d3.selectAll('.key').filter(function(item) {
+      return item._id === data._id;
     });
     if (key.length) {
       d3.selectAll('.key--selected').classed('key--selected', false);
@@ -24,24 +24,21 @@ export default class Keys {
   }
 
   render(properties) {
-    var self = this;
-    var tweenTime = self.timeline.tweenTime;
+    const self = this;
+    const tweenTime = self.timeline.tweenTime;
 
-    var dragmove = function(d) {
-      var sourceEvent = d3.event.sourceEvent;
-      var propertyObject = this.parentNode;
-      var lineObject = propertyObject.parentNode.parentNode;
-      var propertyData = d3.select(propertyObject).datum();
-      var lineData = d3.select(lineObject).datum();
-      var key_data = d;
+    const dragmove = function(key_data) {
+      const sourceEvent = d3.event.sourceEvent;
+      const propertyData = key_data._property;
+      const lineData = propertyData._line;
 
-      var currentDomainStart = self.timeline.x.domain()[0];
+      const currentDomainStart = self.timeline.x.domain()[0];
       var mouse = d3.mouse(this);
-      var old_time = d.time;
+      var old_time = key_data.time;
       var dx = self.timeline.x.invert(mouse[0]);
       dx = dx.getTime();
       dx = dx / 1000 - currentDomainStart / 1000;
-      dx = d.time + dx;
+      dx = key_data.time + dx;
 
       var selection = self.timeline.selectionManager.getSelection();
       var selection_first_time = false;
@@ -61,10 +58,10 @@ export default class Keys {
         timeMatch = dx;
       }
 
-      d.time = timeMatch;
+      key_data.time = timeMatch;
       // Sort the keys of the current selected item.
       propertyData.keys = Utils.sortKeys(propertyData.keys);
-      var time_offset = d.time - old_time;
+      var time_offset = key_data.time - old_time;
 
       var updateKeyItem = function(item) {
         var property = item._property;
@@ -78,10 +75,10 @@ export default class Keys {
         if (sourceEvent.altKey && selection_first_time !== false && selection_last_time !== false) {
           is_first = selection_first_time === old_time;
           if (is_first) {
-            key_scale = (selection_last_time - d.time) / (selection_last_time - old_time);
+            key_scale = (selection_last_time - key_data.time) / (selection_last_time - old_time);
           }
           else {
-            key_scale = (d.time - selection_first_time) / (old_time - selection_first_time);
+            key_scale = (key_data.time - selection_first_time) / (old_time - selection_first_time);
           }
         }
 
@@ -117,8 +114,16 @@ export default class Keys {
     };
     var keys = properties.select('.line-item__keys').selectAll('.key').data(propValue, propKey);
 
+    // Hide keys if curve editor mode.
+    properties.select('.line-item__keys').attr('display', function() {
+      if (!self.timeline.editor.curveEditEnabled) {
+        return 'block';
+      }
+      return 'none';
+    });
+
     // selectKey is triggered by dragstart event
-    var selectKey = function() {
+    var selectKey = function(key_data) {
       var event = d3.event;
       // with dragstart event the mousevent is is inside the event.sourcEvent
       if (event.sourceEvent) {
@@ -133,7 +138,6 @@ export default class Keys {
           return;
         }
       }
-      var key_data = d3.select(this).datum();
 
       // Also keep a reference to the key dom element.
       key_data._dom = this;
@@ -171,10 +175,16 @@ export default class Keys {
           cls += ' key--selected';
         }
         if (d.ease) {
-          var ease = d.ease.split('.');
-          if (ease.length === 2) {
-            cls += ' ' + ease[1];
+          if (Array.isArray(d.ease)) {
+            cls += ' easeCustom'
           }
+          else {
+            var ease = d.ease.split('.');
+            if (ease.length === 2) {
+              cls += ' ' + ease[1];
+            }
+          }
+
         }
         else {
           // If no easing specified, the it's the default Quad.easeOut
@@ -216,6 +226,24 @@ export default class Keys {
       .attr('cx', 0)
       .attr('cy', 0)
       .attr('r', 5);
+
+    var grp_custom = key_grp.append('g')
+      .attr('class', 'ease-custom');
+    grp_custom.append('path')
+      .attr('class', 'key__shape-arrow')
+      .attr('d', 'M 0 -6 L 6 0 L 0 6')
+      .attr({
+        transform: 'translate(-5, 0)'
+      });
+
+    var g2 = grp_custom.append('g')
+      .attr({
+        transform: 'scale(-1, 1) translate(-5, 0)'
+      });
+
+    g2.append('path')
+      .attr('class', 'key__shape-arrow')
+      .attr('d', 'M 0 -6 L 6 0 L 0 6');
 
     keys.attr('transform', function(d) {
       var dx = self.timeline.x(d.time * 1000);

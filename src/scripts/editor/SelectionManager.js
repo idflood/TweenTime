@@ -10,8 +10,6 @@ export default class SelectionManager {
   }
 
   select(item, addToSelection = false) {
-    this.addDataRelations();
-
     if (!addToSelection) {
       this.selection = [];
     }
@@ -97,24 +95,6 @@ export default class SelectionManager {
 
   triggerSelect() {
     this.onSelect.dispatch(this.selection, false);
-  }
-
-  addDataRelations() {
-    // We need to add some parent references in main data object.
-    // Add a _property reference to each keys.
-    // Add a _line property for each references.
-    var data = this.tweenTime.data;
-    for (var lineIndex = 0; lineIndex < data.length; lineIndex++) {
-      var line = data[lineIndex];
-      for (var propIndex = 0; propIndex < line.properties.length; propIndex++) {
-        var property = line.properties[propIndex];
-        property._line = line;
-        for (var keyIndex = 0; keyIndex < property.keys.length; keyIndex++) {
-          var key = property.keys[keyIndex];
-          key._property = property;
-        }
-      }
-    }
   }
 
   highlightItems() {

@@ -8,6 +8,7 @@ export default class EditorMenu {
     this.timer = this.tweenTime.timer;
     this.initExport();
     this.initToggle();
+    this.initCurveToggle();
   }
 
   initToggle() {
@@ -40,6 +41,14 @@ export default class EditorMenu {
         type: 'text/json;charset=utf-8'
       });
       saveAs(blob, 'data.json');
+    });
+  }
+
+  initCurveToggle() {
+    this.$timeline.find('[data-action="switch-curve"]').click((e) => {
+      e.preventDefault();
+      this.editor.curveEditEnabled = !this.editor.curveEditEnabled;
+      this.editor.render(false, false, true);
     });
   }
 }

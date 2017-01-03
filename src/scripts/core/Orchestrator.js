@@ -3,6 +3,9 @@ let TweenMax = require('TweenMax');
 let TimelineMax = require('TimelineMax');
 let Quad = require('Quad');
 
+import Utils from './Utils';
+import BezierEasing from 'bezier-easing';
+
 export default class Orchestrator {
   constructor(timer, data) {
     this.update = this.update.bind(this);
@@ -14,7 +17,6 @@ export default class Orchestrator {
     this.update(0);
     this.onEvent = new Signals.Signal();
   }
-
 
   addUpdateListener(listener) {
     this.onUpdate.add(listener);
@@ -34,12 +36,9 @@ export default class Orchestrator {
 
   getEasing(key = false) {
     if (key && key.ease) {
-      var ease_index = key.ease.split('.');
-      if (ease_index.length === 2 && window[ease_index[0]] && window[ease_index[0]][ease_index[1]]) {
-        return window[ease_index[0]][ease_index[1]];
-      }
+      return Utils.getEasingPoints(key.ease);
     }
-    return Quad.easeOut;
+    return Utils.getEasingPoints('Quad.easeOut');
   }
 
   initSpecialProperties(item) {
@@ -116,6 +115,11 @@ export default class Orchestrator {
             item._timeline.add(property._timeline, 0);
           }
 
+          // Add a reference to the parent item for easier reference.
+          if (!property._line) {
+            property._line = item;
+          }
+
           var propertyTimeline = property._timeline;
           var propName = property.name;
 
@@ -138,7 +142,8 @@ export default class Orchestrator {
           var tween_duration = 0;
           var val = {};
           var easing = this.getEasing();
-          val.ease = easing;
+          // Use spread to convert array to multiple arguments.
+          val.ease = BezierEasing(...easing);
 
           if (property.css) {
             data_target = item._domHelper;
@@ -154,6 +159,11 @@ export default class Orchestrator {
 
           for (let key_index = 0; key_index < property.keys.length; key_index++) {
             let key = property.keys[key_index];
+            // Add a reference to the parent property, allow easier access
+            // without relying on dom order.
+            if (!key._property) {
+              key._property = property;
+            }
 
             if (key_index < property.keys.length - 1) {
               var next_key = property.keys[key_index + 1];
@@ -161,7 +171,9 @@ export default class Orchestrator {
 
               val = {};
               easing = this.getEasing(next_key);
-              val.ease = easing;
+
+              // Use spread to convert array to multiple arguments.
+              val.ease = BezierEasing(...easing);
               if (property.css) {
                 val.css = {};
                 val.css[propName] = next_key.val;

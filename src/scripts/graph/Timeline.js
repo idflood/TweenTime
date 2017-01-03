@@ -6,6 +6,7 @@ import TimeIndicator from './TimeIndicator';
 import Items from './Items';
 import KeysPreview from './KeysPreview';
 import Properties from './Properties';
+import PropertyCurveEdit from './PropertyCurveEdit';
 import Keys from './Keys';
 import Errors from './Errors';
 import Selection from './Selection';
@@ -16,6 +17,11 @@ export default class Timeline {
     this.tweenTime = this.editor.tweenTime;
     this.timer = this.tweenTime.timer;
     this.selectionManager = this.editor.selectionManager;
+    this.selectionManager.onSelect.add(() => {
+      // Needed to apply selection of properties/item to curves.
+      this._isDirty = true;
+      this.render();
+    });
 
     this._isDirty = true;
     this.timer = this.tweenTime.timer;
@@ -74,17 +80,25 @@ export default class Timeline {
     this.keysPreview = new KeysPreview(this, this.linesContainer);
 
     this.properties = new Properties(this);
-    this.properties.onKeyAdded.add((newKey, keyContainer) => {
+    this.properties.onKeyAdded.add((newKey) => {
       this._isDirty = true;
       // render the timeline directly so that we can directly select
       // the new key with it's domElement.
       this.render(0, false);
-      this.keys.selectNewKey(newKey, keyContainer);
+      this.keys.selectNewKey(newKey);
     });
     this.errors = new Errors(this);
     this.keys = new Keys(this);
     this.keys.onKeyUpdated.add(() => {
       this.onUpdate();
+    });
+
+    this.curves = new PropertyCurveEdit(this, this.linesContainer);
+    this.curves.onCurveUpdated.add(() => {
+      this._isDirty = true;
+      // render the timeline directly so that we can directly select
+      // the new key with it's domElement.
+      this.render(0, false);
     });
 
     this.xAxisGrid = d3.svg.axis()
@@ -164,6 +178,7 @@ export default class Timeline {
       var properties = this.properties.render(bar);
       this.errors.render(properties);
       this.keys.render(properties);
+      this.curves.render(bar);
       this._isDirty = false;
 
       // Adapt the timeline height.

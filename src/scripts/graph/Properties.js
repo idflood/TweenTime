@@ -9,27 +9,33 @@ export default class Properties {
     this.subGrp = false;
   }
 
+  propertyVal(d) {
+    if (d.properties) {
+      if (this.timeline.editor.options.showEmptyProperties) {
+        return d.properties;
+      }
+      else {
+        return d.properties.filter((prop) => {return prop.keys.length;});
+      }
+    }
+    return [];
+  }
+
+  propertyKey(d) {
+    return d.name;
+  }
+
+  setSublineHeight(d, i) {
+    const sub_height = (i + 1) * this.timeline.lineHeight;
+    return 'translate(0,' + sub_height + ')';
+  }
+
   render(bar) {
     var self = this;
     var editor = this.timeline.editor;
     var core = editor.tweenTime;
 
-    var propVal = function(d) {
-      if (d.properties) {
-        if (editor.options.showEmptyProperties) {
-          return d.properties;
-        }
-        else {
-          return d.properties.filter((prop) => {return prop.keys.length;});
-        }
-      }
-      return [];
-    };
-    var propKey = function(d) {
-      return d.name;
-    };
-
-    var properties = bar.selectAll('.line-item').data(propVal, propKey);
+    var properties = bar.selectAll('.line-item').data((d) => this.propertyVal(d), this.propertyKey);
     var subGrp = properties.enter()
       .append('g')
       .attr('class', 'line-item');
@@ -37,10 +43,8 @@ export default class Properties {
     // Save subGrp in a variable for use in Errors.coffee
     self.subGrp = subGrp;
 
-    properties.attr('transform', function(d, i) {
-      let sub_height = (i + 1) * self.timeline.lineHeight;
-      return 'translate(0,' + sub_height + ')';
-    });
+
+    properties.attr('transform', (d, i) => this.setSublineHeight(d, i));
 
     subGrp.append('rect')
       .attr('class', 'click-handler click-handler--property')
@@ -49,19 +53,18 @@ export default class Properties {
       .attr('width', self.timeline.x(self.timeline.timer.totalDuration + 100))
       .attr('height', self.timeline.lineHeight)
       .on('dblclick', function(d) {
-        var lineObject = this.parentNode.parentNode;
-        var lineValue = d3.select(lineObject).datum();
-        var def = d.default ? d.default : 0;
-        var mouse = d3.mouse(this);
-        var dx = self.timeline.x.invert(mouse[0]);
+        const lineValue = d._line;
+        let def = d.default ? d.default : 0;
+        const mouse = d3.mouse(this);
+        let dx = self.timeline.x.invert(mouse[0]);
         dx = dx.getTime() / 1000;
-        var prevKey = Utils.getPreviousKey(d.keys, dx);
+        const prevKey = Utils.getPreviousKey(d.keys, dx);
         // set the value to match the previous key if we found one
         if (prevKey) {
           def = prevKey.val;
         }
-        d._line = lineValue;
-        var newKey = {
+        //d._line = lineValue;
+        const newKey = {
           time: dx,
           val: def,
           _property: d
@@ -76,36 +79,42 @@ export default class Properties {
         lineValue._isDirty = true;
 
         lineValue._isDirty = true;
-        var keyContainer = this.parentNode;
-        self.onKeyAdded.dispatch(newKey, keyContainer);
+        self.onKeyAdded.dispatch(newKey);
       });
 
     // Mask
     subGrp.append('svg')
       .attr('class', 'line-item__keys timeline__right-mask')
       .attr('width', window.innerWidth - self.timeline.label_position_x)
-      .attr('height', self.timeline.lineHeight)
-      .attr('fill', '#f00');
+      .attr('height', self.timeline.lineHeight);
 
-    subGrp.append('text')
-      .attr('class', 'line-label line-label--small')
-      .attr('x', self.timeline.label_position_x + 10)
-      .attr('y', 15)
-      .text(function(d) {
-        return d.name;
-      });
+    this.renderPropertiesLabel(bar);
 
     subGrp.append('line')
       .attr('class', 'line-separator--secondary')
       .attr('x1', -self.timeline.margin.left)
-      .attr('x2', self.timeline.x(self.timeline.timer.totalDuration + 100))
       .attr('y1', self.timeline.lineHeight)
       .attr('y2', self.timeline.lineHeight);
 
-    bar.selectAll('.line-item').attr('display', function() {
-      var lineObject = this.parentNode;
-      var lineValue = d3.select(lineObject).datum();
-      if (!lineValue.collapsed) {
+    // Hide property line separator if curve editor is enabled.
+    bar.selectAll('.line-separator--secondary')
+      .attr('x2', function() {
+        if (editor.curveEditEnabled) {
+          return 0;
+        }
+        return self.timeline.x(self.timeline.timer.totalDuration + 100);
+      });
+
+    bar.selectAll('.line-item').attr('display', function(property) {
+      if (!property._line.collapsed) {
+        return 'block';
+      }
+      return 'none';
+    });
+
+    // Hide click handler if curve editor mode.
+    bar.selectAll('.click-handler').attr('display', function() {
+      if (!editor.curveEditEnabled) {
         return 'block';
       }
       return 'none';
@@ -114,5 +123,26 @@ export default class Properties {
     properties.exit().remove();
 
     return properties;
+  }
+
+  renderPropertiesLabel(bar) {
+    const propertiesLabel = bar.selectAll('.line-label--sub').data((d) => this.propertyVal(d), this.propertyKey);
+    propertiesLabel.enter().append('text')
+      .attr({
+        class: 'line-label line-label--sub line-label--small',
+        x: this.timeline.label_position_x + 10,
+        y: 15
+      })
+      .text((d) => d.name)
+      .on('click', (d) => {
+        this.timeline.selectionManager.select(d);
+      });
+
+    bar.selectAll('.line-label--sub')
+      .attr({
+        transform: (d, i) => this.setSublineHeight(d, i),
+        display: (d) => d._line.collapsed ? 'none' : 'block'
+      });
+    propertiesLabel.exit().remove();
   }
 }
