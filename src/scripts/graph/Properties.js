@@ -88,7 +88,7 @@ export default class Properties {
       .attr('width', window.innerWidth - self.timeline.label_position_x)
       .attr('height', self.timeline.lineHeight);
 
-    this.renderPropertiesLabel(bar);
+    this.renderPropertiesLabel(bar, properties);
 
     subGrp.append('line')
       .attr('class', 'line-separator--secondary')
@@ -125,9 +125,8 @@ export default class Properties {
     return properties;
   }
 
-  renderPropertiesLabel(bar) {
-    const propertiesLabel = bar.selectAll('.line-label--sub').data((d) => this.propertyVal(d), this.propertyKey);
-    propertiesLabel.enter().append('text')
+  renderPropertiesLabel(bar, subGrp) {
+    subGrp.append('text')
       .attr({
         class: 'line-label line-label--sub line-label--small',
         x: this.timeline.label_position_x + 10,
@@ -137,12 +136,5 @@ export default class Properties {
       .on('click', (d) => {
         this.timeline.selectionManager.select(d);
       });
-
-    bar.selectAll('.line-label--sub')
-      .attr({
-        transform: (d, i) => this.setSublineHeight(d, i),
-        display: (d) => d._line.collapsed ? 'none' : 'block'
-      });
-    propertiesLabel.exit().remove();
   }
 }
