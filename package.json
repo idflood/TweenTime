@@ -1,6 +1,6 @@
 {
   "name": "TweenTime",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "author": "stimul.ch / David Mignot",
   "dependencies": {
     "file-saver": "*",

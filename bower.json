@@ -1,6 +1,6 @@
 {
   "name": "TweenTime",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "dependencies": {
     "js-signals": "~1.0.0",
     "d3": "~3.5.2",
