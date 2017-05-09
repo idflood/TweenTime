@@ -32,6 +32,11 @@ export default class Exporter {
     };
 
     var data = this.getData();
+    // Give the possibility to add your own data in the export.
+    // ex: new Editor({getJSON: function(data) {data.test = 42; return data;} })
+    if (typeof this.editor.options.getJSON !== 'undefined') {
+      data = this.editor.options.getJSON(data);
+    }
     return JSON.stringify(data, json_replacer, 2);
   }
 }
