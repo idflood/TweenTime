@@ -140,9 +140,13 @@ export default class Items {
       if (!d.collapsed) {
         var numProperties = 0;
         if (d.properties) {
-          var visibleProperties = _.filter(d.properties, function(prop) {
-            return prop.keys.length;
-          });
+          if (editor.options.showEmptyProperties) {
+            var visibleProperties = d.properties;
+          } else {
+            var visibleProperties = _.filter(d.properties, function(prop) {
+              return prop.keys.length;
+            });
+          }
           numProperties = visibleProperties.length;
         }
         self.dy += numProperties * self.timeline.lineHeight;
